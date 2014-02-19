@@ -21,6 +21,7 @@ public class LogisticClassifier extends Predictor{
 
 	private Double[] infogains;
 	private Double[] weights;
+	private int[] bestgains;
 
 	public LogisticClassifier(double input_eta, int input_num_features, int input_num_iters) {
 		// TODO Auto-generated constructor stub
@@ -94,6 +95,12 @@ public class LogisticClassifier extends Predictor{
 		// TODO Auto-generated method stub
 		selectFeatures(instances);
 		trainWeights(instances);
+		
+		System.out.println("start:"+num_features_to_select);
+		for(int i = 0; i < weights.length; i++){
+			System.out.println(this.weights[i]);
+		}
+		System.out.println("num:"+num_features_to_select);
 	}
 	
 	private void selectFeatures(List<Instance> instances){
@@ -104,11 +111,14 @@ public class LogisticClassifier extends Predictor{
 		double pxj, pyixj0, pyixj1;
 		
 		int maxkey = getMaxFeatureKey(instances);
-		infogains = new Double[maxkey];
-		weights = new Double[maxkey];
+		this.infogains = new Double[maxkey];
+		if(num_features_to_select == UNINITIALIZED){
+			num_features_to_select = maxkey;
+		}
+		this.weights = new Double[num_features_to_select];
 		for(int i = 0; i < maxkey; i++){
-			infogains[i] = null;
-			weights[i] = 0.0;
+			this.infogains[i] = null;
+			this.weights[i] = 0.0;
 		}
 		for(int i = 0; i < maxkey; i++){
 			thresh_sum = 0.0;
@@ -134,10 +144,24 @@ public class LogisticClassifier extends Predictor{
 			pxj = px / instances.size();
 			pyixj0 = pyx0 / instances.size();
 			pyixj1 = pyx1 / instances.size();//log of 0 is NaN - might be a problem when lacking train data
-			infogains[i] = -pyixj0*Math.log(pyixj0 / pxj) - pyixj1*Math.log(pyixj1 / pxj);
+			this.infogains[i] = -pyixj0*Math.log(pyixj0 / pxj) - pyixj1*Math.log(pyixj1 / pxj);
 			
-			double temp = infogains[i]; 
-			System.out.println("temp "+temp);
+//			double temp = this.infogains[i]; 
+//			System.out.println("temp "+temp);
+		}
+
+		this.bestgains = new int[this.num_features_to_select];
+		for(int j = 0; j < num_features_to_select; j++){
+			double bestig = Double.NEGATIVE_INFINITY;
+			int bestid = 0;
+			for(int i = 0; i < maxkey; i++){
+				if(bestig < this.infogains[i]){
+					bestig = this.infogains[i];
+					bestid = i;
+				}
+			}
+			this.bestgains[j] = bestid;
+			this.infogains[bestid] = Double.NEGATIVE_INFINITY;
 		}
 	}
 		
@@ -164,6 +188,13 @@ public class LogisticClassifier extends Predictor{
 	}
 	
 	private Double[] getDel(List<Instance> instances){
+//		int numFeaturesUsed;
+//		if(this.num_features_to_select == UNINITIALIZED){
+//			numFeaturesUsed = this.weights.length;
+//		}
+//		else {// use that number
+//			numFeaturesUsed = this.num_features_to_select;
+//		}
 		Double[] Del = new Double[this.weights.length];
 		for(int i = 0; i < Del.length; i++){
 			Del[i] = 0.0;
@@ -172,20 +203,17 @@ public class LogisticClassifier extends Predictor{
 		double xij;
 		Double gneg;
 		Double gpos;
-		double wxneg;
-		double wxpos;
+		double wx;
 		Double[] xi;
 		for(Instance e : instances){ //for each instance
 			if(e.getLabel().equals("0")) yi = 0;
 			else if(e.getLabel().equals("1")) yi = 1;
-			xi = e._feature_vector.getDoubles();
-
-			wxneg = dot(this.weights, scalarMultiply(-1.0, xi));
-			wxpos = dot(this.weights, xi);
-			for(int i = 0; i < this.weights.length; i++){ //for each feature
-				xij = e._feature_vector.get(i+1); //features start at 1 not 0
-				gneg = xij*getLinkFunction(wxneg);
-				gpos = -xij*getLinkFunction(wxpos);
+			xi = e._feature_vector.getDoubles(this.bestgains);
+			wx = dot(this.weights, xi);
+			for(int i = 0; i < this.bestgains.length; i++){ //for each feature
+				xij = e._feature_vector.get(bestgains[i]); //features start at 1 not 0
+				gneg = xij*getLinkFunction(-1*wx);
+				gpos = -xij*getLinkFunction(wx);
 				Del[i] += yi*gneg + (1-yi)*gpos;
 			}
 		}
@@ -232,7 +260,7 @@ public class LogisticClassifier extends Predictor{
 	@Override
 	public Label predict(Instance instance) {
 		// TODO Auto-generated method stub
-		Double[] xi = instance._feature_vector.getDoubles();
+		Double[] xi = instance._feature_vector.getDoubles(this.bestgains);
 
 		Double wx = dot(this.weights, xi);
 		double probability = getLinkFunction(wx);
