@@ -117,11 +117,11 @@ public class LogisticClassifier extends Predictor{
 			num_features_to_select = maxkey;
 		}
 		this.weights = new Double[num_features_to_select];
-		for(int i = 0; i < maxkey; i++){
+		for(int i = 0; i < num_features_to_select; i++){
 			this.infogains[i] = null;
 			this.weights[i] = 0.0;
 		}
-		for(int i = 0; i < maxkey; i++){
+		for(int i = 0; i < num_features_to_select; i++){ //all features
 			thresh_sum = 0.0;
 			px = 0;
 			pyx0 = 0;
@@ -157,7 +157,7 @@ public class LogisticClassifier extends Predictor{
 		for(int j = 0; j < num_features_to_select; j++){
 			double bestig = Double.NEGATIVE_INFINITY;
 			int bestid = 0;
-			for(int i = 0; i < maxkey; i++){
+			for(int i = 0; i < num_features_to_select; i++){
 				if(bestig < this.infogains[i]){
 					bestig = this.infogains[i];
 					bestid = i;
