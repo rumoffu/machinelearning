@@ -85,6 +85,7 @@ public class LogisticClassifier extends Predictor{
 		}
 		LogisticClassifier ml = new LogisticClassifier(0.01, -1, 20);
 		ml.train(instances);
+		System.out.println("Predicted: " + ml.predict(instance));
 		System.out.println("Done unit test for logistic classifier.");
 	}
 
@@ -164,24 +165,27 @@ public class LogisticClassifier extends Predictor{
 	
 	private Double[] getDel(List<Instance> instances){
 		Double[] Del = new Double[this.weights.length];
+		for(int i = 0; i < Del.length; i++){
+			Del[i] = 0.0;
+		}
 		double yi = 0;
 		double xij;
 		Double gneg;
 		Double gpos;
-		Double[] wxneg;
-		Double[] wxpos;
+		double wxneg;
+		double wxpos;
 		Double[] xi;
 		for(Instance e : instances){ //for each instance
 			if(e.getLabel().equals("0")) yi = 0;
 			else if(e.getLabel().equals("1")) yi = 1;
 			xi = e._feature_vector.getDoubles();
 
-			wxneg = vectorMultiply(this.weights, scalarMultiply(-1.0, xi));
-			wxpos = vectorMultiply(this.weights, xi);
+			wxneg = dot(this.weights, scalarMultiply(-1.0, xi));
+			wxpos = dot(this.weights, xi);
 			for(int i = 0; i < this.weights.length; i++){ //for each feature
 				xij = e._feature_vector.get(i+1); //features start at 1 not 0
-				gneg = xij*getLinkFunction(wxneg[i]);
-				gpos = -xij*getLinkFunction(wxpos[i]);
+				gneg = xij*getLinkFunction(wxneg);
+				gpos = -xij*getLinkFunction(wxpos);
 				Del[i] += yi*gneg + (1-yi)*gpos;
 			}
 		}
@@ -208,18 +212,36 @@ public class LogisticClassifier extends Predictor{
 		return product;
 	}
 	
-	private Double[] vectorMultiply(Double[] tomult, Double[] multiplied){
-		Double[] prod = new Double[tomult.length];
-		for(int i = 0; i < prod.length; i++){
-			prod[i] = tomult[i]*multiplied[i];
+//	private Double[] vectorMultiply(Double[] tomult, Double[] multiplied){
+//		Double[] prod = new Double[tomult.length];
+//		for(int i = 0; i < prod.length; i++){
+//			prod[i] = tomult[i]*multiplied[i];
+//		}
+//		return prod;
+//	}
+	
+	private double dot(Double[] w, Double[] x){
+		double dotsum = 0;
+		for(int i = 0; i < w.length; i++){
+			dotsum += w[i]*x[i];
 		}
-		return prod;
+	
+		return dotsum;
 	}
 
 	@Override
 	public Label predict(Instance instance) {
 		// TODO Auto-generated method stub
-		return new ClassificationLabel(1);
+		Double[] xi = instance._feature_vector.getDoubles();
+
+		Double wx = dot(this.weights, xi);
+		double probability = getLinkFunction(wx);
+		if(probability >= 0.5){
+			return new ClassificationLabel(1);
+		}
+		else{ //< 0.5
+			return new ClassificationLabel(0);
+		}
 	}
 	
 	public String toString() {
