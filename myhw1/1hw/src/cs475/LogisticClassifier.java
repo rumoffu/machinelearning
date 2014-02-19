@@ -8,6 +8,7 @@
 package cs475;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -96,11 +97,11 @@ public class LogisticClassifier extends Predictor{
 		selectFeatures(instances);
 		trainWeights(instances);
 		
-		System.out.println("start:"+num_features_to_select);
-		for(int i = 0; i < weights.length; i++){
-			System.out.println(this.weights[i]);
-		}
-		System.out.println("num:"+num_features_to_select);
+//		System.out.println("start:"+num_features_to_select);
+//		for(int i = 0; i < weights.length; i++){
+//			System.out.println(this.weights[i]);
+//		}
+//		System.out.println("num:"+num_features_to_select);
 	}
 	
 	private void selectFeatures(List<Instance> instances){
@@ -126,12 +127,12 @@ public class LogisticClassifier extends Predictor{
 			pyx0 = 0;
 			pyx1 = 0;
 			for(Instance inst : instances){
-				thresh_sum += inst._feature_vector.get(i+1);
+				thresh_sum += inst.getFeatureVector().get(i+1);
 			}
 			threshold = thresh_sum / instances.size();
 			
 			for(Instance inst: instances){
-				if(inst._feature_vector.get(i+1) < threshold){
+				if(inst.getFeatureVector().get(i+1) < threshold){
 					px++;
 					if(inst.getLabel().toString().equals("0")){
 						pyx0++;
@@ -150,7 +151,9 @@ public class LogisticClassifier extends Predictor{
 //			System.out.println("temp "+temp);
 		}
 
+
 		this.bestgains = new int[this.num_features_to_select];
+		double[] bestvalues = new double[bestgains.length];
 		for(int j = 0; j < num_features_to_select; j++){
 			double bestig = Double.NEGATIVE_INFINITY;
 			int bestid = 0;
@@ -160,9 +163,13 @@ public class LogisticClassifier extends Predictor{
 					bestid = i;
 				}
 			}
-			this.bestgains[j] = bestid;
+			this.bestgains[j] = bestid+1;
+			bestvalues[j] = bestig;
 			this.infogains[bestid] = Double.NEGATIVE_INFINITY;
+//			System.out.println("bestid: "+bestgains[j]+" bestvalues: " + bestvalues[j]);
 		}
+		Arrays.sort(bestgains); // to track weight with feature number ordering
+//		for(int j = 0; j < num_features_to_select; j++) System.out.println("bestid: "+bestgains[j]+" bestvalues: " + bestvalues[j]);
 	}
 		
 	private int getMaxFeatureKey(List<Instance> instances){
@@ -188,13 +195,7 @@ public class LogisticClassifier extends Predictor{
 	}
 	
 	private Double[] getDel(List<Instance> instances){
-//		int numFeaturesUsed;
-//		if(this.num_features_to_select == UNINITIALIZED){
-//			numFeaturesUsed = this.weights.length;
-//		}
-//		else {// use that number
-//			numFeaturesUsed = this.num_features_to_select;
-//		}
+
 		Double[] Del = new Double[this.weights.length];
 		for(int i = 0; i < Del.length; i++){
 			Del[i] = 0.0;
@@ -204,18 +205,24 @@ public class LogisticClassifier extends Predictor{
 		Double gneg;
 		Double gpos;
 		double wx;
-		Double[] xi;
+		Double[] xi = new Double[bestgains.length];
 		for(Instance e : instances){ //for each instance
 			if(e.getLabel().equals("0")) yi = 0;
 			else if(e.getLabel().equals("1")) yi = 1;
-			xi = e._feature_vector.getDoubles(this.bestgains);
-			wx = dot(this.weights, xi);
-			for(int i = 0; i < this.bestgains.length; i++){ //for each feature
-				xij = e._feature_vector.get(bestgains[i]); //features start at 1 not 0
-				gneg = xij*getLinkFunction(-1*wx);
-				gpos = -xij*getLinkFunction(wx);
-				Del[i] += yi*gneg + (1-yi)*gpos;
+			
+			for(int i = 0; i < xi.length; i++){
+				xi[i] = e.getFeatureVector().get(bestgains[i]);
 			}
+			Del = vectorAdd(Del, vectorAdd(scalarMultiply(yi*getLinkFunction(-1*dot(weights,xi)),xi),scalarMultiply((1-yi)*getLinkFunction(dot(weights,xi)), scalarMultiply(-1,xi))));
+			
+//			xi = e.getFeatureVector().getDoubles(this.bestgains);
+//			wx = dot(this.weights, xi);
+//			for(int i = 0; i < this.bestgains.length; i++){ //for each feature
+//				xij = e.getFeatureVector().get(bestgains[i]); //features start at 1 not 0
+//				gneg = xij*getLinkFunction(-1*wx);
+//				gpos = -xij*getLinkFunction(wx);
+//				Del[bestgains[i]-1] += yi*gneg + (1-yi)*gpos;
+//			}
 		}
 		return Del;
 	}
@@ -260,8 +267,13 @@ public class LogisticClassifier extends Predictor{
 	@Override
 	public Label predict(Instance instance) {
 		// TODO Auto-generated method stub
-		Double[] xi = instance._feature_vector.getDoubles(this.bestgains);
-
+		Double[] xi = instance.getFeatureVector().getDoubles(this.bestgains);
+		
+//		Double[] xi = new Double[bestgains.length];
+//		for(int i = 0; i < xi.length; i++){
+//			xi[i] = instance.getFeatureVector().get(bestgains[i]);
+//		}
+		
 		Double wx = dot(this.weights, xi);
 		double probability = getLinkFunction(wx);
 		if(probability >= 0.5){
