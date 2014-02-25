@@ -17,5 +17,5 @@ Deleted Clauses					0
 Added Conflict Literals				0
 Deleted (Total) Literals			0
 Number of Implication				9
-Total Run Time					0
+Total Run Time					0.001
 RESULT:	SAT
