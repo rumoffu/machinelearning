@@ -2,7 +2,7 @@
 import os, subprocess
 
 def main():
-  for enc in os.listdir('.'):
+  for enc in sorted(os.listdir('.')):
     basefn, ext = os.path.splitext(enc)
     if enc.endswith('.enc'):# and (basefn + '.ans' not in os.listdir('.')):
       cmd = 'convertToDIMACS {enc} > {basefn}.cnf'.format(**locals())
@@ -14,9 +14,14 @@ def main():
       cmd = 'readOutput {basefn}.output {basefn}.key > {basefn}.ans'.format(**locals())
       #print cmd
       subprocess.call(cmd, shell=True)
-      cmd = 'cat {basefn}.ans'.format(**locals())
+
+      cmd = 'cat {basefn}.enc'.format(**locals())
       print cmd
       subprocess.call(cmd, shell=True)
+      cmd = 'cat {basefn}.ans | sort'.format(**locals())
+      print cmd
+      subprocess.call(cmd, shell=True)
+      print
 
 ## Function to call main
 if __name__ == '__main__':
