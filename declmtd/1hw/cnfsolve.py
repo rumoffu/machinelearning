@@ -4,7 +4,7 @@ import os, subprocess
 def main():
   for enc in os.listdir('.'):
     basefn, ext = os.path.splitext(enc)
-    if enc.endswith('.enc') and (basefn + '.ans' not in os.listdir('.')):
+    if enc.endswith('.enc'):# and (basefn + '.ans' not in os.listdir('.')):
       cmd = 'convertToDIMACS {enc} > {basefn}.cnf'.format(**locals())
       #print cmd
       subprocess.call(cmd, shell=True)
@@ -15,7 +15,7 @@ def main():
       #print cmd
       subprocess.call(cmd, shell=True)
       cmd = 'cat {basefn}.ans'.format(**locals())
-      #print cmd
+      print cmd
       subprocess.call(cmd, shell=True)
 
 ## Function to call main
