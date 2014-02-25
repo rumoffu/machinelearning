@@ -1,0 +1,8 @@
+c 6d2.cnf
+c Auto-generated DIMACS CNF file created by convertToDIMACS
+p cnf 2 5
+1 -2 0 
+-1 2 0 
+1 2 0 
+-1 -2 0 
+2 0

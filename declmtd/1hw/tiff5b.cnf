@@ -1,0 +1,9 @@
+c tiff5b.cnf
+c Auto-generated DIMACS CNF file created by convertToDIMACS
+p cnf 3 6
+-1 -2 3 0 
+1 2 0 
+1 -3 0 
+-2 -3 0 
+2 3 0 
+3 -1 0

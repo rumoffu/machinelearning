@@ -1,0 +1,2 @@
+(~C v ~D v E) & (~C v E)
+& (~D v ~E) & (D v ~E)
