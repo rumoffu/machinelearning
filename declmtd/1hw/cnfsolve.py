@@ -5,16 +5,16 @@ def main():
   for enc in os.listdir('.'):
     basefn, ext = os.path.splitext(enc)
     if enc.endswith('.enc') and (basefn + '.ans' not in os.listdir('.')):
-      cmd = 'convertToDIMACS {enc} > {basefn}.cnf'.format(enc=enc, basefn=basefn)
+      cmd = 'convertToDIMACS {enc} > {basefn}.cnf'.format(**locals())
       #print cmd
       subprocess.call(cmd, shell=True)
-      cmd = 'zchaff {basefn}.cnf > {basefn}.output'.format(basefn=basefn)
+      cmd = 'zchaff {basefn}.cnf > {basefn}.output'.format(**locals())
       #print cmd
       subprocess.call(cmd, shell=True)
-      cmd = 'readOutput {basefn}.output {basefn}.key > {basefn}.ans'.format(basefn=basefn)
+      cmd = 'readOutput {basefn}.output {basefn}.key > {basefn}.ans'.format(**locals())
       #print cmd
       subprocess.call(cmd, shell=True)
-      cmd = 'cat {basefn}.ans'.format(basefn=basefn)
+      cmd = 'cat {basefn}.ans'.format(**locals())
       #print cmd
       subprocess.call(cmd, shell=True)
 
