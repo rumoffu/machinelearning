@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+## This program runs all .enc files through DIMACS and zchaff and outputs the formula and the resulting answer
+
 import os, subprocess
 
 def main():
