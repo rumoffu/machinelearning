@@ -16,9 +16,9 @@ import os, subprocess
 def main():
   dict_fn = 'microwords'
   puzz_fn = 'micro.puzzle'
-  word_dict = readDict(dict_fn)
+  #word_dict = readDict(dict_fn)
   readPuzzle(puzz_fn)
-  encodeDict(puzz_fn, word_dict)
+  #encodeDict(puzz_fn, word_dict)
 
 def readDict(dict_fn):
   dic = open(dict_fn, 'r')
@@ -79,6 +79,19 @@ def encodeDict(puzz_fn, word_dict):
 
 def readPuzzle(puzz_fn):
   puzz = open(puzz_fn, 'r')
+  size = puzz.readline().strip().split()
+  x = int(size[0])
+  y = int(size[1])
+  grid = [['' for i in xrange(x)] for i in xrange(y)]
+  linenum = 0
+  for line in puzz.readlines():
+    line = line.strip()
+    grid[linenum] = []
+    for char in line:
+      grid[linenum].append(char)
+    linenum = linenum + 1
+  for line in grid:
+    print line
   #print 'opened %s' % puzz_fn
   # Read and do the work.
 
