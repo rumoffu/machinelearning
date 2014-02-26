@@ -7,28 +7,39 @@ February 26, 2014
 
 PROBLEM 7
 ----------
-a) The input consists of a partially-filled grid and the dictionary; the task is to replace the "." in the grid with words from the dictionary. In order to find a solution, a set of words must first be selected from the dictionary. Since the solver doesn't know what set will work, it must methodically select a set of words from the dictionary. This is the generate step of the generate-and-test algorithm. Once a set of words is selected, the solver must test whether the set satisfies the grid by attempting to fill in the grid with the words such that every horizontal and vertical string bordered by "#" is an English word. The solver must continue generating sets of words and checking whether they fit in the grid without breaking the constraints until a satisfying set is found.
+a) The input consists of a partially-filled grid and the dictionary; the task is to replace the "." in the grid with words from the dictionary. In order to find a solution, letters must first be selected to fill the grid with. Since the solver doesn't know what set of letters will work, it must select methodicallyor randomly. This is the generate step of the generate-and-test algorithm. Once letters are selected, the solver must test whether every filled-in word in the grid is in the dictionary. The solver must continue generating sets of letters and checking whether they fit into the grid without breaking the constraints until a satisfying set is found. The test is in polynomial time because the grid is limited in size to O(n^2).
 
 b) We must show that the crossword construction problem is reducible to another, known NP-hard problem. This can be done by finding a transformation that encodes the crossword problem into the form of the known NP-hard problem.
 
 
 PROBLEM 8
 ----------
+First, the dictionary file was read and the data stored in a Python dictionary whose keys are prefixes of the dictionary words and whose values are lists of characters that could follow each prefix. Each word is added by first checking that the dictionary contains a list with word's prefix as its key, or creating such a list if it does not yet exist; lists will be added for prefixes of length 1 to 1 + the length of the word, which accounts for the "#".
+
+The puzzle is then read in to determine whether a "#", ".", or letter inhabits each square, and we track the puzzle contents with a 2d array which in python is a list of lists we called grid.
+
+Then, we encode the puzzle contents in CNF by writing a clause to ensure each "#" stays in the puzzle, each "." gets replaced with a letter and not a "#", and that each already filled in letter stays in the puzzle. Next, we write CNF clauses to ensure that if a square has one letter, then it does not have any other letter.
+
+Finally, we encode the dictionary words themselves for each square of the grid.  So the CNF clauses are that, if a word's prefix is present, then the following letter must be one of the letters that leads to a finished word.  We write this for words going vertically down, and then we repeat it for words going horizontally across for every square.  That entire CNF coding thus should require the SAT solver to find a satisfying assignment which solves the crossword.   
+
 a) The "#" can only be included in sets for which ending the string with the end-of-word "#" character would result in a word recognized as valid.
 
-b) The finished puzzle should be a 4x4 grid with a border of "#" all around, leaving a 2x2 square in the center for the letters. The top left space of this square must be an "o", while the bottom right space must be an "i". By the words contained in the microwords file, the remaining two spaces can be either "h" or "f"
+b) The finished puzzle should be a 4x4 grid with a border of "#" all around, leaving a 2x2 square in the center for the letters. Using the microwords dictionary, the top left space of this square must be an "o", while the bottom right space must be an "i". By the words contained in the microwords file, the remaining two spaces can be either "h" or "f"
 
-c) 
+c) The CNF should have clauses encoding the "jigsaw-type" prefix constraints, as well as clauses to limit each space in the grid to one letter or "#".
 
 d) The constraints for the partly-filled grid should include all of those required for the unfilled grid except those that constrain the now-filled squares. Let one such filled square be located at (n, m) in the grid and contain the letter "*". Then, propagate the variable *_n_m, which indicates whether or not the letter "*" occupies the space at (n, m). Doing so leaves the clauses that constrain all of the squares except those already filled.
 
 e) One data structure could be a dictionary with string keys and list values. The keys would be the prefixes to the words in the dictionary and could range in length from 1 to the length of the word + 2, due to the "#" characters that begin and end a word. The lists would hold all of the letters, including the delimiter "#", if applicable, that could follow the prefix according to the dictionary.
 
-f) 
+f) The decoder should traverse the variable assignments outputted by the solver and search for any variables with true assignments. The decoder should then take each of these variables and parse its name to determine what space it refers to and what character should occupy that space. Storing all of these characters into a 2D arrays, nested for loops could then print the completed grid.
 
 PROBLEM 10
 -----------
-
+We were unable to complete a fully-functional encode script, so we were unable to test the effect of using UBC-SAT instead of zchaff.
+However, we hypothesize that UBC-SAT would run faster than zchaff because the former is stochastic. Thus, UBC-SAT would finish early since it doesn't check all of the possibilities.
 
 PROBLEM 11
 -----------
+We were unable to complete a fully-functional encode script, so we were unable to build on it to write a encoder for weighted CNF.
+b) We hypothesize that the UBC-SAT will still be faster than SAT4J, but SAT4J will be guaranteed to find a satisfying assignment while UBC-SAT may not since it is random.
