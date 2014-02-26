@@ -52,6 +52,7 @@ def readDict(dict_fn):
   return word_dict
 
 def encodeDict(puzz_fn, word_dict, grid):
+  temp = open('temp_fn', 'w')
   #encode dictionary entries as cnf
   puzz = open(puzz_fn, 'r')
   size = puzz.readline().strip().split()
@@ -82,6 +83,7 @@ def encodeDict(puzz_fn, word_dict, grid):
             clause = clause + '{let}_{col}_{row} v '.format(**locals())
           clause = clause[:-3] + ')'#cut off + v that overhangs
           print clause + ' & '
+          temp.write(clause + ' & \n')
           #print prefix, nextlets
 
 
@@ -116,6 +118,7 @@ def encodeDict(puzz_fn, word_dict, grid):
     #print ans
 
 def readPuzzle(puzz_fn):
+  temp = open('ttemp_fn', 'w')
   puzz = open(puzz_fn, 'r')
   size = puzz.readline().strip().split()
   x = int(size[0])
@@ -139,10 +142,12 @@ def readPuzzle(puzz_fn):
         for let in atoz:
           pclause = pclause + '{let}_{col}_{row} v '.format(**locals())
         pclause = pclause[:-3] + ')'#cut off + v that overhangs
+        pclause = pclause + ' & (~#_{col}_{row})'.format(**locals()) #do not allow hashtag here
       else:
         inputchar = grid[col][row]
         pclause = pclause + '({inputchar}_{col}_{row})'.format(**locals())
       print pclause + ' & '
+      temp.write(pclause + ' & \n')
   
   #ensure only 1 letter per square
   xclause = ''
