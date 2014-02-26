@@ -16,16 +16,16 @@ import os, subprocess
 def main():
   dict_fn = 'microwords'
   puzz_fn = 'micro.puzzle'
-  #word_dict = readDict(dict_fn)
+  word_dict = readDict(dict_fn)
   readPuzzle(puzz_fn)
-  #encodeDict(puzz_fn, word_dict)
+  encodeDict(puzz_fn, word_dict)
 
 def readDict(dict_fn):
   dic = open(dict_fn, 'r')
   # Add # and all single letters to dictionary.
   word_dict = {}
   word_dict['#'] = []
-  atoz = map(chr, range(97, 123)) 
+  atoz = []#map(chr, range(97, 123)) 
   for let in atoz:
     word_dict['#'].append(let)
     word_dict['#' + let] = []
@@ -72,7 +72,7 @@ def encodeDict(puzz_fn, word_dict):
         for let in nextlets:
           clause = clause + '{let}_{col}_{row} v '.format(**locals())
         clause = clause[:-3] + ')'#cut off + v that overhangs
-        print clause
+        print clause + ' & '
   #for ans in word_dict['#o']:
     #print ans
 
@@ -89,8 +89,8 @@ def readPuzzle(puzz_fn):
     for char in line:
       grid[linenum].append(char)
     linenum = linenum + 1
-  for line in grid:
-    print line
+  #for line in grid:
+    #print line
   atoz = map(chr, range(97, 123)) 
   for col in xrange(x):
     for row in xrange(y):
@@ -99,10 +99,24 @@ def readPuzzle(puzz_fn):
         pclause = pclause + '('
         for let in atoz:
           pclause = pclause + '{let}_{col}_{row} v '.format(**locals())
-        pclause = pclause[:-3] + ')\n &'#cut off + v that overhangs
+        pclause = pclause[:-3] + ')'#cut off + v that overhangs
       else:
-        pclause = pclause + '(#_{col}_{row})\n & '.format(**locals())
-      print pclause
+        pclause = pclause + '(#_{col}_{row})'.format(**locals())
+      print pclause + ' & '
+  
+  #ensure only 1 letter per square
+  xclause = ''
+  for col in xrange(x):
+    for row in xrange(y):
+      if grid[col][row] == '.':
+        for let in atoz:
+          xclause = ''
+          for nonlet in atoz:
+            if nonlet != let:
+              xclause = xclause + '(~{let}_{col}_{row} v ~{nonlet}_{col}_{row}) & '.format(**locals())
+          xclause = xclause[:-3] + ')'
+          print xclause + ' & '
+
   #print 'opened %s' % puzz_fn
   # Read and do the work.
 
