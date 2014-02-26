@@ -3,7 +3,7 @@ Solving 6b.cnf ......
 
 c 6 Clauses are true, Verify Solution successful.
 Instance Satisfiable
--1 -2 -3 Random Seed Used				0
+-1 2 -3 Random Seed Used				0
 Max Decision Level				1
 Num. of Decisions				2
 ( Stack + Vsids + Shrinking Decisions )		0 + 1 + 0
