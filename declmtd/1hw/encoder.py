@@ -1,8 +1,17 @@
 #!/usr/bin/env python
-## This program runs through the dictionary and writes CNF clauses for each word including 1letter a-z
+
+#######################################
+##  Kyle Wong, Tifany Yung
+##  kwong23@jhu.edu, tyung1@jhu.edu
+##  February 26, 2014
+##  Declarative Methods Assignment 1
+#######################################
+
+
+## This program traverses the dictionary and writes CNF clauses for each word, including each letter a-z.
+## This script reads in a word dictionary and a puzzle format file, and outputs a CNF encoding to stdout.
 
 import os, subprocess
-#This script reads in a word dictionary and a puzzle file and outputs a CNF encoding to stdout
 
 def main():
   dict_fn = 'microwords'
@@ -13,7 +22,7 @@ def main():
 
 def readDict(dict_fn):
   dic = open(dict_fn, 'r')
-  # add # and all single letters to dictionary
+  # Add # and all single letters to dictionary.
   word_dict = {}
   word_dict['#'] = []
   atoz = map(chr, range(97, 123)) 
@@ -21,8 +30,9 @@ def readDict(dict_fn):
     word_dict['#'].append(let)
     word_dict['#' + let] = []
     word_dict['#' + let].append('#')
+    # Since every letter is considered a valid word.
 
-  #go through dictionary and add the words
+  # Go through dictionary and add the words.
   for word in dic:
     word = word.strip() + '#'
     for i in xrange(len(word)):
@@ -32,7 +42,14 @@ def readDict(dict_fn):
       else:
           word_dict['#' + word[0:i]] = []
           word_dict['#' + word[0:i]].append(word[i])
+<<<<<<< HEAD
   return word_dict
+=======
+      # Print word[0:i].
+      # Print 'word[i] %s ' % word[i].
+      
+ 
+>>>>>>> e95fa938736393612cc4e59ae3ac7e9f99d7004d
 
 def encodeDict(puzz_fn, word_dict):
   #encode dictionary entries as cnf
@@ -66,7 +83,7 @@ def encodeDict(puzz_fn, word_dict):
 def readPuzzle(puzz_fn):
   puzz = open(puzz_fn, 'r')
   print 'opened %s' % puzz_fn
-  #read and do work
+  # Read and do the work.
 
 
 ## Function to call main
