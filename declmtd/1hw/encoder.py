@@ -19,6 +19,7 @@ def main():
   word_dict = readDict(dict_fn)
   readPuzzle(puzz_fn)
   encodeDict(puzz_fn, word_dict)
+  enforceSingular(puzz_fn)
 
 def readDict(dict_fn):
   dic = open(dict_fn, 'r')
@@ -73,7 +74,7 @@ def encodeDict(puzz_fn, word_dict):
           clause = clause + '{let}_{col}_{row} v '.format(**locals())
         clause = clause[:-3] + ')'#cut off + v that overhangs
         print clause + ' & '
-  #for ans in word_dict['#o']:
+#for ans in word_dict['#o']:
     #print ans
 
 def readPuzzle(puzz_fn):
@@ -117,9 +118,33 @@ def readPuzzle(puzz_fn):
           xclause = xclause[:-3] + ')'
           print xclause + ' & '
 
-  #print 'opened %s' % puzz_fn
+  print "end readPuzz"
+#print 'opened %s' % puzz_fn
   # Read and do the work.
 
+def enforceSingular(puzz_fn):
+  puzz = open(puzz_fn, 'r')
+  size = puzz.readline().strip().split()
+  x = int(size[0])
+  y = int(size[1])
+  atoz = map(chr, range(97, 123))
+
+  for col in xrange(x):
+    for row in xrange(y):
+      sclause = ''
+      for let in atoz:
+        sclause = sclause + '(~#_{col}_{row} v ~{let}_{col}_{row}) & '.format(**locals())
+      sclause = sclause[:-3] + ')'
+      print sclause + ' & '
+
+  for col in xrange(x):
+    for row in xrange(y):
+      sclause = ''
+      for let in atoz:
+        for inlet in atoz:
+          sclause = sclause + '(~{let}_{col}_{row} v ~{inlet}_{col}_{row}) & '.format(**locals())
+        sclause = sclause[:-3] + ')'
+        print sclause + ' & '
 
 ## Function to call main
 if __name__ == '__main__':
