@@ -1,5 +1,0 @@
-c fail.cnf
-c Auto-generated DIMACS CNF file created by convertToDIMACS
-p cnf 1 2
-1 0 
--1 0

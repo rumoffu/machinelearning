@@ -1,5 +1,0 @@
-c 6a.cnf
-c Auto-generated DIMACS CNF file created by convertToDIMACS
-p cnf 2 2
-1 -2 0 
--1 2 0

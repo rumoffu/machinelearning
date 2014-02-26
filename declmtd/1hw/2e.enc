@@ -1,1 +1,0 @@
-(~X v A) & (X v B) & (X v ~Y v C) & (X v Y v D) & (X v Y v ~Z v E) & (X v Y v Z v F) & (X v Y v Z v G)
