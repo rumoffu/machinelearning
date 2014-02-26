@@ -100,7 +100,7 @@ def encodeDict(puzz_fn, word_dict):
             clause = clause + ' v '
         if rowoffset < 0:
           continue
-        clause = clause + ') v ('
+        clause = clause + ' v '
         for let in nextlets:
           clause = clause + '{let}_{col}_{row} v '.format(**locals())
         clause = clause[:-3] + ')'#cut off + v that overhangs
