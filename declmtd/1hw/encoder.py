@@ -19,7 +19,7 @@ def main():
   word_dict = readDict(dict_fn)
   readPuzzle(puzz_fn)
   encodeDict(puzz_fn, word_dict)
-  enforceSingular(puzz_fn)
+  #enforceSingular(puzz_fn)
 
 def readDict(dict_fn):
   dic = open(dict_fn, 'r')
@@ -43,6 +43,9 @@ def readDict(dict_fn):
       else:
           word_dict['#' + word[0:i]] = []
           word_dict['#' + word[0:i]].append(word[i])
+  #for key, value in word_dict.iteritems():
+    #print key, value
+
   return word_dict
 
 def encodeDict(puzz_fn, word_dict):
@@ -51,6 +54,7 @@ def encodeDict(puzz_fn, word_dict):
   size = puzz.readline().strip().split()
   x = int(size[0])
   y = int(size[1])
+  #for horizontal dictionary words
   for prefix, nextlets in word_dict.iteritems():
     for col in xrange(x):
       for row in xrange(y):
@@ -69,11 +73,40 @@ def encodeDict(puzz_fn, word_dict):
             clause = clause + ' v '
         if coloffset < 0:
           continue
+        clause = clause + ' v '
+        for let in nextlets:
+          clause = clause + '{let}_{col}_{row} v '.format(**locals())
+        clause = clause[:-3] + ')'#cut off + v that overhangs
+        print clause + ' & '
+        #print prefix, nextlets
+
+
+  #for vertical dictionary words
+  for prefix, nextlets in word_dict.iteritems():
+    for col in xrange(x):
+      for row in xrange(y):
+        #for i in xrange(len(prefix)):
+        i = 0
+        clause = '('
+        while i < len(prefix):
+          offset = len(prefix) - i
+          rowoffset = row - offset
+          prefixi = prefix[i]
+          if rowoffset < 0:
+            break
+          clause = clause + '~{prefixi}_{col}_{rowoffset}'.format(**locals())
+          i = i + 1
+          if (i < len(prefix)):
+            clause = clause + ' v '
+        if rowoffset < 0:
+          continue
         clause = clause + ') v ('
         for let in nextlets:
           clause = clause + '{let}_{col}_{row} v '.format(**locals())
         clause = clause[:-3] + ')'#cut off + v that overhangs
         print clause + ' & '
+        #print prefix, nextlets
+
 #for ans in word_dict['#o']:
     #print ans
 
@@ -115,10 +148,10 @@ def readPuzzle(puzz_fn):
           for nonlet in atoz:
             if nonlet != let:
               xclause = xclause + '(~{let}_{col}_{row} v ~{nonlet}_{col}_{row}) & '.format(**locals())
+              #xclause = xclause + '(~{let}_{col}_{row} v ~{nonlet}_{col}_{row}) & ({let}_{col}_{row} v {nonlet}_{col}_{row}) & '.format(**locals())
           xclause = xclause[:-3] + ')'
           print xclause + ' & '
 
-  print "end readPuzz"
 #print 'opened %s' % puzz_fn
   # Read and do the work.
 
@@ -133,7 +166,7 @@ def enforceSingular(puzz_fn):
     for row in xrange(y):
       sclause = ''
       for let in atoz:
-        sclause = sclause + '(~#_{col}_{row} v ~{let}_{col}_{row}) & '.format(**locals())
+        sclause = sclause + '(~#_{col}_{row} v {let}_{col}_{row}) & (#_{col}_{row} v ~{let}_{col}_{row}) & '.format(**locals())
       sclause = sclause[:-3] + ')'
       print sclause + ' & '
 
@@ -142,9 +175,9 @@ def enforceSingular(puzz_fn):
       sclause = ''
       for let in atoz:
         for inlet in atoz:
-          sclause = sclause + '(~{let}_{col}_{row} v ~{inlet}_{col}_{row}) & '.format(**locals())
+          sclause = sclause + '(~#_{col}_{row} v {let}_{col}_{row}) & (#_{col}_{row} v ~{let}_{col}_{row}) & '.format(**locals())
         sclause = sclause[:-3] + ')'
-        print sclause + ' & '
+      print sclause + ' & '
 
 ## Function to call main
 if __name__ == '__main__':

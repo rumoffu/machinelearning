@@ -18,12 +18,12 @@ def main():
       subprocess.call(cmd, shell=True)
 
       cmd = 'cat {basefn}.enc'.format(**locals())
-      print cmd
-      subprocess.call(cmd, shell=True)
+      #print cmd
+      #subprocess.call(cmd, shell=True)
       cmd = 'cat {basefn}.ans | sort'.format(**locals())
-      print cmd
-      subprocess.call(cmd, shell=True)
-      print
+      #print cmd
+      #subprocess.call(cmd, shell=True)
+      #print
 
 ## Function to call main
 if __name__ == '__main__':

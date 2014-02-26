@@ -12,14 +12,19 @@
 ## This script reads in a word dictionary and a puzzle format file, and outputs a CNF encoding to stdout.
 
 import os, subprocess
-
+import sys
 def main():
   fn = 'micro'
+  fn = os.path.splitext(sys.argv[1])[0]
+  print fn
   decode(fn)
 
 def decode(fn):
   puz = open(fn + '.puzzle', 'r')
-  ans = open(fn + '.ans', 'r')
+  ansfn = sys.argv[2]
+  #ans = open(fn + '.ans', 'r')
+  ans = open(ansfn, 'r')
+  print ansfn
   header = puz.readline().strip().split()
   x = int(header[0])
   y = int(header[1])
