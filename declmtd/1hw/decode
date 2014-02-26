@@ -34,8 +34,9 @@ def decode(fn):
       continue
     line = line.strip()
     pieces = line.split('_')
-    if(grid[int(pieces[2])][int(pieces[1])] != '#'):
-      grid[int(pieces[2])][int(pieces[1])] = pieces[0]
+    #if(grid[int(pieces[2])][int(pieces[1])] != '#'):
+      #grid[int(pieces[2])][int(pieces[1])] = pieces[0]
+    grid[int(pieces[2])][int(pieces[1])] = pieces[0]
 
   print str(x) + " " + str(y)
   for line in grid:
