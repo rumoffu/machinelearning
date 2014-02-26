@@ -42,14 +42,7 @@ def readDict(dict_fn):
       else:
           word_dict['#' + word[0:i]] = []
           word_dict['#' + word[0:i]].append(word[i])
-<<<<<<< HEAD
   return word_dict
-=======
-      # Print word[0:i].
-      # Print 'word[i] %s ' % word[i].
-      
- 
->>>>>>> e95fa938736393612cc4e59ae3ac7e9f99d7004d
 
 def encodeDict(puzz_fn, word_dict):
   #encode dictionary entries as cnf
