@@ -60,10 +60,14 @@ def encodeDict(puzz_fn, word_dict):
           offset = len(prefix) - i
           coloffset = col - offset
           prefixi = prefix[i]
+          if coloffset < 0:
+            break
           clause = clause + '~{prefixi}_{coloffset}_{row}'.format(**locals())
           i = i + 1
           if (i < len(prefix)):
             clause = clause + ' v '
+        if coloffset < 0:
+          continue
         clause = clause + ') v ('
         for let in nextlets:
           clause = clause + '{let}_{col}_{row} v '.format(**locals())
@@ -75,7 +79,7 @@ def encodeDict(puzz_fn, word_dict):
 
 def readPuzzle(puzz_fn):
   puzz = open(puzz_fn, 'r')
-  print 'opened %s' % puzz_fn
+  #print 'opened %s' % puzz_fn
   # Read and do the work.
 
 
