@@ -20,15 +20,24 @@ def main():
 def decode(fn):
   puz = open(fn + '.puzzle', 'r')
   ans = open(fn + '.ans', 'r')
+  header = puz.readline().strip().split()
+  x = int(header[0])
+  y = int(header[1])
+  grid = [['' for j in range(y)] for i in range(x)]
   for line in ans:
     if line[0] == '-': #not an answer
       continue
+    line = line.strip()
     pieces = line.split('_')
-    grid = [[]]
-    linenum = 0
-    grid[linenum] = []
     grid[int(pieces[2])][int(pieces[1])] = pieces[0]
 
+  print str(x) + " " + str(y)
+  for line in grid:
+     # print line
+     holdLine = ""
+     for item in line:
+       holdLine = holdLine + item + " "
+     print holdLine
 
 ## Function to call main
 if __name__ == '__main__':
