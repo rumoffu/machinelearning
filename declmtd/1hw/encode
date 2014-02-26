@@ -29,7 +29,7 @@ def readDict(dict_fn):
   # Add # and all single letters to dictionary.
   word_dict = {}
   word_dict['#'] = []
-  atoz = []#map(chr, range(97, 123)) 
+  atoz = map(chr, range(97, 123)) #[]
   for let in atoz:
     word_dict['#'].append(let)
     word_dict['#' + let] = []
@@ -140,7 +140,8 @@ def readPuzzle(puzz_fn):
           pclause = pclause + '{let}_{col}_{row} v '.format(**locals())
         pclause = pclause[:-3] + ')'#cut off + v that overhangs
       else:
-        pclause = pclause + '(#_{col}_{row})'.format(**locals())
+        inputchar = grid[col][row]
+        pclause = pclause + '({inputchar}_{col}_{row})'.format(**locals())
       print pclause + ' & '
   
   #ensure only 1 letter per square
