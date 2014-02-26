@@ -1,30 +1,24 @@
 #!/usr/bin/env python
-## This program runs all .enc files through DIMACS and zchaff and outputs the formula and the resulting answer
+## This program runs through the dictionary and writes CNF clauses for each word including 1letter a-z
 
 import os, subprocess
+#This script reads in a word dictionary and a puzzle file and outputs a CNF encoding to stdout
 
 def main():
-  for enc in sorted(os.listdir('.')):
-    basefn, ext = os.path.splitext(enc)
-    if enc.endswith('.enc'):# and (basefn + '.ans' not in os.listdir('.')):
-      cmd = 'convertToDIMACS {enc} > {basefn}.cnf'.format(**locals())
-      #print cmd
-      subprocess.call(cmd, shell=True)
-      cmd = 'zchaff {basefn}.cnf > {basefn}.output'.format(**locals())
-      #print cmd
-      subprocess.call(cmd, shell=True)
-      cmd = 'readOutput {basefn}.output {basefn}.key > {basefn}.ans'.format(**locals())
-      #print cmd
-      subprocess.call(cmd, shell=True)
+  dict_fn = ''
+  puzz_fn = ''
+  readDict(dict_fn)
+  readPuzzle(puzz_fn)
 
-      cmd = 'cat {basefn}.enc'.format(**locals())
-      print cmd
-      subprocess.call(cmd, shell=True)
-      cmd = 'cat {basefn}.ans | sort'.format(**locals())
-      print cmd
-      subprocess.call(cmd, shell=True)
-      print
+def readDict(dict_fn):
+  dic = open(dict_fn, 'r')
+  #read and do work
+
+def readPuzzle(puzz_fn):
+  puzz = open(puzz_fn, 'r')
+  #read and do work
 
 ## Function to call main
 if __name__ == '__main__':
   main()
+  
