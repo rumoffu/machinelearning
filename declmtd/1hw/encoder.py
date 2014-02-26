@@ -71,8 +71,7 @@ def encodeDict(puzz_fn, word_dict):
         clause = clause + ') v ('
         for let in nextlets:
           clause = clause + '{let}_{col}_{row} v '.format(**locals())
-        clause = clause[:-3] #cut off + v that overhangs
-        clause = clause + ')'
+        clause = clause[:-3] + ')'#cut off + v that overhangs
         print clause
   #for ans in word_dict['#o']:
     #print ans
@@ -82,7 +81,7 @@ def readPuzzle(puzz_fn):
   size = puzz.readline().strip().split()
   x = int(size[0])
   y = int(size[1])
-  grid = [['' for i in xrange(x)] for i in xrange(y)]
+  grid = [['' for i in xrange(y)] for i in xrange(x)]
   linenum = 0
   for line in puzz.readlines():
     line = line.strip()
@@ -92,6 +91,18 @@ def readPuzzle(puzz_fn):
     linenum = linenum + 1
   for line in grid:
     print line
+  atoz = map(chr, range(97, 123)) 
+  for col in xrange(x):
+    for row in xrange(y):
+      pclause = ''
+      if grid[col][row] == '.':
+        pclause = pclause + '('
+        for let in atoz:
+          pclause = pclause + '{let}_{col}_{row} v '.format(**locals())
+        pclause = pclause[:-3] + ')\n &'#cut off + v that overhangs
+      else:
+        pclause = pclause + '(#_{col}_{row})\n & '.format(**locals())
+      print pclause
   #print 'opened %s' % puzz_fn
   # Read and do the work.
 
