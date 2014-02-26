@@ -7,8 +7,9 @@ import os, subprocess
 def main():
   dict_fn = 'microwords'
   puzz_fn = 'micro.puzzle'
-  readDict(dict_fn)
+  word_dict = readDict(dict_fn)
   readPuzzle(puzz_fn)
+  encodeDict(puzz_fn, word_dict)
 
 def readDict(dict_fn):
   dic = open(dict_fn, 'r')
@@ -31,13 +32,36 @@ def readDict(dict_fn):
       else:
           word_dict['#' + word[0:i]] = []
           word_dict['#' + word[0:i]].append(word[i])
-      #print word[0:i]
-      #print 'word[i] %s ' % word[i]
-      
- 
+  return word_dict
 
-  for ans in word_dict['#o']:
-    print ans
+def encodeDict(puzz_fn, word_dict):
+  #encode dictionary entries as cnf
+  puzz = open(puzz_fn, 'r')
+  size = puzz.readline().strip().split()
+  x = int(size[0])
+  y = int(size[1])
+  for prefix, nextlets in word_dict.iteritems():
+    for col in xrange(x):
+      for row in xrange(y):
+        #for i in xrange(len(prefix)):
+        i = 0
+        clause = '('
+        while i < len(prefix):
+          offset = len(prefix) - i
+          coloffset = col - offset
+          prefixi = prefix[i]
+          clause = clause + '~{prefixi}_{coloffset}_{row}'.format(**locals())
+          i = i + 1
+          if (i < len(prefix)):
+            clause = clause + ' v '
+        clause = clause + ') v ('
+        for let in nextlets:
+          clause = clause + '{let}_{col}_{row} v '.format(**locals())
+        clause = clause[:-3] #cut off + v that overhangs
+        clause = clause + ')'
+        print clause
+  #for ans in word_dict['#o']:
+    #print ans
 
 def readPuzzle(puzz_fn):
   puzz = open(puzz_fn, 'r')
