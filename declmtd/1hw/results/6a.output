@@ -1,0 +1,21 @@
+Z-Chaff Version: zChaff 2007.3.12
+Solving 6a.cnf ......
+
+c 2 Clauses are true, Verify Solution successful.
+Instance Satisfiable
+1 2 Random Seed Used				0
+Max Decision Level				1
+Num. of Decisions				2
+( Stack + Vsids + Shrinking Decisions )		0 + 1 + 0
+Original Num Variables				2
+Original Num Clauses				2
+Original Num Literals				4
+Added Conflict Clauses				0
+Num of Shrinkings				0
+Deleted Conflict Clauses			0
+Deleted Clauses					0
+Added Conflict Literals				0
+Deleted (Total) Literals			0
+Number of Implication				2
+Total Run Time					0
+RESULT:	SAT

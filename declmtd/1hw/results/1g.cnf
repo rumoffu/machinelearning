@@ -1,0 +1,5 @@
+c 1g.cnf
+c Auto-generated DIMACS CNF file created by convertToDIMACS
+p cnf 2 2
+1 -2 0 
+2 -1 0
