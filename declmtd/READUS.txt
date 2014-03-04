@@ -1,0 +1,34 @@
+Kyle Wong and Tifany Yung
+kwong23@jhu.edu, tyung1@jhu.edu
+Declarative Methods HW 1
+February 26, 2014
+--------------------------------
+--------------------------------
+
+PROBLEM 7
+----------
+a) The input consists of a partially-filled grid and the dictionary; the task is to replace the "." in the grid with words from the dictionary. In order to find a solution, a set of words must first be selected from the dictionary. Since the solver doesn't know what set will work, it must methodically select a set of words from the dictionary. This is the generate step of the generate-and-test algorithm. Once a set of words is selected, the solver must test whether the set satisfies the grid by attempting to fill in the grid with the words such that every horizontal and vertical string bordered by "#" is an English word. The solver must continue generating sets of words and checking whether they fit in the grid without breaking the constraints until a satisfying set is found.
+
+b) We must show that the crossword construction problem is reducible to another, known NP-hard problem. This can be done by finding a transformation that encodes the crossword problem into the form of the known NP-hard problem.
+
+
+PROBLEM 8
+----------
+a) The "#" can only be included in sets for which ending the string with the end-of-word "#" character would result in a word recognized as valid.
+
+b) The finished puzzle should be a 4x4 grid with a border of "#" all around, leaving a 2x2 square in the center for the letters. The top left space of this square must be an "o", while the bottom right space must be an "i". By the words contained in the microwords file, the remaining two spaces can be either "h" or "f"
+
+c) 
+
+d) The constraints for the partly-filled grid should include all of those required for the unfilled grid except those that constrain the now-filled squares. Let one such filled square be located at (n, m) in the grid and contain the letter "*". Then, propagate the variable *_n_m, which indicates whether or not the letter "*" occupies the space at (n, m). Doing so leaves the clauses that constrain all of the squares except those already filled.
+
+e) One data structure could be a dictionary with string keys and list values. The keys would be the prefixes to the words in the dictionary and could range in length from 1 to the length of the word + 2, due to the "#" characters that begin and end a word. The lists would hold all of the letters, including the delimiter "#", if applicable, that could follow the prefix according to the dictionary.
+
+f) 
+
+PROBLEM 10
+-----------
+
+
+PROBLEM 11
+-----------
