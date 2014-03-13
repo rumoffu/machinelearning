@@ -24,8 +24,10 @@ import org.apache.commons.cli.OptionBuilder;
 public class Classify {
 	static public LinkedList<Option> options = new LinkedList<Option>();
 	
+	
 	public static void main(String[] args) throws IOException {
 		// Parse the command line.
+		final int UNINITIALIZED = -1;
 		String[] manditory_args = { "mode"};
 		createCommandLineOptions();
 		CommandLineUtilities.initCommandLineParameters(args, Classify.options, manditory_args);
@@ -35,6 +37,18 @@ public class Classify {
 		String predictions_file = CommandLineUtilities.getOptionValue("predictions_file");
 		String algorithm = CommandLineUtilities.getOptionValue("algorithm");
 		String model_file = CommandLineUtilities.getOptionValue("model_file");
+		int gd_iterations = 20;
+		if (CommandLineUtilities.hasArg("gd_iterations"))
+		gd_iterations = CommandLineUtilities.getOptionValueAsInt("gd_iterations");
+		double gd_eta = .01;
+		if (CommandLineUtilities.hasArg("gd_eta"))
+		gd_eta = CommandLineUtilities.getOptionValueAsFloat("gd_eta");
+		int num_features = UNINITIALIZED;
+		if (CommandLineUtilities.hasArg("num_features_to_select"))
+		num_features = CommandLineUtilities.getOptionValueAsInt("num_features_to_select");
+
+		System.out.printf("gd_eta: %s num_features: %s gd_iterations %s\n", gd_eta, num_features, gd_iterations);
+		
 		
 		if (mode.equalsIgnoreCase("train")) {
 			if (data == null || algorithm == null || model_file == null) {
@@ -47,7 +61,7 @@ public class Classify {
 			data_reader.close();
 			
 			// Train the model.
-			Predictor predictor = train(instances, algorithm);
+			Predictor predictor = train(instances, algorithm, gd_eta, num_features, gd_iterations);
 			saveObject(predictor, model_file);		
 			
 		} else if (mode.equalsIgnoreCase("test")) {
@@ -70,23 +84,30 @@ public class Classify {
 	}
 	
 
-	private static Predictor train(List<Instance> instances, String algorithm) {
+	private static Predictor train(List<Instance> instances, String algorithm, double eta, int num_features, int num_iters) {
 		// TODO Train the model using "algorithm" on "data"
 		// TODO Evaluate the model
-		//AccuracyEvaluator evaluator = new AccuracyEvaluator();
+		AccuracyEvaluator evaluator = new AccuracyEvaluator();
 		double accuracy;
 		if(algorithm.equalsIgnoreCase("majority")){
 			MajorityClassifier predictor = new MajorityClassifier();
 			predictor.train(instances);
-			//System.out.printf("Testing %s Accuracy\n", predictor);
-			//accuracy = evaluator.evaluateAccuracy(instances, predictor);
+			System.out.printf("Testing %s Accuracy\n", predictor);
+			accuracy = evaluator.evaluateAccuracy(instances, predictor);
 			return (Predictor) predictor;
 		}
 		else if(algorithm.equalsIgnoreCase("even_odd")){
 			EvenOddClassifier predictor = new EvenOddClassifier();
 			predictor.train(instances);
-			//System.out.printf("Testing %s Accuracy\n", predictor);
-			//accuracy = evaluator.evaluateAccuracy(instances, predictor);
+			System.out.printf("Testing %s Accuracy\n", predictor);
+			accuracy = evaluator.evaluateAccuracy(instances, predictor);
+			return (Predictor) predictor;
+		}
+		else if(algorithm.equalsIgnoreCase("logistic_regression")){
+			LogisticClassifier predictor = new LogisticClassifier(eta, num_features, num_iters);
+			predictor.train(instances);
+			System.out.printf("Testing %s Accuracy\n", predictor);
+			accuracy = evaluator.evaluateAccuracy(instances, predictor);
 			return (Predictor) predictor;
 		}
 		return null;
@@ -96,15 +117,15 @@ public class Classify {
 			List<Instance> instances, String predictions_file) throws IOException {
 		PredictionsWriter writer = new PredictionsWriter(predictions_file);
 		// TODO Evaluate the model if labels are available. 
-//		double accuracy;
-//		if(instances.get(0).getLabel() != null){
-//			AccuracyEvaluator evaluator = new AccuracyEvaluator();
-//			System.out.printf("Testing %s Accuracy\n", predictor);
-//			accuracy = evaluator.evaluateAccuracy(instances, predictor);
-//		}
-//		else{ //courtesy information message
-//			System.out.println("Test data therefore accuracy cannot be calculated.");
-//		}
+		double accuracy;
+		if(instances.get(0).getLabel() != null){
+			AccuracyEvaluator evaluator = new AccuracyEvaluator();
+			System.out.printf("Testing %s Accuracy\n", predictor);
+			accuracy = evaluator.evaluateAccuracy(instances, predictor);
+		}
+		else{ //courtesy information message
+			System.out.println("Test data therefore accuracy cannot be calculated.");
+		}
 		
 		for (Instance instance : instances) {
 			Label label = predictor.predict(instance);
@@ -163,7 +184,9 @@ public class Classify {
 		registerOption("predictions_file", "String", true, "The predictions file to create.");
 		registerOption("algorithm", "String", true, "The name of the algorithm for training.");
 		registerOption("model_file", "String", true, "The name of the model file to create/load.");
-		
+		registerOption("gd_eta", "int", true, "The step size parameter for GD.");
+		registerOption("gd_iterations", "int", true, "The number of GD iterations.");
+		registerOption("num_features_to_select", "int", true, "The number of features to select.");
 		// Other options will be added here.
 	}
 }
