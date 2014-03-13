@@ -48,6 +48,20 @@ to run and get the answers compiled:
 
 then the file triangleout lists the unique solutions for n 
 
+=====================================
+
+Alternatively, you can solve this problem step-by-step in eclps using
+ugrad12$ rlwrap eclps
+[eclipse 10]: compile('newmagictriangle.ecl').
+[eclipse 10]: setof(N, solve(N), List).
+
+which outputs 
+
+N = N
+List = [17, 19, 20, 21, 23]
+Yes (0.12s cpu)
+
+
 
 Problem 2 b) 6-concatenation
 ======================================================================================
