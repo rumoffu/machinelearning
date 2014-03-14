@@ -113,8 +113,8 @@ def declSolution(s1):
   #too slow#print '\t\tminimize(labeling(AllVars), EndTime),'
   Select = 'occurrence' #most constraints first #input order, first fail, smallest, largest, occurrence, and most constrained
   Choice = 'indomain_middle' #indomain, indomain_min, indomain_max, indomain_middle, indomain_reverse_min, indomain_reverse_max, indomain_median, indomain_split, indomain_reverse_split, indomain_random, indomain_interval
-  Method = 'lds(2)' #complete, bbs(Steps:integer), lds(Disc:integer), credit(Credit:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), dbs(Level:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), sbds, gap_sbds, gap_sbdd
-  OptionList = 'backtrack(-N)' # backtrack(-N), node(++Call), nodes(++N)
+  Method = 'bbs(15)' #complete, bbs(Steps:integer), lds(Disc:integer), credit(Credit:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), dbs(Level:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), sbds, gap_sbds, gap_sbdd
+  OptionList = '[]' # backtrack(-N), node(++Call), nodes(++N)
   print '\t\tminimize(search(AllVars, 0, {Select}, {Choice}, {Method}, {OptionList}), EndTime),'.format(**locals())
   print ''
   for li in s1:
