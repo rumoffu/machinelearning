@@ -17,17 +17,22 @@ go :-
 
 solve(Pattern) :-
         Pattern = [
-                 X1, X2, X3, Y1, Y2, Y3
+                 X,Y
                   ],
-        Pattern :: 0 .. 9,
+        Pattern :: 0 .. 1000,
+        P :: 0 .. 1000,
+        A :: 0 .. 100000,
         % Problem constraints
-        % No leading zeroes
-        X1 #> 0, Y1 #> 0,
-
-          6*(100000*X1 + 10000*X2 + 1000*X3 + 100*Y1 + 10*Y2 + Y3) #= 100000*Y1 + 10000*Y2 + 1000*Y3 + 100*X1 + 10*X2 + X3,
+        % assume sides X, X, Y
+        X*X #= H*H+(Y/2)*(Y/2),
+        P #= 2*X + Y,
+        A #= (Y * H)/2,
+        6*P #= A,
 
 %       Choice=input_order,             % slowest
         Choice=first_fail,              % fastest
 %       Choice=most_constrained,        % medium
-        search(Pattern, 0, Choice, indomain, complete, []).
+        search(Pattern, 0, Choice, indomain, complete, []),
+        printf("P: %d A: %d", [P, A]).
+
 

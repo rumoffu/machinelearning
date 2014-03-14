@@ -57,8 +57,8 @@ def declVars(s1):
     print '\t\tS_{name},'.format(**locals())
   print '\tS_emptyvar],' #add emptyvar to solve trailing comma
   print ''
-  print "\tTaskFinishTimes :: 0..600000," #2 digit -> max 99 hours + 60 minutes = 100 hours = 6000 minutes
-  print "\tTaskStartTimes :: 0..600000,"
+  print "\tTaskFinishTimes :: 0..60000," #2 digit -> max 99 hours + 60 minutes = 100 hours = 6000 minutes
+  print "\tTaskStartTimes :: 0..60000,"
   print ''
 
 # Declares the duration constraints
@@ -113,7 +113,7 @@ def declSolution(s1):
   #too slow#print '\t\tminimize(labeling(AllVars), EndTime),'
   Select = 'input_order' #most constraints first #input order, first fail, smallest, largest, occurrence, and most constrained
   Choice = 'indomain_middle' #indomain, indomain_min, indomain_max, indomain_middle, indomain_reverse_min, indomain_reverse_max, indomain_median, indomain_split, indomain_reverse_split, indomain_random, indomain_interval
-  Method = 'lds(0)' #complete, bbs(Steps:integer), lds(Disc:integer), credit(Credit:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), dbs(Level:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), sbds, gap_sbds, gap_sbdd
+  Method = 'lds(1)' #complete, bbs(Steps:integer), lds(Disc:integer), credit(Credit:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), dbs(Level:integer, Extra:integer or bbs(Steps:integer) or lds(Disc:integer)), sbds, gap_sbds, gap_sbdd
   OptionList = '[]' # backtrack(-N), node(++Call), nodes(++N)
   print '\t\tminimize(search(AllVars, 0, {Select}, {Choice}, {Method}, {OptionList}), EndTime),'.format(**locals())
   print ''
