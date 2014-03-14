@@ -135,6 +135,17 @@ Problem 2 d) The number 12148
 ======================================================================================
 Sum of the first four digits equals the units digit.  How many EVEN five-digit numbers have this property?
 
+There are 200 solutions.
+[kwong23@ugrad4 2hw]$ eclps -b sum.ecl -e 'go' | wc
+    201    1002    3216
+so there are 200 lines of solution and the last line is the runtime.
+
+You can also run the code with
+rlwrap eclps
+compile('sum.ecl').
+solve(X).
+
+and use ; to step through the 200 solutions.
 
 
 Problem 3
