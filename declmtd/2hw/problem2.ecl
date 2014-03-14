@@ -2523,7 +2523,7 @@ solve(EndTime) :-
 	%declare solution commands
 		EndTime #= max(TaskFinishTimes),
 		flatten([TaskStartTimes, TaskFinishTimes, EndTime], AllVars),
-		minimize(labeling(AllVars), EndTime),
+		minimize(search(AllVars, 0, occurrence, indomain_max, complete, []), EndTime),
 
 		printf("asm_1.step_001: %d - %d %n", [S_step_001, F_step_001]),
 		printf("asm_1.step_002: %d - %d %n", [S_step_002, F_step_002]),

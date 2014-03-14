@@ -112,5 +112,49 @@ such that each triangle's area is numerically equal to 6 times its perimeter.
 
 
 Problem 3
+======================================================================================
+- Was only to read
+
+Problem 4
+======================================================================================
+problem1.ecl was generated using:
+python ecl1.py > problem1.ecl
+
+where ecl1.py wrote constraints by reading from a file in the same directory - rcps.data.
+
+The total time for completing all the tasks was 23489 (minutes)
+
+What I did in the python script to write the ecl file was:
+1) to write the header (library imports)
+2) read in the rcps.data sections 1 and 2
+3) use the read-in data to print the variable declarations using 
+the F_ (finishtime) and S_ (starttime) convention and removing the asm_1. prefix
+(because eclps did not like the periods)
+note: I added 2 empty variables to avoid the issues with trailing commas since
+they are unconstrained and do not change the solution anyway
+4) I set the task durations based on the section 1 data (just like in bratwurst.ecl)
+5) I used the section 2 data to declare precedence (just like in bratwurst.ecl)
+6) I declared the solution commands to find the maximum of the finishing times,
+to flatten the solution, and to minimize it.  Then I put commands for printing out
+all of the variable solutions (the start and end time for each step)
+
+I then ran the ecl code in eclps as:
+[kwong23@ugrad19 2hw]$ eclps -b problem1.ecl -e 'solve(EndTime)' > problem1.solution
+
+
+
+Problem 5
+======================================================================================
+- Takes too long.  We don't need to turn anything in
+
+Problem 6
+======================================================================================
+For Search parameters:
+1) for Select - I will use 'occurrence' which selects the entry with the
+largest number of attached constraints is selected because it is easier to solve
+the problem by first fitting in the most constrained variable.  Less constrained
+variables / tasks can just be fitted in at other places.
+2) for Choice - I will use 'indomain_max' to see if there is any solution at all
+
 
 
