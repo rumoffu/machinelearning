@@ -85,8 +85,8 @@ def declSolution(s1):
   for li in s1:
     name1 = li[0]
     name2 = li[0].split('.')[1] #periods not allowed
-    print '\t\tprintf("{name1}: %d - %d %n", [S_{name2}, F_{name2}],'.format(**locals())
-  print '\tprintf("Done", []).'
+    print '\t\tprintf("{name1}: %d - %d %n", [S_{name2}, F_{name2}]),'.format(**locals())
+  print '\tprintf("Done").'
 
 
 if __name__ == '__main__':
