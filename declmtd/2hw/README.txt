@@ -198,6 +198,13 @@ Problem 5
 
 Problem 6
 ======================================================================================
+problem2.ecl was generated using:
+python ecl2.py > problem2.ecl
+
+where ecl2.py wrote constraints by reading from a file in the same directory - rcps.data.
+
+
+
 For Search parameters:
 1) for Select - I tried 'occurrence' which selects the entry with the
 largest number of attached constraints is selected because it is easier to solve
