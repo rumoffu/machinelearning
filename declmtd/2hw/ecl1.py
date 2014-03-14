@@ -37,7 +37,7 @@ def initHeader():
   print ':- lib(branch_and_bound).       % include the branch and bound library for minimization'
   print ':- lib(ic_edge_finder).         % include the cumulative constraint library needed for resource constraints'
   print ''
-  print 'solve(X) :-'
+  print 'solve(EndTime) :-'
 
 # Declares the variables, 1 per line
 def declVars(s1):

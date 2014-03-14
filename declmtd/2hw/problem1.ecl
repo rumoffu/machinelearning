@@ -5,7 +5,7 @@
 :- lib(branch_and_bound).       % include the branch and bound library for minimization
 :- lib(ic_edge_finder).         % include the cumulative constraint library needed for resource constraints
 
-solve(X) :-
+solve(EndTime) :-
 	%declare variables
 	TaskFinishTimes = [
 		F_step_001,
