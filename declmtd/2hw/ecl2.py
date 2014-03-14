@@ -2,7 +2,7 @@
 # Kyle Wong
 # Declarative Methods HW2
 # 14.3.14
-# This solves Benchmark Problem 1 (which is hw question 4)
+# This solves Benchmark Problem 2 (which is hw question 5 and 6)
 
 def main():
   initHeader() #print out the initial header
@@ -10,6 +10,7 @@ def main():
 
   s1 = [] #section1 data
   s2 = [] #section2 data
+  s4 = [] #section4 data
   with open(fn, 'r') as inp:
     sect = 0
     for li in inp.readlines():
@@ -18,21 +19,24 @@ def main():
       elif li.strip() == '': #ignore empty lines
         continue
       elif sect == 1:
-        s1.append(li.split(' ')[0:2]) #only need first two for this problem)
+        s1.append(li.strip().split(' ')) 
       elif sect == 2:
         s2.append(li.strip())
-      elif sect == 3:
-        break #we only need s1 and s2 for this part
+      elif sect == 4 and 'Zone.' in li: #we only need Zone. info
+        s4.append(li.strip()[5:]) #ignore Zone. 
+      elif sect == 5:
+        break #we only need s1 and s2 and s4 for this part
   declVars(s1)
   declDurs(s1)
   declPrecedence(s2)
+  declZones(s1, s4)
   declSolution(s1)
 
 # Initializes the header for the ecl file
 def initHeader():
   print '% Kyle Wong'
   print '% Declarative Methods HW2'
-  print '% Problem 1'
+  print '% Problem 2'
   print ':- lib(ic).                     % include the standard interval constraint library'
   print ':- lib(branch_and_bound).       % include the branch and bound library for minimization'
   print ':- lib(ic_edge_finder).         % include the cumulative constraint library needed for resource constraints'
@@ -75,6 +79,30 @@ def declPrecedence(s2):
     second = second.split('.')[1]
     print '\t\tS_{second} #>= F_{first},'.format(**locals())
 
+# Declares the Zone constraints
+def declZones(s1, s4):
+  print '\t%declare Zones'     
+  maxlist = []
+  for li in s4:
+    name, lim = li.split(' ')
+    maxlist.append(lim)
+  for i in range(len(s4)): #for each zone 0 to 13 (a to m) make a constraint
+    varlist = []
+    timelist = []
+    uselist = []
+    for li in s1: #go through all constraints
+      name = li[0].split('.')[1] #periods not allowed
+      hrs, mins = li[1].split(':') #cut time at the colon
+      total = int(hrs)*60 + int(mins)
+      if int(li[6+i]) > 0: #zone consideration, so add to the list
+        varlist.append('S_{name}'.format(**locals()))
+        timelist.append(total)
+        uselist.append(int(li[6+i]))
+    zonelim = maxlist[i]
+    if varlist: # not empty
+      print '\t\tcumulative({varlist},{timelist},{uselist}, {zonelim}),'.format(**locals())
+  print ''
+
 # Declares the solution commands and output commands
 def declSolution(s1):
   print '\t%declare solution commands'     
@@ -91,14 +119,6 @@ def declSolution(s1):
 
 if __name__ == '__main__':
   main()
-
-
-
-
-
-
-
-
 
 
 
