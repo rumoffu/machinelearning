@@ -46,12 +46,12 @@ def declVars(s1):
   for li in s1:
     name = li[0].split('.')[1] #periods not allowed
     print '\t\tF_{name},'.format(**locals())
-  print '\t],'
+  print '\tF_emptyvar],' #add emptyvar to solve trailing comma
   print '\tTaskStartTimes = ['
   for li in s1:
     name = li[0].split('.')[1] #periods not allowed
-    print '\t\tF_{name},'.format(**locals())
-  print '\t],'
+    print '\t\tS_{name},'.format(**locals())
+  print '\tS_emptyvar],' #add emptyvar to solve trailing comma
   print ''
   print "\tTaskFinishTimes :: 0..6000," #2 digit -> max 99 hours + 60 minutes = 100 hours = 6000 minutes
   print "\tTaskStartTimes :: 0..6000,"
