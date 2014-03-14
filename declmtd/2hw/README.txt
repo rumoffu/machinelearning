@@ -109,6 +109,27 @@ Problem 2 c) 3 isosceles triangles with area = 6*perimeter
 Find three isosceles triangles, no two of which are congruent, with integer sides, 
 such that each triangle's area is numerically equal to 6 times its perimeter.
 
+to run step by step
+ugrad12$ rlwrap eclps
+[eclipse 1]: compile('isosceles.ecl').
+[eclipse 2]: go.
+
+or to run in batch use:
+[kwong23@ugrad4 2hw]$ eclps -b isosceles.ecl -e 'go'
+
+
+Solution1:
+P: 128 A: 768
+X = [40, 40, 48]
+
+Solution2:
+P: 162 A: 972
+X = [45, 45, 72]
+
+Solution3:
+P: 250 A: 1500
+X = [65, 65, 120]
+
 
 
 Problem 3
@@ -150,11 +171,27 @@ Problem 5
 Problem 6
 ======================================================================================
 For Search parameters:
-1) for Select - I will use 'occurrence' which selects the entry with the
+1) for Select - I tried 'occurrence' which selects the entry with the
 largest number of attached constraints is selected because it is easier to solve
 the problem by first fitting in the most constrained variable.  Less constrained
 variables / tasks can just be fitted in at other places.
-2) for Choice - I will use 'indomain_max' to see if there is any solution at all
+
+However, I found that it was better to use 'input_order" which possibly 
+works better since the initial steps are more likely to be of higher precedence than
+later steps.
+
+2) for Choice - I tried to use 'indomain_middle' since it would be easiest to find
+solutions, providing more flexibility to move around the starting and ending times of steps.
+
+3) for Method - I found that lds - Limited Discrepancy Search - gave the best results.
+It works well because, when 1-sampling fails, you can follow the heuristic at all but
+one or two decision points (or "wrong turns") that got it off track.  So it works
+quickly while also being able to search the entire tree exhaustively.
+
+Using input_order and indomain_middle and lds(1) I found a solution of
+X = 59380
+Yes (1137.19s cpu)
+
 
 
 

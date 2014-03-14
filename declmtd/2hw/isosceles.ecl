@@ -17,15 +17,16 @@ go :-
 
 solve(Pattern) :-
         Pattern = [
-                 X,Y
+                 X1, X2, Y
                   ],
         Pattern :: 0 .. 1000,
-        P :: 0 .. 1000,
-        A :: 0 .. 100000,
+        P :: 0 .. 10000,
+        A :: 0 .. 1000000,
         % Problem constraints
-        % assume sides X, X, Y
-        X*X #= H*H+(Y/2)*(Y/2),
-        P #= 2*X + Y,
+        % assume sides X1=X2, Y
+        X1 #= X2,
+        X1*X2 #= H*H+(Y/2)*(Y/2),
+        P #= 2*X1 + Y,
         A #= (Y * H)/2,
         6*P #= A,
 
