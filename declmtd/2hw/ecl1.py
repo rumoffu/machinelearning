@@ -71,6 +71,8 @@ def declPrecedence(s2):
   print '\t%declare precedence'
   for li in s2:
     first, second = li.split(' ')
+    first = first.split('.')[1]
+    second = second.split('.')[1]
     print '\t\tS_{second} #>= F_{first},'.format(**locals())
 
 # Declares the solution commands and output commands
