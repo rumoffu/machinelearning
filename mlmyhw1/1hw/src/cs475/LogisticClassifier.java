@@ -35,60 +35,63 @@ public class LogisticClassifier extends Predictor{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Here we go - unit test");
-		ArrayList<Instance> instances = new ArrayList<Instance>();
-		FeatureVector feature_vector = new FeatureVector();
-		Label label = null;
+//		System.out.println("Here we go - unit test");
+//		ArrayList<Instance> instances = new ArrayList<Instance>();
+//		FeatureVector feature_vector = new FeatureVector();
+//		Label label = null;
+//		
+//		label = new ClassificationLabel(1);
+//		feature_vector.add(1, -0.112217);
+//		feature_vector.add(2, 0.077192);
+//		Instance instance = new Instance(feature_vector, label);
+//		instances.add(instance);
+//		
+//		feature_vector = new FeatureVector();
+//		label = new ClassificationLabel(0);
+//		feature_vector.add(1, 0.496442);
+//		feature_vector.add(2, -0.290597);
+//		instance = new Instance(feature_vector, label);
+//		instances.add(instance);
+//		
+//		feature_vector = new FeatureVector();
+//		label = new ClassificationLabel(1);
+//		feature_vector.add(1, 0.418255);
+//		feature_vector.add(2, -1.791584);
+//		instance = new Instance(feature_vector, label);
+//		instances.add(instance);
+//		
+//		feature_vector = new FeatureVector();
+//		label = new ClassificationLabel(0);
+//		feature_vector.add(1, 0.237331);
+//		feature_vector.add(2, 0.9901527);
+//		instance = new Instance(feature_vector, label);
+//		instances.add(instance);
+//		
+//		feature_vector = new FeatureVector();
+//		label = new ClassificationLabel(0);
+//		feature_vector.add(1, 0.537331);
+//		feature_vector.add(2, 0.9901527);
+//		instance = new Instance(feature_vector, label);
+//		instances.add(instance);
+//		
+//		for(Instance e : instances){
+//
+//			System.out.println(e);
+//			System.out.println(e.getLabel());
+//			Iterator elements = e.getFeatureVector().getIterator();
+//			while(elements.hasNext()){
+//				Map.Entry items = (Map.Entry)elements.next();
+//				System.out.printf("key %s value %s\n", items.getKey(), items.getValue() );
+//			}
+//			System.out.println();
+//		}
+//		LogisticClassifier ml = new LogisticClassifier(0.01, -1, 20);
+//		ml.train(instances);
+//		System.out.println("Predicted: " + ml.predict(instance));
+//		System.out.println("Done unit test for logistic classifier.");
 		
-		label = new ClassificationLabel(1);
-		feature_vector.add(1, -0.112217);
-		feature_vector.add(2, 0.077192);
-		Instance instance = new Instance(feature_vector, label);
-		instances.add(instance);
-		
-		feature_vector = new FeatureVector();
-		label = new ClassificationLabel(0);
-		feature_vector.add(1, 0.496442);
-		feature_vector.add(2, -0.290597);
-		instance = new Instance(feature_vector, label);
-		instances.add(instance);
-		
-		feature_vector = new FeatureVector();
-		label = new ClassificationLabel(1);
-		feature_vector.add(1, 0.418255);
-		feature_vector.add(2, -1.791584);
-		instance = new Instance(feature_vector, label);
-		instances.add(instance);
-		
-		feature_vector = new FeatureVector();
-		label = new ClassificationLabel(0);
-		feature_vector.add(1, 0.237331);
-		feature_vector.add(2, 0.9901527);
-		instance = new Instance(feature_vector, label);
-		instances.add(instance);
-		
-		feature_vector = new FeatureVector();
-		label = new ClassificationLabel(0);
-		feature_vector.add(1, 0.537331);
-		feature_vector.add(2, 0.9901527);
-		instance = new Instance(feature_vector, label);
-		instances.add(instance);
-		
-		for(Instance e : instances){
-
-			System.out.println(e);
-			System.out.println(e.getLabel());
-			Iterator elements = e.getFeatureVector().getIterator();
-			while(elements.hasNext()){
-				Map.Entry items = (Map.Entry)elements.next();
-				System.out.printf("key %s value %s\n", items.getKey(), items.getValue() );
-			}
-			System.out.println();
-		}
-		LogisticClassifier ml = new LogisticClassifier(0.01, -1, 20);
-		ml.train(instances);
-		System.out.println("Predicted: " + ml.predict(instance));
-		System.out.println("Done unit test for logistic classifier.");
+//		LogisticClassifier ml = new LogisticClassifier(0.01, -1, 20);
+//		System.out.println(ml.getLinkFunction(5.0));
 	}
 
 	@Override
@@ -112,16 +115,16 @@ public class LogisticClassifier extends Predictor{
 		double pxj, pyixj0, pyixj1;
 		
 		int maxkey = getMaxFeatureKey(instances);
-		this.infogains = new Double[maxkey];
 		if(num_features_to_select == UNINITIALIZED){
 			num_features_to_select = maxkey;
 		}
+		this.infogains = new Double[maxkey];
 		this.weights = new Double[num_features_to_select];
-		for(int i = 0; i < num_features_to_select; i++){
+		for(int i = 0; i < maxkey; i++){
 			this.infogains[i] = null;
-			this.weights[i] = 0.0;
 		}
-		for(int i = 0; i < num_features_to_select; i++){ //all features
+		for(int i = 0; i < maxkey; i++){ //all features
+			
 			thresh_sum = 0.0;
 			px = 0;
 			pyx0 = 0;
@@ -132,7 +135,7 @@ public class LogisticClassifier extends Predictor{
 			threshold = thresh_sum / instances.size();
 			
 			for(Instance inst: instances){
-				if(inst.getFeatureVector().get(i+1) < threshold){
+				if(inst.getFeatureVector().get(i+1) <= threshold){
 					px++;
 					if(inst.getLabel().toString().equals("0")){
 						pyx0++;
@@ -148,17 +151,18 @@ public class LogisticClassifier extends Predictor{
 			this.infogains[i] = -pyixj0*Math.log(pyixj0 / pxj) - pyixj1*Math.log(pyixj1 / pxj);
 			
 //			double temp = this.infogains[i]; 
-//			System.out.println("temp "+temp);
+//			System.out.printf("%s %s\n", i, temp);
 		}
-
+//		for(int k = 0; k < infogains.length; k++) System.out.printf("infogains %s %s\n", k, infogains[k]);
 
 		this.bestgains = new int[this.num_features_to_select];
 		double[] bestvalues = new double[bestgains.length];
 		for(int j = 0; j < num_features_to_select; j++){
+			this.weights[j] = 0.0;
 			double bestig = Double.NEGATIVE_INFINITY;
 			int bestid = 0;
-			for(int i = 0; i < num_features_to_select; i++){
-				if(bestig < this.infogains[i]){
+			for(int i = 0; i < bestgains.length; i++){
+				if(bestig <= this.infogains[i]){
 					bestig = this.infogains[i];
 					bestid = i;
 				}
@@ -166,7 +170,7 @@ public class LogisticClassifier extends Predictor{
 			this.bestgains[j] = bestid+1;
 			bestvalues[j] = bestig;
 			this.infogains[bestid] = Double.NEGATIVE_INFINITY;
-//			System.out.println("bestid: "+bestgains[j]+" bestvalues: " + bestvalues[j]);
+//			System.out.println("bestid: "+bestgains[j]+" bestvalues: " + bestvalues[j]); //verified speech.train
 		}
 		Arrays.sort(bestgains); // to track weight with feature number ordering
 //		for(int j = 0; j < num_features_to_select; j++) System.out.println("bestid: "+bestgains[j]+" bestvalues: " + bestvalues[j]);
@@ -191,38 +195,37 @@ public class LogisticClassifier extends Predictor{
 			Double[] etaDel = scalarMultiply(this.gd_eta, getDel(instances));
 			newWeight = vectorAdd(this.weights, etaDel);
 			this.weights = newWeight;
+			
+//			for(int j = 0; j < etaDel.length; j++) System.out.println(etaDel[j]);
+//			System.out.println("break");
+			
+//			for(int j = 0; j < weights.length; j++) System.out.println(weights[j]);
+//			System.out.println("break");
 		}
 	}
 	
 	private Double[] getDel(List<Instance> instances){
 
-		Double[] Del = new Double[this.weights.length];
+		Double[] Del = new Double[this.bestgains.length];
 		for(int i = 0; i < Del.length; i++){
 			Del[i] = 0.0;
 		}
 		double yi = 0;
-		double xij;
-		Double gneg;
-		Double gpos;
-		double wx;
-		Double[] xi = new Double[bestgains.length];
+		double xij, wx;
+		Double gneg, gpos;
 		for(Instance e : instances){ //for each instance
-			if(e.getLabel().equals("0")) yi = 0;
-			else if(e.getLabel().equals("1")) yi = 1;
+			Double[] xi = new Double[bestgains.length];
+			if(e.getLabel().toString().equals("0")){ 
+				yi = 0.0;
+			}
+			else if(e.getLabel().toString().equals("1")){ 
+				yi = 1.0;
+			}
 			
 			for(int i = 0; i < xi.length; i++){
 				xi[i] = e.getFeatureVector().get(bestgains[i]);
 			}
-			Del = vectorAdd(Del, vectorAdd(scalarMultiply(yi*getLinkFunction(-1*dot(weights,xi)),xi),scalarMultiply((1-yi)*getLinkFunction(dot(weights,xi)), scalarMultiply(-1,xi))));
-			
-//			xi = e.getFeatureVector().getDoubles(this.bestgains);
-//			wx = dot(this.weights, xi);
-//			for(int i = 0; i < this.bestgains.length; i++){ //for each feature
-//				xij = e.getFeatureVector().get(bestgains[i]); //features start at 1 not 0
-//				gneg = xij*getLinkFunction(-1*wx);
-//				gpos = -xij*getLinkFunction(wx);
-//				Del[bestgains[i]-1] += yi*gneg + (1-yi)*gpos;
-//			}
+			Del = vectorAdd(Del, vectorAdd(scalarMultiply(yi*getLinkFunction(-1*dot(weights,xi)), xi),scalarMultiply((1-yi)*getLinkFunction(dot(weights,xi)), scalarMultiply(-1,xi))));
 		}
 		return Del;
 	}
