@@ -100,7 +100,9 @@ def declZones(s1, s4):
         uselist.append(int(li[6+i]))
     zonelim = maxlist[i]
     if varlist: # not empty
-      print '\t\tcumulative({varlist},{timelist},{uselist}, {zonelim}),'.format(**locals())
+      s = str(varlist)
+      stringvarlist = s.replace("'", "") #remove apostrophes/quotes
+      print '\t\tcumulative({stringvarlist},{timelist},{uselist}, {zonelim}),'.format(**locals())
   print ''
 
 # Declares the solution commands and output commands
