@@ -3085,4 +3085,4 @@ solve(X) :-
 		printf("asm_1.step_573: %d - %d %n", [S_step_573, F_step_573]),
 		printf("asm_1.step_574: %d - %d %n", [S_step_574, F_step_574]),
 		printf("asm_1.step_575: %d - %d %n", [S_step_575, F_step_575]),
-	printf("Done").
+	printf("Done", []).
