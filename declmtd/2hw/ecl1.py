@@ -44,12 +44,12 @@ def declVars(s1):
   print '\t%declare variables'
   print '\tTaskFinishTimes = ['
   for li in s1:
-    name = li[0]
+    name = li[0].split('.')[1] #periods not allowed
     print '\t\tF_{name},'.format(**locals())
   print '\t],'
   print '\tTaskStartTimes = ['
   for li in s1:
-    name = li[0]
+    name = li[0].split('.')[1] #periods not allowed
     print '\t\tF_{name},'.format(**locals())
   print '\t],'
   print ''
@@ -61,7 +61,7 @@ def declVars(s1):
 def declDurs(s1):
   print '\t%declare durations'
   for li in s1:
-    name = li[0]
+    name = li[0].split('.')[1] #periods not allowed
     hrs, mins = li[1].split(':') #cut at the colon
     total = int(hrs)*60 + int(mins)
     print '\t\tF_{name} - S_{name} #= {total},'.format(**locals())
