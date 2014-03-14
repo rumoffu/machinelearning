@@ -53,8 +53,8 @@ def declVars(s1):
     print '\t\tS_{name},'.format(**locals())
   print '\tS_emptyvar],' #add emptyvar to solve trailing comma
   print ''
-  print "\tTaskFinishTimes :: 0..6000," #2 digit -> max 99 hours + 60 minutes = 100 hours = 6000 minutes
-  print "\tTaskStartTimes :: 0..6000,"
+  print "\tTaskFinishTimes :: 0..600000," #2 digit -> max 99 hours + 60 minutes = 100 hours = 6000 minutes
+  print "\tTaskStartTimes :: 0..600000,"
   print ''
 
 # Declares the duration constraints

@@ -1162,8 +1162,8 @@ solve(X) :-
 		S_step_575,
 	S_emptyvar],
 
-	TaskFinishTimes :: 0..6000,
-	TaskStartTimes :: 0..6000,
+	TaskFinishTimes :: 0..600000,
+	TaskStartTimes :: 0..600000,
 
 	%declare durations
 		F_step_001 - S_step_001 #= 30,
