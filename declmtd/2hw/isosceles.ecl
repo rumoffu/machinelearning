@@ -3,9 +3,9 @@
 % 14.3.13
 % Problem 2 c
 %
-% Find 3-digit integers x and y such that 6 * (x || y) = (y || x) where || is concatenation
+% Find isosceles triangle with perimeter*6 = area
 %
-% run as [kwong23@ugrad12 2hw]$ eclps -b concat6.ecl -e 'go'  
+% run as [kwong23@ugrad12 2hw]$ eclps -b isosceles.ecl -e 'go'  
 
 :- lib(ic).
 

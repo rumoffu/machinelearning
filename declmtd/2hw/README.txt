@@ -131,6 +131,11 @@ P: 250 A: 1500
 X = [65, 65, 120]
 
 
+Problem 2 d) The number 12148
+======================================================================================
+Sum of the first four digits equals the units digit.  How many EVEN five-digit numbers have this property?
+
+
 
 Problem 3
 ======================================================================================
@@ -192,6 +197,12 @@ Using input_order and indomain_middle and lds(1) I found a solution of
 X = 59380
 Yes (1137.19s cpu)
 
+It is run in batch mode as
+[kwong23@ugrad19 2hw]$ eclps -b problem2.ecl -e 'solve(EndTime)' > problem2.solution
 
+or you can use 
+rlwrap eclps
+compile('problem2.ecl').
+solve(EndTime).
 
 
