@@ -83,8 +83,9 @@ def declSolution(s1):
   print '\t\tminimize(labeling(AllVars), EndTime),'
   print ''
   for li in s1:
-    name = li[0]
-    print '\t\tprintf("{name}: %d - %d %n", [S_{name}, F_{name}],'.format(**locals())
+    name1 = li[0]
+    name2 = li[0].split('.')[1] #periods not allowed
+    print '\t\tprintf("{name1}: %d - %d %n", [S_{name2}, F_{name2}],'.format(**locals())
   print '\tprintf("Done").'
 
 
