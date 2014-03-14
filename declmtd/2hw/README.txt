@@ -147,6 +147,18 @@ solve(X).
 
 and use ; to step through the 200 solutions.
 
+Problem 2 e) Smallest square number (perfect square)
+======================================================================================
+
+The smallest square number using all digits 0 to 9 is
+[1, 0, 2, 6, 7, 5, 3, 8, 4, 9]
+1026753849
+
+run as
+[kwong23@ugrad4 2hw]$ eclps -b square.ecl -e 'go'
+
+and select the smallest answer.
+
 
 Problem 3
 ======================================================================================
