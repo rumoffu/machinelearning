@@ -1162,8 +1162,8 @@ solve(EndTime) :-
 		S_step_575,
 	S_emptyvar],
 
-	TaskFinishTimes :: 0..600000,
-	TaskStartTimes :: 0..600000,
+	TaskFinishTimes :: 0..60000,
+	TaskStartTimes :: 0..60000,
 
 	%declare durations
 		F_step_001 - S_step_001 #= 30,
@@ -2523,7 +2523,7 @@ solve(EndTime) :-
 	%declare solution commands
 		EndTime #= max(TaskFinishTimes),
 		flatten([TaskStartTimes, TaskFinishTimes, EndTime], AllVars),
-		minimize(search(AllVars, 0, occurrence, indomain_max, complete, []), EndTime),
+		minimize(search(AllVars, 0, input_order, indomain_middle, lds(1), []), EndTime),
 
 		printf("asm_1.step_001: %d - %d %n", [S_step_001, F_step_001]),
 		printf("asm_1.step_002: %d - %d %n", [S_step_002, F_step_002]),
