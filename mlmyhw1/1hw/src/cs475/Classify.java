@@ -1,9 +1,9 @@
 /*
  * Kyle Wong
- * 14.2.11
+ * 14.3.6
  * Machine Learning
  * kwong23
- * Assignment 1
+ * Assignment 3
  */
 package cs475;
 
@@ -39,16 +39,27 @@ public class Classify {
 		String model_file = CommandLineUtilities.getOptionValue("model_file");
 		int gd_iterations = 20;
 		if (CommandLineUtilities.hasArg("gd_iterations"))
-		gd_iterations = CommandLineUtilities.getOptionValueAsInt("gd_iterations");
+			gd_iterations = CommandLineUtilities.getOptionValueAsInt("gd_iterations");
 		double gd_eta = .01;
 		if (CommandLineUtilities.hasArg("gd_eta"))
-		gd_eta = CommandLineUtilities.getOptionValueAsFloat("gd_eta");
+			gd_eta = CommandLineUtilities.getOptionValueAsFloat("gd_eta");
 		int num_features = UNINITIALIZED;
 		if (CommandLineUtilities.hasArg("num_features_to_select"))
-		num_features = CommandLineUtilities.getOptionValueAsInt("num_features_to_select");
-
-		System.out.printf("gd_eta: %s num_features: %s gd_iterations %s\n", gd_eta, num_features, gd_iterations);
-		
+			num_features = CommandLineUtilities.getOptionValueAsInt("num_features_to_select");
+		double online_learning_rate = 1.0;
+		if (CommandLineUtilities.hasArg("online_learning_rate"))
+			online_learning_rate = CommandLineUtilities.getOptionValueAsFloat("online_learning_rate");
+		double polynomial_kernel_exponent = 2;
+		if (CommandLineUtilities.hasArg("polynomial_kernel_exponent"))
+			polynomial_kernel_exponent = CommandLineUtilities.getOptionValueAsFloat("polynomial_kernel_exponent");
+		int online_training_iterations = 5;
+		if (CommandLineUtilities.hasArg("online_training_iterations"))
+			online_training_iterations = CommandLineUtilities.getOptionValueAsInt("online_training_iterations");
+			
+//		for(int i = 0; i < args.length; i++){
+//			System.out.print(args[i] + " ");
+//		}
+//		System.out.println();
 		
 		if (mode.equalsIgnoreCase("train")) {
 			if (data == null || algorithm == null || model_file == null) {
@@ -61,7 +72,10 @@ public class Classify {
 			data_reader.close();
 			
 			// Train the model.
-			Predictor predictor = train(instances, algorithm, gd_eta, num_features, gd_iterations);
+			TrainParameter params = new TrainParameter(instances, algorithm, gd_eta, num_features, gd_iterations,
+					online_learning_rate, online_training_iterations, polynomial_kernel_exponent);
+			Predictor predictor = train(params);
+//			System.out.println(params);
 			saveObject(predictor, model_file);		
 			
 		} else if (mode.equalsIgnoreCase("test")) {
@@ -83,34 +97,144 @@ public class Classify {
 		}
 	}
 	
+	/**
+	 * Nested parameter object class for passing parameters to Classifiers.
+	 * @author KT Wong
+	 *
+	 */
+	public static class TrainParameter {
+		private List<Instance> instances;
+		private String algorithm;
+		private double eta;
+		private int num_features;
+		private int num_iters;
+		private double online_learning_rate;
+		private int online_training_iterations;
+		private double polynomial_kernel_exponent;
 
-	private static Predictor train(List<Instance> instances, String algorithm, double eta, int num_features, int num_iters) {
+		public TrainParameter(List<Instance> instances, String algorithm,
+				double eta, int num_features, int num_iters,
+				double online_learning_rate, int online_training_iterations,
+				double polynomial_kernel_exponent) {
+			this.instances = instances;
+			this.algorithm = algorithm;
+			this.eta = eta;
+			this.num_features = num_features;
+			this.num_iters = num_iters;
+			this.online_learning_rate = online_learning_rate;
+			this.online_training_iterations = online_training_iterations;
+			this.polynomial_kernel_exponent = polynomial_kernel_exponent;
+		}
+
+		public List<Instance> getInstances() {
+			return instances;
+		}
+
+		public void setInstances(List<Instance> instances) {
+			this.instances = instances;
+		}
+
+		public String getAlgorithm() {
+			return algorithm;
+		}
+
+		public void setAlgorithm(String algorithm) {
+			this.algorithm = algorithm;
+		}
+
+		public double getEta() {
+			return eta;
+		}
+
+		public void setEta(double eta) {
+			this.eta = eta;
+		}
+
+		public int getNum_features() {
+			return num_features;
+		}
+
+		public void setNum_features(int num_features) {
+			this.num_features = num_features;
+		}
+
+		public int getNum_iters() {
+			return num_iters;
+		}
+
+		public void setNum_iters(int num_iters) {
+			this.num_iters = num_iters;
+		}
+
+		public double getOnline_learning_rate() {
+			return online_learning_rate;
+		}
+
+		public void setOnline_learning_rate(double online_learning_rate) {
+			this.online_learning_rate = online_learning_rate;
+		}
+
+		public int getOnline_training_iterations() {
+			return online_training_iterations;
+		}
+
+		public void setOnline_training_iterations(int online_training_iterations) {
+			this.online_training_iterations = online_training_iterations;
+		}
+		
+		public double getPolynomial_kernel_exponent(){
+			return polynomial_kernel_exponent;
+		}
+		public void setPolynomial_kernel_exponent(double polynomial_kernel_exponent) {
+			this.polynomial_kernel_exponent = polynomial_kernel_exponent;
+		}
+		
+		public String toString(){
+//			return instances + " " + 
+			return algorithm + " eta: " + eta + " numfeatures: " + num_features + 
+					" num_iters: " + num_iters + " online_learning_rate: " + 
+					online_learning_rate + "\nonline_training_iterations: " + 
+					online_training_iterations + " polynomial_kernel_exponent: " +
+					polynomial_kernel_exponent;
+		}
+	}
+
+	private static Predictor train(TrainParameter params) {
 		// TODO Train the model using "algorithm" on "data"
 		// TODO Evaluate the model
+		Predictor predictor = null;
 		AccuracyEvaluator evaluator = new AccuracyEvaluator();
 		double accuracy;
-		if(algorithm.equalsIgnoreCase("majority")){
-			MajorityClassifier predictor = new MajorityClassifier();
-			predictor.train(instances);
-			System.out.printf("Testing %s Accuracy\n", predictor);
-			accuracy = evaluator.evaluateAccuracy(instances, predictor);
-			return (Predictor) predictor;
+		if(params.getAlgorithm().equalsIgnoreCase("majority")){
+			predictor = new MajorityClassifier();
 		}
-		else if(algorithm.equalsIgnoreCase("even_odd")){
-			EvenOddClassifier predictor = new EvenOddClassifier();
-			predictor.train(instances);
-			System.out.printf("Testing %s Accuracy\n", predictor);
-			accuracy = evaluator.evaluateAccuracy(instances, predictor);
-			return (Predictor) predictor;
+		else if(params.getAlgorithm().equalsIgnoreCase("even_odd")){
+			predictor = new EvenOddClassifier();
 		}
-		else if(algorithm.equalsIgnoreCase("logistic_regression")){
-			LogisticClassifier predictor = new LogisticClassifier(eta, num_features, num_iters);
-			predictor.train(instances);
-			System.out.printf("Testing %s Accuracy\n", predictor);
-			accuracy = evaluator.evaluateAccuracy(instances, predictor);
-			return (Predictor) predictor;
+		else if(params.getAlgorithm().equalsIgnoreCase("logistic_regression")){
+			predictor = new LogisticClassifier(params.getEta(), params.getNum_features(), params.getNum_iters());
 		}
-		return null;
+		else if(params.getAlgorithm().equalsIgnoreCase("margin_perceptron")){
+			predictor = new MarginPerceptron(params.getOnline_learning_rate(), params.getOnline_training_iterations());
+		}
+		else if(params.getAlgorithm().equalsIgnoreCase("perceptron_linear_kernel")){
+			predictor = new DualMarginPerceptron(params.getOnline_learning_rate(), 
+					params.getOnline_training_iterations(), params.getAlgorithm(), 
+					params.getPolynomial_kernel_exponent());
+		}
+		else if(params.getAlgorithm().equalsIgnoreCase("perceptron_polynomial_kernel")){
+			predictor = new DualMarginPerceptron(params.getOnline_learning_rate(), 
+					params.getOnline_training_iterations(), params.getAlgorithm(), 
+					params.getPolynomial_kernel_exponent());
+		}
+		else if(params.getAlgorithm().equalsIgnoreCase("mira")){
+			predictor = new MiraPerceptron(params.getOnline_training_iterations());
+		}
+		predictor.train(params.getInstances());
+//		System.out.printf("Testing %s Accuracy\n", predictor);
+		System.out.print("train data: ");
+		accuracy = evaluator.evaluateAccuracy(params.getInstances(), predictor);
+		return (Predictor) predictor;
 	}
 
 	private static void evaluateAndSavePredictions(Predictor predictor,
@@ -120,17 +244,18 @@ public class Classify {
 		double accuracy;
 		if(instances.get(0).getLabel() != null){
 			AccuracyEvaluator evaluator = new AccuracyEvaluator();
-			System.out.printf("Testing %s Accuracy\n", predictor);
-			accuracy = evaluator.evaluateAccuracy(instances, predictor);
+//			System.out.printf("Testing %s Accuracy\n", predictor);
+			System.out.print("dev data: ");
+			accuracy = evaluator.evaluateAndPrintAccuracy(instances, predictor, writer);
 		}
 		else{ //courtesy information message
 			System.out.println("Test data therefore accuracy cannot be calculated.");
 		}
 		
-		for (Instance instance : instances) {
-			Label label = predictor.predict(instance);
-			writer.writePrediction(label);
-		}
+//		for (Instance instance : instances) {
+//			Label label = predictor.predict(instance);
+//			writer.writePrediction(label);
+//		}
 		
 		writer.close();
 		
@@ -187,6 +312,10 @@ public class Classify {
 		registerOption("gd_eta", "int", true, "The step size parameter for GD.");
 		registerOption("gd_iterations", "int", true, "The number of GD iterations.");
 		registerOption("num_features_to_select", "int", true, "The number of features to select.");
+		registerOption("online_learning_rate", "double", true, "The learning rate for perceptron.");
+		registerOption("polynomial_kernel_exponent", "double", true, "The exponent of the polynomial kernel.");
+		registerOption("online_training_iterations", "int", true, "The number of training iterations for online methods.");
+		
 		// Other options will be added here.
 	}
 }

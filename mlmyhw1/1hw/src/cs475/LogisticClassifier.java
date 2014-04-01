@@ -118,6 +118,9 @@ public class LogisticClassifier extends Predictor{
 		if(num_features_to_select == UNINITIALIZED){
 			num_features_to_select = maxkey;
 		}
+		if(maxkey < num_features_to_select){
+			maxkey = num_features_to_select;
+		}
 		this.infogains = new Double[maxkey];
 		this.weights = new Double[num_features_to_select];
 		for(int i = 0; i < maxkey; i++){
@@ -148,7 +151,8 @@ public class LogisticClassifier extends Predictor{
 			pxj = px / instances.size();
 			pyixj0 = pyx0 / instances.size();
 			pyixj1 = pyx1 / instances.size();//log of 0 is NaN - might be a problem when lacking train data
-			this.infogains[i] = -pyixj0*Math.log(pyixj0 / pxj) - pyixj1*Math.log(pyixj1 / pxj);
+			this.infogains[i] = -1*pyixj0*Math.log(pyixj0 / pxj) + -1* pyixj1*Math.log(pyixj1 / pxj);
+			//this.infogains[i] = -1*pyixj0*Math.log(pyixj0 / pxj) + -1* pyixj1*Math.log(pyixj1 / pxj);
 			
 //			double temp = this.infogains[i]; 
 //			System.out.printf("%s %s\n", i, temp);
