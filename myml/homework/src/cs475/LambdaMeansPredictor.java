@@ -87,7 +87,7 @@ public class LambdaMeansPredictor extends Predictor{
 			// get the minimum distance cluster k that the instance belongs to 
 			for(int k = 0; k < this.mewk.size(); k++){
 				dist = Util.euclideanDistance(xi, mewk.get(k));
-				if(dist < minDist){
+				if(dist < minDist){//defaults to break ties by assigning to lowest cluster number
 					minDist = dist;
 					minCluster = k;
 				}
@@ -113,16 +113,46 @@ public class LambdaMeansPredictor extends Predictor{
 				xi = instances.get(rnk.get(k).get(n)).getFeatureVector().getAll(this.number_of_features);
 				sum = Util.vectorAdd(sum, xi);
 			}
-			mewk.set(k, Util.scalarMultiply(1.0/rnk.get(k).size(), sum));
+			if(rnk.get(k).size() == 0){ //if it is empty, set it to 0's
+				mewk.set(k, new Double[this.number_of_features]);
+			}
+			else{//update to 1 over n times the sum of each instance in it
+				mewk.set(k, Util.scalarMultiply(1.0/rnk.get(k).size(), sum));
+			}
 		}
 		
 		
 	}
 	@Override
+	/**
+	 * Predicts the cluster number that the instance belongs to.
+	 * @return a label with number 0 to k-1 which is the cluster number
+	 */
 	public Label predict(Instance instance) {
-		// TODO Auto-generated method stub
-		return null;
+		double minDist = Double.POSITIVE_INFINITY;
+		double dist;
+		Double[] xi = instance.getFeatureVector().getAll(this.number_of_features);
+		int minCluster = -1;
+		for(int k = 0; k < this.mewk.size(); k++){ //compare to each mewk
+			dist = Util.euclideanDistance(xi, mewk.get(k));
+			if(dist < minDist){ //defaults to break ties by assigning to lowest cluster number
+				minDist = dist;
+				minCluster = k;
+			}
+		}
+		
+		return new ClassificationLabel(minCluster);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 
