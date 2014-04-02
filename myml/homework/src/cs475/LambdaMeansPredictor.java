@@ -59,6 +59,10 @@ public class LambdaMeansPredictor extends Predictor{
 		}
 		mewk.add(Util.scalarMultiply(1.0/instances.size(), sum));
 		
+		//initialize rnk
+		ArrayList<Integer> newCluster = new ArrayList<Integer>();
+		rnk.add(newCluster);
+		
 		//Initialize Lambda Value
 		if(this.cluster_lambda == 0.0){
 			double lambdasum = 0.0;
@@ -87,6 +91,7 @@ public class LambdaMeansPredictor extends Predictor{
 		// For each instance, assign to cluster
 		for(int j = 0; j < instances.size(); j++){
 			xi = instances.get(j).getFeatureVector().getAll(this.number_of_features);
+			minDist = Double.POSITIVE_INFINITY;
 			// get the minimum distance cluster k that the instance belongs to 
 			for(int k = 0; k < this.mewk.size(); k++){
 				dist = Util.euclideanDistance(xi, mewk.get(k));
@@ -97,6 +102,7 @@ public class LambdaMeansPredictor extends Predictor{
 			}
 			if(minDist <= this.cluster_lambda){
 				// fits in a current cluster, so get the cluster's arraylist and add the instance id to it
+				
 				rnk.get(minCluster).add(j);
 			}
 			else{ //bigger than lambda so we make a new cluster and make a new mew_k
@@ -111,16 +117,21 @@ public class LambdaMeansPredictor extends Predictor{
 	private void Mstep(List<Instance> instances){
 		Double[] xi;
 		Double[] sum = new Double[this.number_of_features];
-		for(int i = 0; i < this.number_of_features; i++){
-			sum[i] = 0.0;
-		}
+		
 		for(int k = 0; k < mewk.size(); k++){ // for each mew
+			for(int i = 0; i < this.number_of_features; i++){
+				sum[i] = 0.0;
+			}
 			for(int n = 0; n < rnk.get(k).size(); n++){ //for each instance in mew
 				xi = instances.get(rnk.get(k).get(n)).getFeatureVector().getAll(this.number_of_features);
 				sum = Util.vectorAdd(sum, xi);
 			}
 			if(rnk.get(k).size() == 0){ //if it is empty, set it to 0's
-				mewk.set(k, new Double[this.number_of_features]);
+				sum = new Double[this.number_of_features];
+				for(int i = 0; i < this.number_of_features; i++){
+					sum[i] = 0.0;
+				}
+				mewk.set(k, sum);
 			}
 			else{//update to 1 over n times the sum of each instance in it
 				mewk.set(k, Util.scalarMultiply(1.0/rnk.get(k).size(), sum));
