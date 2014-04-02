@@ -48,6 +48,9 @@ public class LambdaMeansPredictor extends Predictor{
 		// Initialize prototype vector to the mean of all instances
 		this.number_of_features = Util.getMaxFeatureKey(instances);
 		Double[] sum = new Double[this.number_of_features];
+		for(int i = 0; i < this.number_of_features; i++){
+			sum[i] = 0.0;
+		}
 		Double[] xi;
 		
 		for(Instance e : instances){
@@ -107,7 +110,10 @@ public class LambdaMeansPredictor extends Predictor{
 	}
 	private void Mstep(List<Instance> instances){
 		Double[] xi;
-		Double[] sum = new Double[this.number_of_features];;
+		Double[] sum = new Double[this.number_of_features];
+		for(int i = 0; i < this.number_of_features; i++){
+			sum[i] = 0.0;
+		}
 		for(int k = 0; k < mewk.size(); k++){ // for each mew
 			for(int n = 0; n < rnk.get(k).size(); n++){ //for each instance in mew
 				xi = instances.get(rnk.get(k).get(n)).getFeatureVector().getAll(this.number_of_features);
