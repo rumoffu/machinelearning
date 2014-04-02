@@ -77,6 +77,10 @@ public class LambdaMeansPredictor extends Predictor{
 		double dist;
 		Double[] xi;
 		int minCluster = -1;
+		// Reset old cluster assignments
+		for(ArrayList<Integer> ra : rnk){
+			ra.clear();
+		}
 		// For each instance, assign to cluster
 		for(int j = 0; j < instances.size(); j++){
 			xi = instances.get(j).getFeatureVector().getAll(this.number_of_features);
@@ -92,7 +96,7 @@ public class LambdaMeansPredictor extends Predictor{
 				// fits in a current cluster, so get the cluster's arraylist and add the instance id to it
 				rnk.get(minCluster).add(j);
 			}
-			else{ //we make a new cluster and make a new mew_k
+			else{ //bigger than lambda so we make a new cluster and make a new mew_k
 				ArrayList<Integer> newCluster = new ArrayList<Integer>();
 				newCluster.add(j);
 				rnk.add(newCluster);
@@ -102,7 +106,15 @@ public class LambdaMeansPredictor extends Predictor{
 		
 	}
 	private void Mstep(List<Instance> instances){
-		
+		Double[] xi;
+		Double[] sum = new Double[this.number_of_features];;
+		for(int k = 0; k < mewk.size(); k++){ // for each mew
+			for(int n = 0; n < rnk.get(k).size(); n++){ //for each instance in mew
+				xi = instances.get(rnk.get(k).get(n)).getFeatureVector().getAll(this.number_of_features);
+				sum = Util.vectorAdd(sum, xi);
+			}
+			mewk.set(k, Util.scalarMultiply(1.0/rnk.get(k).size(), sum));
+		}
 		
 		
 	}
