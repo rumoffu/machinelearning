@@ -26,6 +26,7 @@ public class Classify {
 	
 	
 	public static void main(String[] args) throws IOException {
+		final long startTime = System.currentTimeMillis();
 		// Parse the command line.
 		final int UNINITIALIZED = -1;
 		String[] manditory_args = { "mode"};
@@ -106,6 +107,9 @@ public class Classify {
 		} else {
 			System.out.println("Requires mode argument.");
 		}
+		final long endTime = System.currentTimeMillis();
+
+		System.out.println("Total execution time (ms): " + (endTime - startTime) );
 	}
 	
 	/**
@@ -272,7 +276,7 @@ public class Classify {
 			predictor = new LambdaMeansPredictor(params.getCluster_lambda(), params.getClustering_training_iterations());
 		}
 		else if(params.getAlgorithm().equalsIgnoreCase("ska")){
-			predictor = new LambdaMeansPredictor(params.getNum_clusters(), params.getClustering_training_iterations());
+			predictor = new StochasticKMeansPredictor(params.getClustering_training_iterations(), params.getNum_clusters());
 		}
 		predictor.train(params.getInstances());
 //		System.out.printf("Testing %s Accuracy\n", predictor);

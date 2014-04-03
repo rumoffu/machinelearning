@@ -59,11 +59,11 @@ public class LambdaMeansPredictor extends Predictor{
 		}
 		mewk.add(Util.scalarMultiply(1.0/instances.size(), sum));
 		
-		//initialize rnk
+		// Initialize rnk
 		ArrayList<Integer> newCluster = new ArrayList<Integer>();
 		rnk.add(newCluster);
 		
-		//Initialize Lambda Value
+		// Initialize Lambda Value
 		if(this.cluster_lambda == 0.0){
 			double lambdasum = 0.0;
 			for(Instance e : instances){
@@ -72,7 +72,9 @@ public class LambdaMeansPredictor extends Predictor{
 			}
 			this.cluster_lambda = 1.0/instances.size() * lambdasum;
 		}
+		System.out.println("Cluster lambda: " + this.cluster_lambda);
 		
+		// Perform training iterations
 		for(int i = 0; i < this.clustering_training_iterations; i++){
 			Estep(instances);
 			Mstep(instances);
@@ -122,11 +124,12 @@ public class LambdaMeansPredictor extends Predictor{
 			for(int i = 0; i < this.number_of_features; i++){
 				sum[i] = 0.0;
 			}
-			for(int n = 0; n < rnk.get(k).size(); n++){ //for each instance in mew
-				xi = instances.get(rnk.get(k).get(n)).getFeatureVector().getAll(this.number_of_features);
+			ArrayList<Integer> cluster = rnk.get(k);
+			for(int n : cluster){ //for each instance in mew
+				xi = instances.get(n).getFeatureVector().getAll(this.number_of_features);
 				sum = Util.vectorAdd(sum, xi);
 			}
-			if(rnk.get(k).size() == 0){ //if it is empty, set it to 0's
+			if(cluster.size() == 0){ //if it is empty, set it to 0's
 				sum = new Double[this.number_of_features];
 				for(int i = 0; i < this.number_of_features; i++){
 					sum[i] = 0.0;
@@ -134,7 +137,7 @@ public class LambdaMeansPredictor extends Predictor{
 				mewk.set(k, sum);
 			}
 			else{//update to 1 over n times the sum of each instance in it
-				mewk.set(k, Util.scalarMultiply(1.0/rnk.get(k).size(), sum));
+				mewk.set(k, Util.scalarMultiply(1.0/cluster.size(), sum));
 			}
 		}
 		
@@ -157,7 +160,6 @@ public class LambdaMeansPredictor extends Predictor{
 				minCluster = k;
 			}
 		}
-		
 		return new ClassificationLabel(minCluster);
 	}
 	
