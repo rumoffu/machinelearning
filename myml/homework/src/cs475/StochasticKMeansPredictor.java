@@ -47,7 +47,7 @@ public class StochasticKMeansPredictor extends Predictor{
 			instanceToCluster[i] = i; //instance i is now in cluster i
 			// Initialize rnk
 			newCluster = new ArrayList<Integer>();
-			newCluster.add(i);
+			newCluster.add(new Integer(i));
 			rnk.add(newCluster);
 		}
 		
@@ -84,9 +84,10 @@ public class StochasticKMeansPredictor extends Predictor{
 //				removeFromCluster(instances.get(j), j); //faster but might be wrong
 			}
 			this.instanceToCluster[j] = minCluster; //add to new min cluster
+			
 			rnk.get(minCluster).add(j);
 			updateCluster(minCluster, instances);
-//			addToCluster(instances.get(minCluster), j); //faster but might be wrong
+//			addToCluster(instances.get(j), j); //faster but might be wrong
 		}
 		
 	}
@@ -153,7 +154,7 @@ public class StochasticKMeansPredictor extends Predictor{
 		// add key and update new mewk
 		cluster.add(new Integer(key_to_add));
 		mewk.set(this.instanceToCluster[key_to_add], Util.scalarMultiply(1.0/cluster.size(), sum));
-		
+
 	}
 
 	/**
