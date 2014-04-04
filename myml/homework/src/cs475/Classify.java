@@ -300,10 +300,10 @@ public class Classify {
 			System.out.println("Test data therefore accuracy cannot be calculated.");
 		}
 		
-//		for (Instance instance : instances) {
-//			Label label = predictor.predict(instance);
-//			writer.writePrediction(label);
-//		}
+		for (Instance instance : instances) {
+			Label label = predictor.predict(instance);
+			writer.writePrediction(label);
+		}
 		
 		writer.close();
 		
