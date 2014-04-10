@@ -151,4 +151,24 @@ It should return No.
 d) In general, how efficient is a query of mode pow(+A,+B,-C)?
 What is Prolog doing internally? Give the asymptotic complexity in terms of A and B.
 
+pow calls mult which calls add.  And add runs in time O(A).
+So mult will recurse and use add, and mult will run O(A) times using add each time,
+so mult runs in O(A^2).  Then, pow(A,B,C) recurses and runs O(B) times and thus
+the overall runtime will be O(B*A^2)
+
+e) How would pow be used for roots or logarithms?  What happens when you try it?
+What is the Prolog solver doing internally?
+
+You can use pow to solve logs by using it in mode pow(+,-,+) where B is unknown.
+so pow(A+,B-,C+) is asking what is the log base A of C
+
+You can use pow to solve roots by using it in mode pow(-,+,+) where A is unknown.
+so pow(A-,B+,C+) is asking what is the C to the root B
+
+You can solve logs and roots if the answer is an integer, 
+but if it seeks another solution, it will overflow the stack.
+If there is no integer answer, it will search infinitely.
+
+
+
 
