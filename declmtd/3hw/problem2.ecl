@@ -7,7 +7,6 @@
 % but greater_than(s(s(s(z))),s(s(z))) should return Yes.
 % Assume this predicate will be called with Peano integers as its arguments
 %
-% run as [kwong23@ugrad12 2hw]$ eclps -b square.ecl -e 'go'  
 % compile and run $ rlwrap eclps
 % compile('problem2.ecl').
 % 

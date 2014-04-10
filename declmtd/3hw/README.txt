@@ -69,6 +69,76 @@ e) Prolog does unification, but the copies are different.  So they are partly sh
 Problem 3 - Duplicate
 =====================================================================================
 
+See problem3.ecl
 
+What should be returned by the query duplicate(M, [f(3),f(X),X,Y])?
+
+Since the only way to make it match is a function where f returns 3, then Y should be 3
+
+[eclipse 6]: duplicate(M, [f(3),f(X),X,Y]).
+
+M = [f(3), 3]
+X = 3
+Y = 3
+Yes (0.00s cpu)
+
+Problem 4 - Swap
+=====================================================================================
+
+a) See problem 4.ecl
+
+swap([a],L) should just return L = a since there are no elements to swap.
+swap([],L) should just return L = [] since there are no elements to swap.
+
+b) mystery(W,Z) :- swap(W,X), swap(X,Y), swap(Y,Z).
+
+What does this do?
+
+How many values for L will be returned by mystery([1,2,3,...n],L)?
+Are all of these values different from one another? Why or why not?
+
+mystery first swaps adjacent elements down the list to find solutions, 
+then starting from those solutions, it swaps adjacent elements down the list 
+to find new solutions, and then starts from the new solutions to try swapping 
+adjacent elements down the list again.
+
+So if there are n elements, it will create n more solutions with n swaps,
+then for each of those solutions, it creates n times more solutions, 
+then for each of those additional solutions, creates n times more solutions.
+
+Thus, mystery will return n^3 solutions.  
+Not all of these values are different from each other because mystery is only
+swapping the elements and does not track if the solution is a new discovery.
+
+For example, running 
+[eclipse 35]: mystery([a,b],L).
+
+generates:
+
+L = [b, a]
+Yes (0.00s cpu, solution 1, maybe more) ? ;
+L = [a, b]
+Yes (0.00s cpu, solution 2, maybe more) ? ;
+L = [a, b]
+Yes (0.00s cpu, solution 3, maybe more) ? ;
+L = [b, a]
+Yes (0.00s cpu, solution 4, maybe more) ? ;
+L = [a, b]
+Yes (0.00s cpu, solution 5, maybe more) ? ;
+L = [b, a]
+Yes (0.00s cpu, solution 6, maybe more) ? ;
+L = [b, a]
+Yes (0.00s cpu, solution 7, maybe more) ? ;
+L = [a, b]
+Yes (0.00s cpu, solution 8, maybe more) ? ;
+No (0.00s cpu)
+
+Even if the input is larger, such as mystery([a,b,c,d,e,f],L),
+the solutions will repeat.  
+
+
+
+Problem 5 - power
+=====================================================================================
 
 
