@@ -11,13 +11,34 @@
 % compile('problem4.ecl').
 % 
 % Example:
-% [eclipse 12]: swap([a,b,c,d],L).
+% [eclipse 16]: pow(z,z,C).
 % 
-%
+% C = s(z)
+% Yes (0.00s cpu)
+% [eclipse 17]: pow(s(s(z)),s(s(z)),C).
+% 
+% C = s(s(s(s(z))))
+% Yes (0.00s cpu)
+% [eclipse 18]: pow(s(z),z,C).
+% 
+% C = s(z)
+% Yes (0.00s cpu)
+% [eclipse 19]: pow(s(s(z)),s(s(s(z))),C).
+% 
+% C = s(s(s(s(s(s(s(s(z))))))))
+% Yes (0.00s cpu)
+
 
 add(z,B,B). %0+B=B
 add(s(A),B,Sum) :- add(A,s(B),Sum). %(1+A)+B =Sum if A+(1+B)=Sum
 
-mult(z,B,z). %0*B=0
+mult(z,_,z). %0*B=0
 mult(s(A),B,Sum) :- mult(A,B,Product), add(B, Product, Sum). %(1+A)*B = B + A*B = Sum if A*B=Product and B+Product=Sum
+
+% anything to the power 0 is 1
+pow(_,z,s(z)).
+% pow(s(_),z,s(z)).
+
+% A^(B+1) = A^B*A
+pow(A,s(B),C) :- pow(A,B,AtotheB), mult(AtotheB,A,C).
 

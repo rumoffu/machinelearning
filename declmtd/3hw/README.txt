@@ -141,4 +141,14 @@ the solutions will repeat.
 Problem 5 - power
 =====================================================================================
 
+a) See problem5.ecl
+
+b) query pow(z,z,C) which is 0^0 should return 1.
+
+c) What will your program answer if A,B, and C are not all Peano integers?
+It should return No.
+
+d) In general, how efficient is a query of mode pow(+A,+B,-C)?
+What is Prolog doing internally? Give the asymptotic complexity in terms of A and B.
+
 
