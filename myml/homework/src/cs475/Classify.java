@@ -1,9 +1,9 @@
 /*
  * Kyle Wong
- * 14.3.6
+ * 14.4.1
  * Machine Learning
  * kwong23
- * Assignment 3
+ * Assignment 4
  */
 package cs475;
 
@@ -26,6 +26,7 @@ public class Classify {
 	
 	
 	public static void main(String[] args) throws IOException {
+		final long startTime = System.currentTimeMillis();
 		// Parse the command line.
 		final int UNINITIALIZED = -1;
 		String[] manditory_args = { "mode"};
@@ -55,6 +56,16 @@ public class Classify {
 		int online_training_iterations = 5;
 		if (CommandLineUtilities.hasArg("online_training_iterations"))
 			online_training_iterations = CommandLineUtilities.getOptionValueAsInt("online_training_iterations");
+		double cluster_lambda = 0.0;
+		if (CommandLineUtilities.hasArg("cluster_lambda"))
+			cluster_lambda = CommandLineUtilities.getOptionValueAsFloat("cluster_lambda");
+		int clustering_training_iterations = 10;
+		if (CommandLineUtilities.hasArg("clustering_training_iterations"))
+			clustering_training_iterations = CommandLineUtilities.getOptionValueAsInt("clustering_training_iterations");
+		int num_clusters = 0;
+		if (CommandLineUtilities.hasArg("num_clusters"))
+			num_clusters = CommandLineUtilities.getOptionValueAsInt("num_clusters");
+		
 			
 //		for(int i = 0; i < args.length; i++){
 //			System.out.print(args[i] + " ");
@@ -72,8 +83,9 @@ public class Classify {
 			data_reader.close();
 			
 			// Train the model.
-			TrainParameter params = new TrainParameter(instances, algorithm, gd_eta, num_features, gd_iterations,
-					online_learning_rate, online_training_iterations, polynomial_kernel_exponent);
+			TrainParameter params = new TrainParameter(instances, algorithm, gd_iterations, gd_eta, num_features, 
+					online_learning_rate, polynomial_kernel_exponent, online_training_iterations, cluster_lambda,
+					clustering_training_iterations, num_clusters);
 			Predictor predictor = train(params);
 //			System.out.println(params);
 			saveObject(predictor, model_file);		
@@ -95,6 +107,9 @@ public class Classify {
 		} else {
 			System.out.println("Requires mode argument.");
 		}
+		final long endTime = System.currentTimeMillis();
+
+		System.out.println("Total execution time (ms): " + (endTime - startTime) );
 	}
 	
 	/**
@@ -105,25 +120,32 @@ public class Classify {
 	public static class TrainParameter {
 		private List<Instance> instances;
 		private String algorithm;
+		private int gd_iters;
 		private double eta;
 		private int num_features;
-		private int num_iters;
 		private double online_learning_rate;
-		private int online_training_iterations;
 		private double polynomial_kernel_exponent;
+		private int online_training_iterations;
+		private double cluster_lambda;
+		private int clustering_training_iterations;
+		private int num_clusters;
 
 		public TrainParameter(List<Instance> instances, String algorithm,
-				double eta, int num_features, int num_iters,
-				double online_learning_rate, int online_training_iterations,
-				double polynomial_kernel_exponent) {
+				int gd_iters, double eta, int num_features, 
+				double online_learning_rate, double polynomial_kernel_exponent,
+				int online_training_iterations, double cluster_lambda,
+				int clustering_training_iterations, int num_clusters) {
 			this.instances = instances;
 			this.algorithm = algorithm;
+			this.gd_iters = gd_iters;
 			this.eta = eta;
 			this.num_features = num_features;
-			this.num_iters = num_iters;
 			this.online_learning_rate = online_learning_rate;
-			this.online_training_iterations = online_training_iterations;
 			this.polynomial_kernel_exponent = polynomial_kernel_exponent;
+			this.online_training_iterations = online_training_iterations;
+			this.cluster_lambda = cluster_lambda;
+			this.clustering_training_iterations = clustering_training_iterations;
+			this.num_clusters = num_clusters;
 		}
 
 		public List<Instance> getInstances() {
@@ -141,7 +163,14 @@ public class Classify {
 		public void setAlgorithm(String algorithm) {
 			this.algorithm = algorithm;
 		}
+		
+		public int getGd_iters() {
+			return gd_iters;
+		}
 
+		public void setGd_iters(int gd_iters) {
+			this.gd_iters = gd_iters;
+		}
 		public double getEta() {
 			return eta;
 		}
@@ -158,20 +187,18 @@ public class Classify {
 			this.num_features = num_features;
 		}
 
-		public int getNum_iters() {
-			return num_iters;
-		}
-
-		public void setNum_iters(int num_iters) {
-			this.num_iters = num_iters;
-		}
-
 		public double getOnline_learning_rate() {
 			return online_learning_rate;
 		}
 
 		public void setOnline_learning_rate(double online_learning_rate) {
 			this.online_learning_rate = online_learning_rate;
+		}
+		public double getPolynomial_kernel_exponent(){
+			return polynomial_kernel_exponent;
+		}
+		public void setPolynomial_kernel_exponent(double polynomial_kernel_exponent) {
+			this.polynomial_kernel_exponent = polynomial_kernel_exponent;
 		}
 
 		public int getOnline_training_iterations() {
@@ -182,20 +209,35 @@ public class Classify {
 			this.online_training_iterations = online_training_iterations;
 		}
 		
-		public double getPolynomial_kernel_exponent(){
-			return polynomial_kernel_exponent;
+		public double getCluster_lambda(){
+			return cluster_lambda;
 		}
-		public void setPolynomial_kernel_exponent(double polynomial_kernel_exponent) {
-			this.polynomial_kernel_exponent = polynomial_kernel_exponent;
+		public void setCluster_lambda(double cluster_lambda){
+			this.cluster_lambda = cluster_lambda;
 		}
+		
+		public int getClustering_training_iterations(){
+			return clustering_training_iterations;
+		}
+		public void setClustering_training_iterations(int clustering_training_iterations){
+			this.clustering_training_iterations = clustering_training_iterations;
+		}
+		public int getNum_clusters(){
+			return num_clusters;
+		}
+		public void setNum_clusters(int num_clusters){
+			this.num_clusters = num_clusters;
+		}
+		
+
 		
 		public String toString(){
 //			return instances + " " + 
-			return algorithm + " eta: " + eta + " numfeatures: " + num_features + 
-					" num_iters: " + num_iters + " online_learning_rate: " + 
-					online_learning_rate + "\nonline_training_iterations: " + 
-					online_training_iterations + " polynomial_kernel_exponent: " +
-					polynomial_kernel_exponent;
+			return algorithm + " gd_iters: " + gd_iters + " eta: " + eta + " numfeatures: " + num_features + 
+					" online_learning_rate: " + online_learning_rate + "\npolynomial_kernel_exponent: " +
+					polynomial_kernel_exponent + " online_training_iterations: " + 
+					online_training_iterations + " cluster_lambda: " + cluster_lambda + " num_clusters " +
+					num_clusters;
 		}
 	}
 
@@ -212,7 +254,7 @@ public class Classify {
 			predictor = new EvenOddClassifier();
 		}
 		else if(params.getAlgorithm().equalsIgnoreCase("logistic_regression")){
-			predictor = new LogisticClassifier(params.getEta(), params.getNum_features(), params.getNum_iters());
+			predictor = new LogisticClassifier(params.getEta(), params.getNum_features(), params.getGd_iters());
 		}
 		else if(params.getAlgorithm().equalsIgnoreCase("margin_perceptron")){
 			predictor = new MarginPerceptron(params.getOnline_learning_rate(), params.getOnline_training_iterations());
@@ -229,6 +271,12 @@ public class Classify {
 		}
 		else if(params.getAlgorithm().equalsIgnoreCase("mira")){
 			predictor = new MiraPerceptron(params.getOnline_training_iterations());
+		}
+		else if(params.getAlgorithm().equalsIgnoreCase("lambda_means")){
+			predictor = new LambdaMeansPredictor(params.getCluster_lambda(), params.getClustering_training_iterations());
+		}
+		else if(params.getAlgorithm().equalsIgnoreCase("ska")){
+			predictor = new StochasticKMeansPredictor(params.getClustering_training_iterations(), params.getNum_clusters());
 		}
 		predictor.train(params.getInstances());
 //		System.out.printf("Testing %s Accuracy\n", predictor);
@@ -252,10 +300,10 @@ public class Classify {
 			System.out.println("Test data therefore accuracy cannot be calculated.");
 		}
 		
-//		for (Instance instance : instances) {
-//			Label label = predictor.predict(instance);
-//			writer.writePrediction(label);
-//		}
+		for (Instance instance : instances) {
+			Label label = predictor.predict(instance);
+			writer.writePrediction(label);
+		}
 		
 		writer.close();
 		
@@ -315,6 +363,9 @@ public class Classify {
 		registerOption("online_learning_rate", "double", true, "The learning rate for perceptron.");
 		registerOption("polynomial_kernel_exponent", "double", true, "The exponent of the polynomial kernel.");
 		registerOption("online_training_iterations", "int", true, "The number of training iterations for online methods.");
+		registerOption("cluster_lambda", "double", true, "The value of lambda in lambda-means.");
+		registerOption("clustering_training_iterations", "int", true, "The number of clustering iterations.");
+		registerOption("num_clusters", "int", true, "The number of clusters in stochastic K means.");
 		
 		// Other options will be added here.
 	}

@@ -36,11 +36,11 @@ public class EvenOddClassifier extends Predictor{
 		double oddsum = 0;
 		while(elements.hasNext()){
 			Map.Entry items = (Map.Entry)elements.next();
-			if((int)items.getKey() % 2 == 0){
-				evensum += (double)items.getValue();
+			if(Integer.parseInt(items.getKey().toString()) % 2 == 0){
+				evensum += Double.parseDouble(items.getValue().toString());
 			}
 			else {//odd
-				oddsum += (double)items.getValue();
+				oddsum += Double.parseDouble(items.getValue().toString());
 			}
 				
 		}
