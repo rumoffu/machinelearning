@@ -38,8 +38,8 @@ mult(z,_,z). %0*B=0
 mult(s(A),B,Sum) :- mult(A,B,Product), add(B, Product, Sum). %(1+A)*B = B + A*B = Sum if A*B=Product and B+Product=Sum
 
 % anything to the power 0 is 1
-pow(_,z,s(z)).
-% pow(s(_),z,s(z)).
+pow(z,z,s(z)).
+pow(s(_),z,s(z)).
 
 % A^(B+1) = A^B*A
 pow(A,s(B),C) :- pow(A,B,AtotheB), mult(AtotheB,A,C).
