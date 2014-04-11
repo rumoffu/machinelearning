@@ -61,7 +61,7 @@ d) It has to enumerate solutions because it must ensure that A and B are Peano
 integers and not any other value.  But more deeply, it uses unification and backtracking
 and so it must use a Generate-and-test method and thus will enumerate solutions.
 
-e) Prolog does unification, but the copies are different.  So they are partly shared copies
+e) [425] Prolog does unification, but the copies are different.  So they are partly shared copies
 (where they have the same z, but different s's).
 
 
@@ -369,7 +369,7 @@ Found no solution with cost -1.0Inf .. -4
 Ans = [4, 6, 8]
 Yes (0.00s cpu)
 
-e) Explain the meaning of the following query.
+e) [425] Explain the meaning of the following query.
 
 Vars = [A,B,C,D,E], Vars::1..4, inc_subseq(Vars,[E,C,A]),
   labeling(Vars).
@@ -418,6 +418,53 @@ The delayed goals show the constraints between the variable assignment answers.
 
 Problem 9 
 =====================================================================================
+
+a) explain what p does
+
+:- lib(ic).
+
+p([],1).
+p([X|Xs],A) :- p(Xs,B), A #= X*B.
+
+p can calculate the product of a list of integers. It turns each element into a factor,
+then recurses down the list to calculate the total product of all the factors in the list.
+
+b) explain what q does:
+
+q(List,N) :- p(List,N), List::2..N, labeling(List).
+
+q finds a list of factors who multiply up to form the product in N.  It restricts the
+domain of answers to 2 up to N (so 0 and 1 are excluded).  When the total number of
+possible solutions has been found, seeking more solutions (with semicolon) causes
+the program to search infinitely for more factors in vain.
+
+c) p appears to set up a constraint program with exactly three numeric variables,
+(A,B,X).  Explain why this is false.  How large is the constraint program?
+
+It actually has several more varibles since it is recursing 
+and thus adds constraints at each level of recursion:
+For every X in the list Xs, there is a constraint added where A #= X*B
+and so each step of the recursion actually generates a different X, A, and B.
+
+For each level of recursion, we get a new constraint and 3 different variables.
+Thus, since it recurses equal to the length of the list, then the constraint
+program is as large as the length of the List.
+
+% [20] gives 20=20*1
+% [2, 10] gives recurse p(10,B) which gives B #= 10*1 and so A #= 2*10 and A =20
+
+d) Explain why q([7,R],20) returns no.
+
+The query returns No because there is no solution to R such that 7*R = 20.  This is
+basically saying that no R exists that would make 7*R = 20.
+
+Explain why q([7|Rs],20) fails to halt.
+
+This query is asking if there is a list of integers Rs that would make 7*Rs = 20,
+so the program fails to halt because it continues searching more and more possible
+lists of integers to make 7*Rs = 20.
+
+e) [425]
 
 
 Problem 10 isomorphic binary trees
