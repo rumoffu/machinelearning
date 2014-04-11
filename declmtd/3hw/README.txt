@@ -319,5 +319,31 @@ Problem 8 - increasing subsequence
 
 a) See problem8.ecl
 
-b) 
+b) This query finds and counts all increasing subsequence solutions
+[eclipse 4]: findall(S,inc_subseq([3,5,2,6,7,4,9,1,8,0],S),List), length(List,N).
+
+S = S
+List = [[3, 5, 6, 7, 9], [3, 5, 6, 7, 8], [3, 5, 6, 7], [3, 5, 6, 9], [3, 5, 6, 8], 
+[3, 5, 6], [3, 5, 7, 9], [3, 5, 7, 8], [3, 5, 7], [3, 5, 9], [3, 5, 8], [3, 5], 
+[3, 6, 7, 9], [3, 6, 7, 8], [3, 6, 7], [3, 6, 9], [3, 6, ...], [3, ...], [...], ...]
+N = 72
+Yes (0.00s cpu)
+
+
+Modify it to find and count only subsequences of length 3.
+
+[eclipse 7]: length(S, 3), findall(S,inc_subseq([3,5,2,6,7,4,9,1,8,0],S),List), length(List,N).
+
+S = [_370, _372, _374]
+List = [[3, 5, 6], [3, 5, 7], [3, 5, 9], [3, 5, 8], [3, 6, 7], [3, 6, 9], [3, 6, 8],
+[3, 7, 9], [3, 7, 8], [3, 4, 9], [3, 4, 8], [5, 6, 7], [5, 6, 9], [5, 6, 8], [5, 7, 9],
+[5, 7, 8], [2, 6, ...], [2, ...], [...], ...]
+N = 25
+Yes (0.00s cpu)
+
+
+Problem 9
+=====================================================================================
+
+
 

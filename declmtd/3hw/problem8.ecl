@@ -1,22 +1,24 @@
 % Kyle Wong
 % Declarative Methods Homework 3
-% 14.4.10
-% Problem 7
+% 14.4.11
+% Problem 8
 %
-% Unique elements of a list
+% Increasing subsequence
 %
 % compile and run $ rlwrap eclps
-% compile('problem7.ecl').
+% compile('problem8.ecl').
 % 
+:- lib(branch_and_bound).
 
+% Empty set is an increasing subsequence
+inc_subseq([],[]).
 
-uniq([],[]).
-% we can find unique Ys if there is an X that is a member of Xs
-% and we can ensure the rest of Xs is unique
-uniq([X|Xs], Ys) :- member(X,Xs), uniq(Xs,Ys), !.
+% If X is the front of the solution, then Y is empty or Y has Z greater than X
+% which is to say the rest of the list must be strictly increasing
+inc_subseq([X|Xs],[X|Y]) :- inc_subseq(Xs, Y), (Y = [] ; Y = [Z|_], X<Z).
 
-% if X is not repeated in Xs, then we include it in the unique
-% solution Ys and ensure the rest of Xs is unique
-uniq([X|Xs],[X|Ys]) :- uniq(Xs,Ys).
+% remove the first element and ensure the rest is increasing subsequence
+inc_subseq([_|Xs],Y) :- inc_subseq(Xs,Y).
+
 
 
