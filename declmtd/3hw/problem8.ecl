@@ -8,6 +8,7 @@
 % compile and run $ rlwrap eclps
 % compile('problem8.ecl').
 % 
+:- lib(ic).
 :- lib(branch_and_bound).
 
 % Empty set is an increasing subsequence
@@ -20,5 +21,7 @@ inc_subseq([X|Xs],[X|Y]) :- inc_subseq(Xs, Y), (Y = [] ; Y = [Z|_], X<Z).
 % remove the first element and ensure the rest is increasing subsequence
 inc_subseq([_|Xs],Y) :- inc_subseq(Xs,Y).
 
+max_inc_subseq(X,Y) :-
 
+  minimize( (inc_subseq(X,Y), length(Y,N), Cost is -N), Cost).
 

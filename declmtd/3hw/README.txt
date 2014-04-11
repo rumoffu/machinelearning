@@ -341,9 +341,60 @@ List = [[3, 5, 6], [3, 5, 7], [3, 5, 9], [3, 5, 8], [3, 6, 7], [3, 6, 9], [3, 6,
 N = 25
 Yes (0.00s cpu)
 
+c) In the previous question, it is more efficient to process the length=3 constraint 
+before the inc_subseq constraint because it sets a bound on the size of the sets that
+Prolog will generate and test that match the inc_subseq constraints.
+
+d) The built-in ECLiPSe predicate minimize/2 tries to find the minimum-cost satisfying 
+assignment of some query. You can maximize a function by negating the cost.
+Give a command to find the longest increasing subsequence of a given list.
+
+max_inc_subseq(X,Y) :-
+
+  minimize( (inc_subseq(X,Y), length(Y,N), Cost is -N), Cost).
+
+running it and getting output gives:
+[eclipse 12]: max_inc_subseq([3,5,2,6,7,4,9,1,8,0],S).
+Found a solution with cost -5
+Found no solution with cost -1.0Inf .. -6
+
+S = [3, 5, 6, 7, 9]
+Yes (0.00s cpu)
+------------------------------------------------------------
+
+[eclipse 13]: max_inc_subseq([4,6,5,4,8,1],Ans).
+Found a solution with cost -3
+Found no solution with cost -1.0Inf .. -4
+
+Ans = [4, 6, 8]
+Yes (0.00s cpu)
+
+e)
+
 
 Problem 9
 =====================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
