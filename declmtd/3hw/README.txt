@@ -464,7 +464,9 @@ This query is asking if there is a list of integers Rs that would make 7*Rs = 20
 so the program fails to halt because it continues searching more and more possible
 lists of integers to make 7*Rs = 20.
 
-e) [425]
+e) [425] write alldifferent to have all the constraints.
+
+See problem9.ecl --- it gives all the constraints for adiff([X,Y,Z]) and adiff([V,W,X,Y,Z])
 
 
 Problem 10 isomorphic binary trees
@@ -488,9 +490,75 @@ Two trees with children with the same label.  This makes each branch indistingui
 so Prolog will have to wander down each branch until the very very bottom leafs to see
 there is a difference.
 
+For example:
+       d             d
+     /   \         /   \
+    d     d       d     d
+   / \   / \     / \   / \
+  d   d d   a   d   d d   z
+
+   The query isotree(
+   t(d, t(d,t(d,nil,nil),t(d,nil,nil)),  t(d,t(d,nil,nil),t(a,nil,nil))), 
+   t(d, t(d,t(d,nil,nil),t(d,nil,nil)),  t(d,t(d,nil,nil),t(z,nil,nil))). 
+   
+   would create a mostly symmetric tree where the solver would have to check every 
+   subtree and its Left and Right inverted form until the deepest leaf node in order
+   to see that the two trees are not isomorphic.  So it will do exponential work since
+   each branch creates 2 times as many nodes to check.
+
+
 Problem 11 
 =====================================================================================
 
+a) Please see problem11.ecl
+
+b)  Please see problem11.ecl for the inorder2 predicate.
+The original predicate inorder1 ran into infinite recursion
+after finding the first solution because it tries to backtrack through append
+before it backtracks through the inorder1 left traversal.
+
+Thus, our call to append now simply sets constraints for how to append the 
+subtrees into the final resulting list of nodes called Keys.  It no longer operates 
+as a source of backtracking where Prolog gets stuck in infinite recursion.
+
+
+
+[eclipse 15]: findall(Tree,inorder2(Tree,[a,b,c,d,e]),List), length(List,N).
+
+Tree = Tree
+List = [t(a, nil, t(b, nil, t(c, nil, t(d, nil, t(e, nil, nil))))), 
+t(a, nil, t(b, nil, t(c, nil, t(e, t(d, nil, nil), nil)))), 
+t(a, nil, t(b, nil, t(d, t(c, nil, nil), t(e, nil, nil)))), 
+t(a, nil, t(b, nil, t(e, t(c, nil, t(d, nil, nil)), nil))), 
+t(a, nil, t(b, nil, t(e, t(d, t(c, nil, nil), nil), nil))), 
+t(a, nil, t(c, t(b, nil, nil), t(d, nil, t(e, nil, nil)))), 
+t(a, nil, t(c, t(b, nil, nil), t(e, t(d, nil, nil), nil))), 
+t(a, nil, t(d, t(b, nil, t(c, nil, nil)), t(e, nil, nil))), 
+t(a, nil, t(d, t(c, t(b, nil, nil), nil), t(e, nil, nil))), 
+t(a, nil, t(e, t(b, nil, t(c, nil, t(d, nil, nil))), nil)), 
+t(a, nil, t(e, t(b, nil, t(d, t(c, nil, nil), nil)), nil)), 
+t(a, nil, t(e, t(c, t(b, nil, nil), t(d, nil, nil)), nil)), 
+t(a, nil, t(e, t(d, t(b, nil, t(c, nil, nil)), nil), nil)), 
+t(a, nil, t(e, t(d, t(c, t(b, nil, nil), nil), nil), nil)), 
+t(b, t(a, nil, nil), t(c, nil, t(d, nil, t(e, nil, nil)))), 
+t(b, t(a, nil, nil), t(c, nil, t(e, t(...), nil))), 
+t(b, t(a, nil, nil), t(d, t(...), t(...))), 
+t(b, t(...), t(...)), t(...), ...]
+N = 42
+Yes (0.00s cpu)
+
+
+Thus, there are 42 legal binary search trees for [a,b,c,d,e]
+
+c) [425] Searches in a binary tree are more efficient if the node being searched for
+is closer to the root of the tree.  The root has depth 0, its children have depth 1,
+etc.  Write a function total_depth/2 that computes the total depth of all non-nil 
+nodes in a tree. (Not the deepest depth, but the sum of all depths of all nodes)
+This is proportional to the amount of time it would take to search once for each element.
+Use minimize/2 from branch_and_bound to construct inorder3 which constructs a tree
+like inorder2 but requires it to have minimum total depth.
+(the result should turn out to be a complete binary tree, except that the deepest 
+layer of nodes need not be left-aligned.)
 
 
 
