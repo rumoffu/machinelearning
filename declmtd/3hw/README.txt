@@ -416,12 +416,33 @@ total range of answer values.
 
 The delayed goals show the constraints between the variable assignment answers.
 
-Problem 9
+Problem 9 
 =====================================================================================
 
 
+Problem 10 isomorphic binary trees
+=====================================================================================
 
+a) See problem10.ecl
 
+[eclipse 29]: 
+isotree(
+  t(d, t(a, nil, nil), t(d, t(b, nil, nil), t(c,nil, nil) ) ),
+  t(d, t(d, t(b, nil, nil), t(c, nil, nil) ), t(a, nil, nil) ) ).
+
+Yes (0.00s cpu)
+
+b) Give an example isotree query (on two constant trees) that demonstrate that Prolog 
+may have to do an exponential amount of work to determine that two trees are not 
+isomorphic.  Your example should "tease" Prolog leading it down many long blind
+alleys.
+
+Two trees with children with the same label.  This makes each branch indistinguishable,
+so Prolog will have to wander down each branch until the very very bottom leafs to see
+there is a difference.
+
+Problem 11 
+=====================================================================================
 
 
 
