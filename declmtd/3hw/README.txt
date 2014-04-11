@@ -241,17 +241,76 @@ Yes (0.00s cpu)
 
 ------------------------------------------------------------
 
-They do not do the same thing.  This is because the cut
+The first query does the same thing, but the second and third
+queries do not do the same thing.  This is because the cut
 operator stops backtracking through the current statement. Thus, when it is a part
 of a subroutine, it prevents backtracking through any part of the subroutine that 
 came before it. However, it does not stop backtracking through any statements that
 are outside of the subroutine that come before it.  So, it is limited in scope within
 subroutine calls to only stop backtracking within that subroutine.
 
-Problem 7 - 
+Problem 7 - Unique
 =====================================================================================
 
+uniq([],[]).
+uniq([X|Xs], Ys) :- member(X,Xs), uniq(Xs,Ys).
+uniq([X|Xs],[X|Ys]) :- uniq(Xs,Ys).
+
+[eclipse 19]: uniq([a,a,b,b,c],L).
+
+L = [a, b, c]
+Yes (0.00s cpu, solution 1, maybe more) ? ;
+
+L = [a, b, b, c]
+Yes (0.00s cpu, solution 2, maybe more) ? ;
+
+L = [a, a, b, c]
+Yes (0.00s cpu, solution 3, maybe more) ? ;
+
+L = [a, a, b, b, c]
+Yes (0.00s cpu, solution 4)
 
 
+a) The solution given above allows backtracking which gives solutions that are
+not unique.
 
+b) Consider the query uniq([3,X],[3,X]). What would you like it to return? Can Prolog do this?
+
+You would like it to return any number other than 3 and then to enumerate other solutions.
+Prolog cannot do this because it can only do unification.
+
+c) Add a cut at the end of the second statement.
+uniq([X|Xs], Ys) :- member(X,Xs), uniq(Xs,Ys), !.
+This makes sure that we will only find one unique solution and will not backtrack
+to get more solutions (which will actually find non-unique solutions).
+
+d) What does the modified program do for uniq([3,X], L)?
+
+[eclipse 22]: uniq([3,X],L).
+
+X = 3
+L = [3]
+Yes (0.00s cpu)
+
+It just returns the first X and L solution where L contains the unique elements
+that are in the list [3,X].
+
+How about uniq([3,X],[3,X])? Why?
+
+[eclipse 23]: uniq([3,X],[3,X]).
+
+X = X
+Yes (0.00s cpu)
+
+The output does not change.  This is because Prolog just unifies X with X and does
+not understand that there needs to be a constraint on X to not be equal to three.
+It does not have delayed constraints. 
+The cut operator does not add that meaning to the program.
+
+Problem 8 - increasing subsequence
+=====================================================================================
+
+a) See problem8.ecl
+
+b) 
 
