@@ -369,7 +369,50 @@ Found no solution with cost -1.0Inf .. -4
 Ans = [4, 6, 8]
 Yes (0.00s cpu)
 
-e)
+e) Explain the meaning of the following query.
+
+Vars = [A,B,C,D,E], Vars::1..4, inc_subseq(Vars,[E,C,A]),
+  labeling(Vars).
+
+This query is finding an assignment to the variables A-E such that the values are
+from 1 to 4 such that E < C < A.
+
+Then try it and report the results:
+Vars = [A,B,C,D,E], Vars::1..4, inc_subseq(Vars,[E,C,A]),
+          labeling(Vars).
+
+Vars = [3, 1, 2, 3, 1]
+A = 3
+B = 1
+C = 2
+D = 3
+E = 1
+
+
+Now remove the labeling(Vars). Results:
+
+[eclipse 17]: Vars = [A,B,C,D,E], Vars::1..4, inc_subseq(Vars,[E,C,A]).
+
+Vars = [A{[3, 4]}, B{[1, 2]}, C{[2, 3]}, A, B]
+A = A{[3, 4]}
+B = B{[1, 2]}
+C = C{[2, 3]}
+D = A{[3, 4]}
+E = B{[1, 2]}
+
+
+Delayed goals:
+        A{[3, 4]} - C{[2, 3]} #> 0
+        C{[2, 3]} - B{[1, 2]} #> 0
+
+------------------------------------------------------------
+
+Explanation: Prolog is finding all ranges of values for the variables such that
+the constraints will be made true.  So A{[3, 4]} means A can be 3 or 4. And
+B = B{[1, 2]} means B can be 1 or 2.  The list (square brackets) indicates that if
+A = 3, then B = 1 (all elements must take the value of the correct spot in the list).
+Prolog finds these values by backtracking and then simply saves and outputs the
+total range of answer values.
 
 
 Problem 9
