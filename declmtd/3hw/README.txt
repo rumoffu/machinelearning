@@ -307,6 +307,13 @@ not understand that there needs to be a constraint on X to not be equal to three
 It does not have delayed constraints. 
 The cut operator does not add that meaning to the program.
 
+e) The cut operator stops backtracking from going through the clause (the statement 
+which ends with a period).  So in this case, the cut's location puts an ordering
+on the constraint clauses.  This is because when the statement is passed, backtracking
+is no longer allowed to go past the cut.  So, the order of the clauses becomes 
+important.  Normally, in pure Prolog, there are no cuts, and so the order should not
+matter.  But with the cut, the clause order matters because of how it stops backtracking.
+
 Problem 8 - increasing subsequence
 =====================================================================================
 
