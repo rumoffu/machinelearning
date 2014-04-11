@@ -1,7 +1,7 @@
 Kyle Wong
 kwong23@jhu.edu
 Declarative Methods HW 3
-14.4.10
+14.4.11
 
 Problem 1 - Unification Variable Bindings
 =====================================================================================

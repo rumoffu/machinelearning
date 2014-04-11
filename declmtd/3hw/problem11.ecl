@@ -37,8 +37,8 @@ inorder2(t(Label,L,R),Keys) :-
 total_depth(nil,0).
 total_depth(t(_,nil,nil),0).
 total_depth(t(_,L,R),Total) :- 
-  Total = Ldepth + Rdepth, 
   total_depth(L,Ldepth),
-  total_depth(R,Rdepth).
+  total_depth(R,Rdepth),
+  Total is Ldepth + Rdepth. 
 
 
