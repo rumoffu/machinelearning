@@ -37,8 +37,14 @@ inorder2(t(Label,L,R),Keys) :-
 total_depth(nil,0).
 total_depth(t(_,nil,nil),0).
 total_depth(t(_,L,R),Total) :- 
-  total_depth(L,Ldepth),
-  total_depth(R,Rdepth),
+  depth(L,Ldepth),
+  depth(R,Rdepth),
   Total is Ldepth + Rdepth. 
 
+
+depth(nil,0).
+depth(t(_,Left,Right), D) :-
+  depth(Left,Leftdepth), 
+  depth(Right,Rightdepth), 
+  D is max(Leftdepth,Rightdepth)+1.
 
