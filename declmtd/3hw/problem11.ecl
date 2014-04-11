@@ -15,6 +15,7 @@
 % 
 
 :- lib(ic).
+:- lib(branch_and_bound).
 
 % Empty tree gives empty list traversal
 inorder1(nil,[]).
@@ -47,4 +48,12 @@ depth(t(_,Left,Right), D) :-
   depth(Left,Leftdepth), 
   depth(Right,Rightdepth), 
   D is max(Leftdepth,Rightdepth)+1.
+
+inorder3(nil,[]).
+inorder3(t(Label,L,R),Keys) :-
+  minimize( (total_depth(t(Label,L,R),Depth), Cost is Depth), Cost).
+  
+
+
+
 
