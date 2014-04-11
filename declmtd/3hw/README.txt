@@ -169,6 +169,89 @@ You can solve logs and roots if the answer is an integer,
 but if it seeks another solution, it will overflow the stack.
 If there is no integer answer, it will search infinitely.
 
+Problem 6 - cut operator
+=====================================================================================
+
+cutmember outputs the first solution to member(X, List) and cuts off other potential
+solutions.  Thus, the cut is red.
+If you are just checking for existence of a ground integer in a long list, using
+cutmember will skip over the other unnecessary repeated solutions and allow the rest
+of the program to finish more quickly.
+
+Outputs tested:
+
+[eclipse 12]: cutmember(L,[[a,b],[],[c,d]]), member(X,L).
+
+L = [a, b]
+X = a
+Yes (0.00s cpu, solution 1, maybe more) ? ;
+
+L = [a, b]
+X = b
+Yes (0.00s cpu, solution 2)
+
+------------------------------------------------------------
+[eclipse 13]: member(L,[[a,b],[],[c,d]]), cutmember(X,L).
+
+L = [a, b]
+X = a
+Yes (0.00s cpu, solution 1, maybe more) ? ;
+
+L = [c, d]
+X = c
+Yes (0.00s cpu, solution 2)
+
+
+------------------------------------------------------------
+[eclipse 14]: member(L,[[],[a,b],[c,d]]), cutmember(X,L).
+
+L = [a, b]
+X = a
+Yes (0.00s cpu, solution 1, maybe more) ? ;
+
+L = [c, d]
+X = c
+Yes (0.00s cpu, solution 2)
+
+------------------------------------------------------------
+
+[eclipse 15]: member(L,[[a,b],[],[c,d]]), !, member(X,L).
+
+L = [a, b]
+X = a
+Yes (0.00s cpu, solution 1, maybe more) ? ;
+
+L = [a, b]
+X = b
+Yes (0.00s cpu, solution 2)
+
+------------------------------------------------------------
+
+[eclipse 16]: member(L,[[a,b],[],[c,d]]), member(X,L), !.
+
+L = [a, b]
+X = a
+Yes (0.00s cpu)
+------------------------------------------------------------
+[eclipse 17]: member(L,[[],[a,b],[c,d]]), member(X,L), !.
+
+L = [a, b]
+X = a
+Yes (0.00s cpu)
+
+------------------------------------------------------------
+
+They do not do the same thing.  This is because the cut
+operator stops backtracking through the current statement. Thus, when it is a part
+of a subroutine, it prevents backtracking through any part of the subroutine that 
+came before it. However, it does not stop backtracking through any statements that
+are outside of the subroutine that come before it.  So, it is limited in scope within
+subroutine calls to only stop backtracking within that subroutine.
+
+Problem 7 - 
+=====================================================================================
+
+
 
 
 

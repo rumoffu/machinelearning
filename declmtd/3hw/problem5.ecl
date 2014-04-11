@@ -8,7 +8,7 @@
 %
 % 
 % compile and run $ rlwrap eclps
-% compile('problem4.ecl').
+% compile('problem5.ecl').
 % 
 % Example:
 % [eclipse 16]: pow(z,z,C).
