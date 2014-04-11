@@ -414,6 +414,7 @@ A = 3, then B = 1 (all elements must take the value of the correct spot in the l
 Prolog finds these values by backtracking and then simply saves and outputs the
 total range of answer values.
 
+The delayed goals show the constraints between the variable assignment answers.
 
 Problem 9
 =====================================================================================
