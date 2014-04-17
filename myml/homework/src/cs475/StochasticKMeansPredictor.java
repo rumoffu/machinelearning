@@ -54,15 +54,20 @@ public class StochasticKMeansPredictor extends Predictor{
 		// Perform training iterations
 //		System.out.println("iteration, number in each cluster");
 		for(int i = 0; i < this.clustering_training_iterations; i++){
-			clusterData(instances);
-//			System.out.print(i + " ");
+			Double[] um = new Double[this.number_of_features];
+			for(int z = 0; z < this.number_of_features; z++){
+				um[z] = 0.0;
+			}
+			System.out.println(Util.euclideanDistance(this.mewk.get(0), um));
+//			System.out.println(i + " ");
 //			for(int j = 0; j < this.rnk.size(); j++){
 //				System.out.print(this.rnk.get(j).size() + " ");
-////				for(int k = 0; k < this.mewk.get(j).length; k++){
-////					System.out.print(this.mewk.get(j)[k] + " ");
+////				for(int k = 0; k < this.mewk.get(0).length; k++){
+////					System.out.print(this.mewk.get(0)[k] + " ");
 ////				}
-//			}
+////			}
 //			System.out.println();
+			clusterData(instances);
 		}
 
 	}
