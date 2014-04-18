@@ -84,7 +84,7 @@ public class MaxSum {
 				raAscxtof[ind] = Util.ramult(msgftox(this.n+ind-1, ind), getunary(ind));
 			}
 		}
-		System.out.println();
+//		System.out.println();
 		
 	}
 	
@@ -209,52 +209,31 @@ public class MaxSum {
 		int pre_index = 0;
 		int next_index = 0;
 		
-		for(int index = x_i - 1;index >=1;index--){
-			pre_index = assignments[index + 1];
-			assignments[index] = backtrack[index][pre_index];
-		}
-		for(int index = x_i; index < this.n;index++){
-			next_index = assignments[index];
-			assignments[index + 1] = backtrack[index][next_index];
-		}
+//		for(int index = x_i - 1;index >=1;index--){
+//			pre_index = assignments[index + 1];
+//			assignments[index] = backtrack[index][pre_index];
+//		}
+//		for(int index = x_i; index < this.n;index++){
+//			next_index = assignments[index];
+//			assignments[index + 1] = backtrack[index][next_index];
+//		}
 		
 		//Normalize
 		SumProduct sp = new SumProduct(this.potentials);
 		topmsg = sp.getunary(x_i);
 		rightinmsg = sp.raDesftox[x_i];
 		leftinmsg = sp.raAscftox[x_i];
+		
+		//raAscftox = sp.raAscftox;
 		Double z = 0.0;
 		probability = Util.ramult(Util.ramult(topmsg, rightinmsg), leftinmsg);
 		for(int i = 1; i <= this.k; i++){
 			z += probability[i];
 		}
+		System.out.println();
 		return max - Math.log(z);
-		
-				
-//		if(x_i == 1){ // special case f leftarrow x1
-//			//Double[] rightoutmsg = msgxtof(x_i, this.n + x_i); // == topmsg
-//			numer = Util.raadd(topmsg, rightinmsg);
-//			Double denom = Util.dot(topmsg, rightinmsg);
-//			resu = Util.scalarMultiply(1/denom, numer);
-//		}
-//		else if (x_i == this.n){ //special case f rightarrow xn
-//			numer = Util.raadd(topmsg, leftinmsg);
-//			Double denom = Util.dot(topmsg, leftinmsg);
-//			resu = Util.scalarMultiply(1/denom, numer);
-//			}
-//		else{ //rest use 3way
-//			numer = Util.raadd(Util.raadd(topmsg, leftinmsg), rightinmsg);
-//			Double denom = Util.dot(topmsg, Util.raadd(leftinmsg, rightinmsg));
-//			resu = Util.scalarMultiply(1/denom, numer);
-//		}
-//		Double max = Double.NEGATIVE_INFINITY;
-//		for(int i = 1; i < resu.length; i++){
-//			if(resu[i] > max){
-//				max = resu[i];
-//			}
-//		}
 //		return max;
-//		// TODO
+		
 	}
 	
 	private Double[] matrixmax(Double[][] bin, Double[] una, int xind){
@@ -268,10 +247,10 @@ public class MaxSum {
 					backtrack[xind][row] = col;
 					temp = col;
 				}
-				System.out.println(col);
+//				System.out.println(col);
 			}
 		}
-		System.out.println(temp);
+//		System.out.println(temp);
 		
 		return res;
 	}
