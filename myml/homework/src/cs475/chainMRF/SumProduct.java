@@ -177,23 +177,18 @@ public class SumProduct {
 	
 	public double[] marginalProbability(int x_i) {
 		if(x_i == 1){ // special case f leftarrow x1
-			double[] ftox = msgftox(this.n + x_i, x_i);
-			double[] ftox2 = msgftox(x_i, x_i);
-			double[] ram = Util.ramult(ftox, ftox2);
-			double[] xtof = msgxtof(x_i, this.n + x_i);
-			double[] div = Util.radiv(xtof, ram);
-			
-			double[] num = msgxtof(x_i, this.n + x_i);
 			double denom = Util.dot(msgftox(this.n + x_i, x_i), msgftox(x_i, x_i));
-			double[] left = msgftox(this.n + x_i, x_i);
-			double[] right = msgftox(x_i, x_i);
-			double[] ans = Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i, x_i), msgftox(x_i, x_i)), Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i, x_i)));
-			
-			return Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i, x_i), msgftox(x_i, x_i)), Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i, x_i)));
-			//return Util.radiv(msgxtof(x_i, this.n + x_i), Util.dot(msgftox(this.n + x_i, x_i), msgftox(x_i, x_i)));
+			double[] numer = Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i, x_i));
+			double[] resu = Util.scalarMultiply(1/denom, numer);
+			return resu;
 		}
-		else{ //all other marginals can be calculated f rightarrow x
-			//return Util.radiv(msgxtof(x_i, this.n + x_i), Util.ramult(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)));
+		else if (x_i == this.n){ //special case f rightarrow xn
+			double denom = Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i));
+			double[] numer = Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i));
+			double[] resu = Util.scalarMultiply(1/denom, numer);
+			return resu;
+		}
+		else{ //rest use 3way
 			double[] num = Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i - 1, x_i));
 			double denom = Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i));
 			double[] left = msgftox(this.n + x_i - 1, x_i);
@@ -201,6 +196,7 @@ public class SumProduct {
 			double[] ans = Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i)));
 			//System.out.println();
 			return Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i)));
+		
 		}
 	}
 
