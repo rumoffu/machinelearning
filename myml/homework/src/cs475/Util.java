@@ -137,18 +137,18 @@ public class Util{
 		return res;
 	}
 	
-	public static double[] matrixmax(double[][] bin, double[] una){
-		double[] res = new double[una.length];
-		for(int row = 0; row < bin.length; row++){
-			res[row] = Double.NEGATIVE_INFINITY; //initialize
-			for(int col = 0; col < bin[0].length; col++){
-				if(bin[row][col]*una[col] > res[row]){
-					res[row] = bin[row][col]*una[col];
-				}
-			}
-		}
-		return res;
-	}
+//	public static double[] matrixmax(double[][] bin, double[] una, int[] assignment){
+//		double[] res = new double[una.length];
+//		for(int row = 0; row < bin.length; row++){
+//			res[row] = Double.NEGATIVE_INFINITY; //initialize
+//			for(int col = 0; col < bin[0].length; col++){
+//				if(bin[row][col]+ una[col] > res[row]){
+//					res[row] = bin[row][col] + una[col];
+//				}
+//			}
+//		}
+//		return res;
+//	}
 	public static double[] ramult(double[] ra, double[] una){
 		double[] res = new double[ra.length];
 		for(int i = 0; i < ra.length; i++){

@@ -21,12 +21,14 @@ public class MaxSum {
 	private double[][] raDesftox;
 	private double[][] raAscxtof;
 	private double[][] raAscftox;
+	private int[][] backtrack;
 	
 	public MaxSum(ChainMRFPotentials p) {
 		this.potentials = p;
 		assignments = new int[p.chainLength()+1];
 		this.n = p.chainLength();
 		this.k = p.numXValues();
+		backtrack = new int[n+1][k+1];
 		
 		//for storing messages from variable x to factor f and vice versa
 		raDesxtof = new double[n+1][k+1];
@@ -72,13 +74,13 @@ public class MaxSum {
 	private double[] msgftox(int find, int xind){
 		double[] msg = new double[this.k+1];
 		if(find == this.n + xind){ //f leftarrow x message
-			msg = Util.matrixmax(getbinary(find), raDesxtof[xind+1]);
+			msg = matrixmax(getbinary(find), raDesxtof[xind+1], xind);
 		}
 		else if(find == this.n + xind - 1){ //f rightarrow x message
-			msg = Util.matrixmax(getbinary2(find), raAscxtof[xind-1]);
+			msg = matrixmax(getbinary2(find), raAscxtof[xind-1], xind);
 			//System.out.println();
 		}
-		return msg;
+		return msg; //max gives the joint probability maximum and sets backtracking
 	}
 	/**
 	 * Returns the message from x to f specified by indices
@@ -158,29 +160,67 @@ public class MaxSum {
 		double[] leftinmsg = raAscftox[x_i];
 		double[] numer;
 		double[] resu;
-		if(x_i == 1){ // special case f leftarrow x1
-			//double[] rightoutmsg = msgxtof(x_i, this.n + x_i); // == topmsg
-			numer = Util.raadd(topmsg, rightinmsg);
-			double denom = Util.dot(topmsg, rightinmsg);
-			resu = Util.scalarMultiply(1/denom, numer);
-		}
-		else if (x_i == this.n){ //special case f rightarrow xn
-			numer = Util.raadd(topmsg, leftinmsg);
-			double denom = Util.dot(topmsg, leftinmsg);
-			resu = Util.scalarMultiply(1/denom, numer);
-			}
-		else{ //rest use 3way
-			numer = Util.raadd(Util.raadd(topmsg, leftinmsg), rightinmsg);
-			double denom = Util.dot(topmsg, Util.raadd(leftinmsg, rightinmsg));
-			resu = Util.scalarMultiply(1/denom, numer);
-		}
+		double[] probability;
+		
+		resu = Util.raadd(Util.raadd(topmsg, rightinmsg), leftinmsg);
+		//get max of the sum over all k configurations
 		double max = Double.NEGATIVE_INFINITY;
-		for(int i = 1; i < resu.length; i++){
+		for(int i = 1; i <= this.k; i++){
 			if(resu[i] > max){
 				max = resu[i];
+				assignments[x_i] = i;
 			}
 		}
-		return max;
-		// TODO
+		//Normalize
+		SumProduct sp = new SumProduct(this.potentials);
+		topmsg = sp.getunary(x_i);
+		rightinmsg = sp.raDesftox[x_i];
+		leftinmsg = sp.raAscftox[x_i];
+		double z = 0.0;
+		probability = Util.ramult(Util.ramult(topmsg, rightinmsg), leftinmsg);
+		for(int i = 0; i <= this.k; i++){
+			z += probability[i];
+		}
+		return max - Math.log(z);
+		
+				
+//		if(x_i == 1){ // special case f leftarrow x1
+//			//double[] rightoutmsg = msgxtof(x_i, this.n + x_i); // == topmsg
+//			numer = Util.raadd(topmsg, rightinmsg);
+//			double denom = Util.dot(topmsg, rightinmsg);
+//			resu = Util.scalarMultiply(1/denom, numer);
+//		}
+//		else if (x_i == this.n){ //special case f rightarrow xn
+//			numer = Util.raadd(topmsg, leftinmsg);
+//			double denom = Util.dot(topmsg, leftinmsg);
+//			resu = Util.scalarMultiply(1/denom, numer);
+//			}
+//		else{ //rest use 3way
+//			numer = Util.raadd(Util.raadd(topmsg, leftinmsg), rightinmsg);
+//			double denom = Util.dot(topmsg, Util.raadd(leftinmsg, rightinmsg));
+//			resu = Util.scalarMultiply(1/denom, numer);
+//		}
+//		double max = Double.NEGATIVE_INFINITY;
+//		for(int i = 1; i < resu.length; i++){
+//			if(resu[i] > max){
+//				max = resu[i];
+//			}
+//		}
+//		return max;
+//		// TODO
+	}
+	
+	private double[] matrixmax(double[][] bin, double[] una, int xind){
+		double[] res = new double[una.length];
+		for(int row = 0; row < bin.length; row++){
+			res[row] = Double.NEGATIVE_INFINITY; //initialize
+			for(int col = 0; col < bin[0].length; col++){
+				if(bin[row][col]+ una[col] > res[row]){
+					res[row] = bin[row][col] + una[col];
+					backtrack[xind][row] = col;
+				}
+			}
+		}
+		return res;
 	}
 }

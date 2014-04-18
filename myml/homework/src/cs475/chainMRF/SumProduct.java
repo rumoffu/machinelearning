@@ -16,10 +16,10 @@ public class SumProduct {
 	private int k;
 	// add whatever data structures needed
 	//for storing messages from variable x to factor f and vice versa
-	private double[][] raDesxtof;
-	private double[][] raDesftox;
-	private double[][] raAscxtof;
-	private double[][] raAscftox;
+	protected double[][] raDesxtof;
+	protected double[][] raDesftox;
+	protected double[][] raAscxtof;
+	protected double[][] raAscftox;
 	
 	public static void main(String[] args){
 		ChainMRFPotentials p = new ChainMRFPotentials("sample_mrf_potentials_small.txt");
@@ -139,7 +139,7 @@ public class SumProduct {
 	 * @param ind
 	 * @return
 	 */
-	private double[] getunary(int ind){
+	protected double[] getunary(int ind){
 		double[] unary = new double[this.k+1];
 		for(int i = 1; i <= this.k; i++){
 			unary[i] = this.potentials.potential(ind, i);
