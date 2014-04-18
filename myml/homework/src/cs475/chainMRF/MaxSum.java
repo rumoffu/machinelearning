@@ -189,49 +189,56 @@ public class MaxSum {
 		return assignments;
 	}
 
+	
 	public Double maxProbability(int x_i) {
-		Double[] topmsg = getunary(x_i);
-		Double[] rightinmsg = raDesftox[x_i];
-		Double[] leftinmsg = raAscftox[x_i];
-		Double[] numer;
-		Double[] resu;
-		Double[] probability;
+//		x_i = n -1;
+		Double[] topmsg, rightinmsg, leftinmsg, resu, probability;
+		Double max = Double.NEGATIVE_INFINITY;
+		Double z = 0.0;
+		for(int p = 1; p <= n; p++){
+		max = Double.NEGATIVE_INFINITY;
+		z = 0.0;
+		x_i = p;
+		topmsg = getunary(x_i);
+		rightinmsg = raDesftox[x_i];
+		leftinmsg = raAscftox[x_i];
 		
 		resu = Util.raadd(Util.raadd(topmsg, rightinmsg), leftinmsg);
 		//get max of the sum over all k configurations
-		Double max = Double.NEGATIVE_INFINITY;
+		
 		for(int i = 1; i <= this.k; i++){
 			if(resu[i] > max){
 				max = resu[i];
 				assignments[x_i] = i;
 			}
 		}
-		int pre_index = 0;
-		int next_index = 0;
 		
-//		for(int index = x_i - 1;index >=1;index--){
-//			pre_index = assignments[index + 1];
-//			assignments[index] = backtrack[index][pre_index];
-//		}
-//		for(int index = x_i; index < this.n;index++){
-//			next_index = assignments[index];
-//			assignments[index + 1] = backtrack[index][next_index];
-//		}
 		
 		//Normalize
+		
 		SumProduct sp = new SumProduct(this.potentials);
 		topmsg = sp.getunary(x_i);
 		rightinmsg = sp.raDesftox[x_i];
 		leftinmsg = sp.raAscftox[x_i];
 		
 		//raAscftox = sp.raAscftox;
-		Double z = 0.0;
-		probability = Util.ramult(Util.ramult(topmsg, rightinmsg), leftinmsg);
+		
+		if(x_i == 1){
+			probability = Util.ramult(topmsg, rightinmsg);
+		}
+		else if(x_i == n){
+			probability = Util.ramult(topmsg, leftinmsg);
+		}
+		else{
+			probability = Util.ramult(Util.ramult(topmsg, rightinmsg), leftinmsg);
+		}
 		for(int i = 1; i <= this.k; i++){
 			z += probability[i];
 		}
-		System.out.println();
+//		System.out.println();
+		}
 		return max - Math.log(z);
+		
 //		return max;
 		
 	}
