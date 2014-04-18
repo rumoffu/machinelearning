@@ -176,9 +176,10 @@ public class SumProduct {
 	}
 	
 	public double[] marginalProbability(int x_i) {
+		double[] topmsg = getunary(x_i);
+		double[] rightinmsg = raDesftox[x_i];
+		double[] leftinmsg = raAscftox[x_i];
 		if(x_i == 1){ // special case f leftarrow x1
-			double[] topmsg = msgftox(x_i, x_i);
-			double[] rightinmsg = msgftox(this.n + x_i, x_i);
 			//double[] rightoutmsg = msgxtof(x_i, this.n + x_i); // == topmsg
 			double[] numer = Util.ramult(topmsg, rightinmsg);
 			double denom = Util.dot(topmsg, rightinmsg);
@@ -186,22 +187,16 @@ public class SumProduct {
 			return resu;
 		}
 		else if (x_i == this.n){ //special case f rightarrow xn
-			double[] topmsg = msgftox(x_i, x_i);
-			double[] leftinmsg = msgftox(this.n + x_i - 1, x_i);
 			double[] numer = Util.ramult(topmsg, leftinmsg);
 			double denom = Util.dot(topmsg, leftinmsg);
 			double[] resu = Util.scalarMultiply(1/denom, numer);
 			return resu;
 		}
 		else{ //rest use 3way
-			double[] num = Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i - 1, x_i));
-			double denom = Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i));
-			double[] left = msgftox(this.n + x_i - 1, x_i);
-			double[] right = msgftox(x_i, x_i);
-			double[] ans = Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i)));
-			//System.out.println();
-			return Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i)));
-		
+			double[] numer = Util.ramult(topmsg, leftinmsg);
+			double denom = Util.dot(topmsg, leftinmsg);
+			double[] resu = Util.scalarMultiply(1/denom, numer);
+			return resu;
 		}
 	}
 
