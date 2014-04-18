@@ -190,12 +190,6 @@ public class SumProduct {
 			return resu;
 		}
 		else{ //rest use 3way
-			//fake
-//			double[] numer = Util.ramult(topmsg, leftinmsg);
-//			double denom = Util.dot(topmsg, leftinmsg);
-//			double[] resu = Util.scalarMultiply(1/denom, numer);
-//			return resu;
-			
 			double[] numer = Util.ramult(Util.ramult(topmsg, leftinmsg), rightinmsg);
 			double denom = Util.dot(topmsg, Util.ramult(leftinmsg, rightinmsg));
 			double[] resu = Util.scalarMultiply(1/denom, numer);
