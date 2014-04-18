@@ -1,3 +1,10 @@
+/*
+ * Kyle Wong
+ * 14.4.17
+ * Machine Learning
+ * kwong23
+ * Assignment 5
+ */
 package cs475.chainMRF;
 import cs475.chainMRF.*;
 
@@ -12,11 +19,12 @@ public class MaxSum {
 		assignments = new int[p.chainLength()+1];
 	}
 	
-	public int[] getAssinments() {
+	public int[] getAssignments() {
 		return assignments;
 	}
 
 	public double maxProbability(int x_i) {
+		return x_i;
 		// TODO
 	}
 }
