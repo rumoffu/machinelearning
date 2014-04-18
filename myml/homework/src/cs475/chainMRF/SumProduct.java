@@ -102,7 +102,8 @@ public class SumProduct {
 			msg = Util.matrixmult(getbinary(find), raDesxtof[xind+1]);
 		}
 		else if(find == this.n + xind - 1){ //f rightarrow x message
-			msg = Util.matrixmult(getbinary(find), raAscxtof[xind-1]);
+			msg = Util.matrixmult(getbinary2(find), raAscxtof[xind-1]);
+			//System.out.println();
 		}
 		return msg;
 	}
@@ -164,6 +165,16 @@ public class SumProduct {
 		return binary;
 	}
 	
+	private double[][] getbinary2(int ind){
+		double[][] binary = new double[this.k+1][this.k+1];
+		for(int i = 1; i <= this.k; i++){
+			for(int j = 1; j <= this.k; j++){
+				binary[i][j] = this.potentials.potential(ind, j, i);
+			}
+		}
+		return binary;
+	}
+	
 	public double[] marginalProbability(int x_i) {
 		if(x_i == 1){ // special case f leftarrow x1
 			double[] ftox = msgftox(this.n + x_i, x_i);
@@ -187,8 +198,9 @@ public class SumProduct {
 			double denom = Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i));
 			double[] left = msgftox(this.n + x_i - 1, x_i);
 			double[] right = msgftox(x_i, x_i);
-			double[] ans = Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i - 1, x_i)));
-			return Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i - 1, x_i)));
+			double[] ans = Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i)));
+			//System.out.println();
+			return Util.scalarMultiply(1/Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i)), Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i)));
 		}
 	}
 
