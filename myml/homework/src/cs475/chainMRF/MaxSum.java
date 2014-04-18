@@ -48,11 +48,16 @@ public class MaxSum {
 				raAscftox[i][j] = value;
 			}
 		}
+		Double[] zeros = new Double[k+1];
+		for(int i = 0; i < k+1; i++){
+			zeros[i] = 0.0;
+		}
 		
 		//Get all descending messages that go from right to left
 		for(int ind = n; ind >= 1; ind--){
 			if(ind == this.n){ //right hand edge
 				raDesxtof[ind] = getunary(ind);
+				raDesftox[ind] = zeros; //
 			}
 			else if(ind != 1){
 				raDesftox[ind] = msgftox(this.n+ind, ind);
@@ -60,6 +65,7 @@ public class MaxSum {
 			}
 			else {//ind == 1
 				raDesftox[ind] = msgftox(this.n+1, ind);
+				raDesxtof[ind] = Util.ramult(msgftox(this.n+1, ind), getunary(ind));
 			}
 		}
 		
@@ -67,6 +73,7 @@ public class MaxSum {
 		for(int ind = 1; ind <= n; ind++){
 			if(ind == 1){
 				raAscxtof[ind] = msgxtof(ind, this.n+ind);
+				raAscftox[ind] = getunary(ind);
 			}
 			else if(ind != this.n){
 				raAscftox[ind] = msgftox(this.n+ind-1, ind);
@@ -74,6 +81,7 @@ public class MaxSum {
 			}
 			else {// ind == n
 				raAscftox[ind] = msgftox(this.n+ind-1, ind);
+				raAscxtof[ind] = Util.ramult(msgftox(this.n+ind-1, ind), getunary(ind));
 			}
 		}
 		System.out.println();
