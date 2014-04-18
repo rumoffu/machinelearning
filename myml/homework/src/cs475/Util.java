@@ -19,15 +19,15 @@ import java.util.List;
 public class Util{
 	
 	public static void main(String[] args){
-		double[][] f3 = new double[3][3];
-		double[] f1 = new double[3];
+		Double[][] f3 = new Double[3][3];
+		Double[] f1 = new Double[3];
 		f1[1] = 0.3;
 		f1[2] = 0.2;
 		f3[1][1] = 0.1;
 		f3[1][2] = 0.1;
 		f3[2][1] = 0.2;
 		f3[2][2] = 0.4;
-		double[] res = Util.matrixmult(f3, f1);
+		Double[] res = Util.matrixmult(f3, f1);
 		//should return 0.05 and 0.14
 		for(int i = 1; i < res.length; i++){
 			System.out.println(res[i]);
@@ -84,8 +84,8 @@ public class Util{
 	 * @param x input vector as a Double[]
 	 * @return dotsum the result of the dot product
 	 */
-	protected static double dot(Double[] w, Double[] x){
-		double dotsum = 0;
+	public static Double dot(Double[] w, Double[] x){
+		Double dotsum = 0.0;
 		for(int i = 0; i < w.length; i++){
 			dotsum += w[i]*x[i];
 		}
@@ -101,7 +101,7 @@ public class Util{
 		return sum;
 	}
 	
-	protected static Double[] scalarMultiply(double scaler, Double[] ra){
+	public static Double[] scalarMultiply(double scaler, Double[] ra){
 		Double[] product = new Double[ra.length];
 		for(int i = 0; i < product.length; i++){
 			product[i] = scaler*ra[i];
@@ -126,8 +126,8 @@ public class Util{
 		return sum;
 	}
 	
-	public static double[] matrixmult(double[][] bin, double[] una){
-		double[] res = new double[una.length];
+	public static Double[] matrixmult(Double[][] bin, Double[] una){
+		Double[] res = new Double[una.length];
 		for(int row = 0; row < bin.length; row++){
 			res[row] = 0.0; //initialize
 			for(int col = 0; col < bin[0].length; col++){
@@ -137,8 +137,8 @@ public class Util{
 		return res;
 	}
 	
-//	public static double[] matrixmax(double[][] bin, double[] una, int[] assignment){
-//		double[] res = new double[una.length];
+//	public static Double[] matrixmax(Double[][] bin, Double[] una, int[] assignment){
+//		Double[] res = new Double[una.length];
 //		for(int row = 0; row < bin.length; row++){
 //			res[row] = Double.NEGATIVE_INFINITY; //initialize
 //			for(int col = 0; col < bin[0].length; col++){
@@ -149,16 +149,16 @@ public class Util{
 //		}
 //		return res;
 //	}
-	public static double[] ramult(double[] ra, double[] una){
-		double[] res = new double[ra.length];
+	public static Double[] ramult(Double[] ra, Double[] una){
+		Double[] res = new Double[ra.length];
 		for(int i = 0; i < ra.length; i++){
 			res[i] = ra[i]*una[i];
 		}
 		return res;
 	}
 
-	public static double[] radiv(double[] ra, double[] una){
-		double[] res = new double[ra.length];
+	public static Double[] radiv(Double[] ra, Double[] una){
+		Double[] res = new Double[ra.length];
 		for(int i = 0; i < ra.length; i++){
 			res[i] = ra[i]/una[i];
 		}
@@ -182,9 +182,15 @@ public class Util{
 		return product;
 	}
 	
-	public static double[] raadd(double[] ra, double[] una){
-		double[] res = new double[ra.length];
+	public static Double[] raadd(Double[] ra, Double[] una){
+		Double[] res = new Double[ra.length];
 		for(int i = 0; i < ra.length; i++){
+			if(ra[i] == null){
+				ra[i] = 0.0;
+			}
+			if(una[i] == null){
+				una[i] = 0.0;
+			}
 			res[i] = ra[i]+una[i];
 		}
 		return res;

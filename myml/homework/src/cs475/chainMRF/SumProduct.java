@@ -16,16 +16,16 @@ public class SumProduct {
 	private int k;
 	// add whatever data structures needed
 	//for storing messages from variable x to factor f and vice versa
-	protected double[][] raDesxtof;
-	protected double[][] raDesftox;
-	protected double[][] raAscxtof;
-	protected double[][] raAscftox;
+	protected Double[][] raDesxtof;
+	protected Double[][] raDesftox;
+	protected Double[][] raAscxtof;
+	protected Double[][] raAscftox;
 	
 	public static void main(String[] args){
 		ChainMRFPotentials p = new ChainMRFPotentials("sample_mrf_potentials_small.txt");
 		SumProduct sp = new SumProduct(p);
-		double[] una = sp.getunary(1);
-		double[][] bin = sp.getbinary(3);
+		Double[] una = sp.getunary(1);
+		Double[][] bin = sp.getbinary(3);
 		// should print out 0.3 then 0.2
 		for(int i = 1; i < una.length; i++){
 			System.out.println(una[i]);
@@ -53,10 +53,18 @@ public class SumProduct {
 		this.k = p.numXValues();
 		
 		//for storing messages from variable x to factor f and vice versa
-		raDesxtof = new double[n+1][k+1];
-		raDesftox = new double[n+1][k+1];
-		raAscxtof = new double[n+1][k+1];
-		raAscftox = new double[n+1][k+1];
+		raDesxtof = new Double[n+1][k+1];
+		raDesftox = new Double[n+1][k+1];
+		raAscxtof = new Double[n+1][k+1];
+		raAscftox = new Double[n+1][k+1];
+		for(int i = 0; i < n+1; i++){
+			for(int j = 0; j < k+1; j++){
+				raDesxtof[i][j] = 0.0;
+				raDesftox[i][j] = 0.0;
+				raAscxtof[i][j] = 0.0;
+				raAscftox[i][j] = 0.0;
+			}
+		}
 		
 		//Get all descending messages that go from right to left
 		for(int ind = n; ind >= 1; ind--){
@@ -93,8 +101,8 @@ public class SumProduct {
 	 * @param xind the x index
 	 * @return msg the message requested from f to x
 	 */
-	private double[] msgftox(int find, int xind){
-		double[] msg = new double[this.k+1];
+	private Double[] msgftox(int find, int xind){
+		Double[] msg = new Double[this.k+1];
 		if(find == this.n + xind){ //f leftarrow x message
 			msg = Util.matrixmult(getbinary(find), raDesxtof[xind+1]);
 		}
@@ -110,8 +118,8 @@ public class SumProduct {
 	 * @param find the f index
 	 * @return msg the message requested from f to x
 	 */
-	private double[] msgxtof(int xind, int find){
-		//double[] msg = new double[this.k+1];
+	private Double[] msgxtof(int xind, int find){
+		//Double[] msg = new Double[this.k+1];
 		if(find == this.n + xind){ //x rightarrow f message
 			if(xind == 1){//special edge case
 				return getunary(xind);
@@ -139,11 +147,12 @@ public class SumProduct {
 	 * @param ind
 	 * @return
 	 */
-	protected double[] getunary(int ind){
-		double[] unary = new double[this.k+1];
+	protected Double[] getunary(int ind){
+		Double[] unary = new Double[this.k+1];
 		for(int i = 1; i <= this.k; i++){
 			unary[i] = this.potentials.potential(ind, i);
 		}
+		unary[0] = 0.0;
 		return unary;
 	}
 	
@@ -152,50 +161,66 @@ public class SumProduct {
 	 * @param ind
 	 * @return
 	 */
-	private double[][] getbinary(int ind){
-		double[][] binary = new double[this.k+1][this.k+1];
-		for(int i = 1; i <= this.k; i++){
-			for(int j = 1; j <= this.k; j++){
-				binary[i][j] = this.potentials.potential(ind, i, j);
+	private Double[][] getbinary(int ind){
+		Double[][] binary = new Double[this.k+1][this.k+1];
+		for(int i = 0; i <= this.k; i++){
+			for(int j = 0; j <= this.k; j++){
+				if(i == 0 || j == 0){
+					binary[i][j] = 0.0;
+				}
+				else{
+					binary[i][j] = this.potentials.potential(ind, i, j);
+				}
 			}
 		}
 		return binary;
 	}
 	
-	private double[][] getbinary2(int ind){
-		double[][] binary = new double[this.k+1][this.k+1];
-		for(int i = 1; i <= this.k; i++){
-			for(int j = 1; j <= this.k; j++){
-				binary[i][j] = this.potentials.potential(ind, j, i);
+	private Double[][] getbinary2(int ind){
+		Double[][] binary = new Double[this.k+1][this.k+1];
+		for(int i = 0; i <= this.k; i++){
+			for(int j = 0; j <= this.k; j++){
+				if(i == 0 || j == 0){
+					binary[i][j] = 0.0;
+				}
+				else{
+					binary[i][j] = this.potentials.potential(ind, j, i);
+				}
 			}
 		}
 		return binary;
 	}
 	
 	public double[] marginalProbability(int x_i) {
-		double[] topmsg = getunary(x_i);
-		double[] rightinmsg = raDesftox[x_i];
-		double[] leftinmsg = raAscftox[x_i];
+		Double[] topmsg = getunary(x_i);
+		Double[] rightinmsg = raDesftox[x_i];
+		Double[] leftinmsg = raAscftox[x_i];
+		Double[] resu;
 		if(x_i == 1){ // special case f leftarrow x1
-			//double[] rightoutmsg = msgxtof(x_i, this.n + x_i); // == topmsg
-			double[] numer = Util.ramult(topmsg, rightinmsg);
-			double denom = Util.dot(topmsg, rightinmsg);
-			double[] resu = Util.scalarMultiply(1/denom, numer);
-			return resu;
+			//Double[] rightoutmsg = msgxtof(x_i, this.n + x_i); // == topmsg
+			Double[] numer = Util.ramult(topmsg, rightinmsg);
+			Double denom = Util.dot(topmsg, rightinmsg);
+			resu = Util.scalarMultiply(1/denom, numer);
+//			return resu;
 		}
 		else if (x_i == this.n){ //special case f rightarrow xn
-			double[] numer = Util.ramult(topmsg, leftinmsg);
-			double denom = Util.dot(topmsg, leftinmsg);
-			double[] resu = Util.scalarMultiply(1/denom, numer);
-			return resu;
+			Double[] numer = Util.ramult(topmsg, leftinmsg);
+			Double denom = Util.dot(topmsg, leftinmsg);
+			resu = Util.scalarMultiply(1/denom, numer);
+//			return resu;
 		}
 		else{ //rest use 3way
 			
-			double[] numer = Util.ramult(Util.ramult(topmsg, leftinmsg), rightinmsg);
-			double denom = Util.dot(topmsg, Util.ramult(leftinmsg, rightinmsg));
-			double[] resu = Util.scalarMultiply(1/denom, numer);
-			return resu;
+			Double[] numer = Util.ramult(Util.ramult(topmsg, leftinmsg), rightinmsg);
+			Double denom = Util.dot(topmsg, Util.ramult(leftinmsg, rightinmsg));
+			resu = Util.scalarMultiply(1/denom, numer);
+//			return resu;
 		}
+		double[] res = new double[resu.length];
+		for(int i = 0; i < res.length; i++){
+			res[i] = resu[i];
+		}
+		return res;
 	}
 
 }
