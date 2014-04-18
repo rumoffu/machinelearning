@@ -61,7 +61,7 @@ public class SumProduct {
 		//Get all descending messages that go from right to left
 		for(int ind = n; ind >= 1; ind--){
 			if(ind == this.n){ //right hand edge
-				raDesxtof[ind] = msgftox(ind, ind);
+				raDesxtof[ind] = getunary(ind);
 			}
 			else if(ind != 1){
 				raDesftox[ind] = msgftox(this.n+ind, ind);
@@ -95,10 +95,7 @@ public class SumProduct {
 	 */
 	private double[] msgftox(int find, int xind){
 		double[] msg = new double[this.k+1];
-		if(find == xind){ //top down from factor to variable node
-			msg = getunary(xind);
-		}
-		else if(find == this.n + xind){ //f leftarrow x message
+		if(find == this.n + xind){ //f leftarrow x message
 			msg = Util.matrixmult(getbinary(find), raDesxtof[xind+1]);
 		}
 		else if(find == this.n + xind - 1){ //f rightarrow x message
@@ -193,10 +190,16 @@ public class SumProduct {
 			return resu;
 		}
 		else{ //rest use 3way
+			//fake
 			double[] numer = Util.ramult(topmsg, leftinmsg);
 			double denom = Util.dot(topmsg, leftinmsg);
 			double[] resu = Util.scalarMultiply(1/denom, numer);
 			return resu;
+			
+//			double[] numer = Util.ramult(Util.ramult(topmsg, leftinmsg), rightinmsg);
+//			double denom = Util.dot(topmsg, numer);
+//			double[] resu = Util.scalarMultiply(1/denom, numer);
+//			return resu;
 		}
 	}
 
