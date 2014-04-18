@@ -177,14 +177,19 @@ public class SumProduct {
 	
 	public double[] marginalProbability(int x_i) {
 		if(x_i == 1){ // special case f leftarrow x1
-			double denom = Util.dot(msgftox(this.n + x_i, x_i), msgftox(x_i, x_i));
-			double[] numer = Util.ramult(msgxtof(x_i, this.n + x_i), msgftox(this.n + x_i, x_i));
+			double[] topmsg = msgftox(x_i, x_i);
+			double[] rightinmsg = msgftox(this.n + x_i, x_i);
+			//double[] rightoutmsg = msgxtof(x_i, this.n + x_i); // == topmsg
+			double[] numer = Util.ramult(topmsg, rightinmsg);
+			double denom = Util.dot(topmsg, rightinmsg);
 			double[] resu = Util.scalarMultiply(1/denom, numer);
 			return resu;
 		}
 		else if (x_i == this.n){ //special case f rightarrow xn
-			double denom = Util.dot(msgftox(this.n + x_i - 1, x_i), msgftox(x_i, x_i));
-			double[] numer = Util.ramult(msgftox(x_i, x_i), msgftox(this.n + x_i - 1, x_i));
+			double[] topmsg = msgftox(x_i, x_i);
+			double[] leftinmsg = msgftox(this.n + x_i - 1, x_i);
+			double[] numer = Util.ramult(topmsg, leftinmsg);
+			double denom = Util.dot(topmsg, leftinmsg);
 			double[] resu = Util.scalarMultiply(1/denom, numer);
 			return resu;
 		}
