@@ -36,7 +36,7 @@ public class AccuracyEvaluator {
 		Label prediction;
 		for(Instance element : instances){
 			prediction = predictor.predict(element);
-			//writer.writePrediction(prediction);
+//			writer.writePrediction(prediction);
 			numTested++;
 			if( element.getLabel() != null && prediction != null){
 				if (prediction.toString().equals(element.getLabel().toString())){
