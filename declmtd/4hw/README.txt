@@ -3,10 +3,26 @@ kwong23@jhu.edu
 Declarative Methods HW 4
 14.5.5
 
-Problem 1 - Unification Variable Bindings
+Problem 1 - ZIMPL Introduction
 =====================================================================================
-a) [eclipse 1]: foo(X,X,Y) = foo(A,B,B).
+a) What is the minimum transportation cost that can be achieved?
 
+The minimum transportation cost is 6600
+
+b) In this optimal solution, which producer is not operating at full capacity?
+
+Carol is the producer that is not operating at full capacity: she is sending only
+200 out of 400.
+
+c) Which consumers are using multiple suppliers to meet their demand?
+
+Consumers 1 and 2 are using multiple suppliers to meet their demand.
+
+d) What is the most expensive (cost per unit) transportation route that is actually
+getting used?
+
+The most expensive transportation route actually being used is Carol sending to
+consumer 1 with a cost per unit of 11.
 
 
 
