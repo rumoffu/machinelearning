@@ -1,6 +1,7 @@
 # [kwong23@ugradx 4hw]$ rlwrap scip
 # SCIP> read aknapsack.zpl
 # SCIP> opt
+# SCIP> display solution
 
 # A basic knapsack solver.
 # 
