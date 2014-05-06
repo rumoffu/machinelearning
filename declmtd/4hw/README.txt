@@ -194,6 +194,39 @@ count                                            3695   (obj:0)
 totalvalue                                   17785767   (obj:1)
 spareweight                                         0   (obj:0)
 
+f) Does the solver do the same thing every time?  
+Were the solver statistics the same as last time? Why or why not?
+Were count, totalvalue, and spareweight the same? Why or why not?
+
+Repeating:
+SCIP> read eknapsack.zpl
+SCIP> opt
+SCIP> di statistics
+
+or using 
+[kwong23@ugradx 4hw]$ scip -f eknapsack.zpl
+repeatedly seems to return the same values every time.  
+
+The solver statistics are also the same.  This is because scip is deterministic
+and so it will run the same method to solve the same problem each time it is run.
+Thus, it will reach the same optimum. However, there is some minor variation on the
+run time which is due to the speed of the machine which fluctuates depending
+on other processes that the computer machine is running.
+
+So count, totalvalue, and spareweight are also the same every time.
+This is similarly because scip is deterministic and so it will reach the same optimum
+every time it is run.
+
+g) It will be easier to unpack the knapsack if it contains fewer items. Change
+the linear objective function so that it encourages a large totalvalue (as before)
+but also encourages a small count.
+
+What is your new objective function?  How does this affect the values of count, 
+totalvalue, and spareweight in the optimal solution?  Why?
+
+Please see gknapsack.zpl
+
+
 
 Problem 3 - Duplicate
 =====================================================================================
