@@ -6,7 +6,8 @@
 
 set Producer := {"alice","bob","carol"};
 set Consumer := {1 to 4};
-var send[Producer*Consumer] >= -10000;
+# Uncomment the following line for part g
+#var send[Producer*Consumer] >= -10000;
 
 param supply[Producer] := <"alice"> 500, <"bob"> 300, <"carol"> 400;
 param demand[Consumer] := <1> 200, <2> 400, <3> 300, <4> 100;
