@@ -1,4 +1,9 @@
+# [kwong23@ugradx 4hw]$ rlwrap scip
+# SCIP> read aknapsack.zpl
+# SCIP> opt
+
 # A basic knapsack solver.
+# 
 # 
 # The knapsack.txt file should have lines of the form 
 # "item,value,weight,radioactivity" -- like this:
