@@ -30,31 +30,7 @@ param maxweight := (sum <i> in I: weight[i]) / 3;
 # of the items I that has maximum total value, subject to the constraint
 # that they must fit in the knapsack.
 
-var take[I] binary;
-maximize totalvalue:    FILL THIS IN
-subto maxweight:        FILL THIS IN
+var take[I] binary; #tracks which items are taken
+maximize totalvalue:   totalvalue == sum<i> in I: take[i]*value[i]; 
+subto maxweight:       sum<i> in I: take[i]*weight[i] <= maxweight;
 
-
-var take[I] binary;
-#var take[I] <= 1;
-
-# -----------
-
-# Set up additional analysis variables and constraints.
-# Setup must occur after the take, value, and weight parameters have
-# been initialized so that they may be used.
-
-var count integer;
-subto count: count == sum<i> in I: take[i];
-var totalvalue real;
-subto totalvalue: totalvalue == sum <i> in I: value[i]*take[i];
-var spareweight real;
-subto spareweight: spareweight == maxweight - (sum <i> in I: weight[i]*take[i]);
-
-# -----------
-
-# Complete problem set up.
-
-maximize total:         totalvalue;
-subto maxweight:        (sum <i> in I: weight[i]*take[i]) <= maxweight;
-subto maxradioactivity: (sum <i> in I: radioactivity[i]*take[i]) <= maxradioactivity;
