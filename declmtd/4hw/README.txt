@@ -178,6 +178,22 @@ take$item9084                                       1   (obj:2342)
   items of the greater value-to-weight ratio and just keep going until it needs 
   to add fractions of the last item to fill the rest of the knapsack to the fullest.
 
+e) Know how many items are in the optimally packed knapsack, their total value,
+and how much room is left in the knapsack.  So introduce variables:
+count, totalvalue, and spareweight, and constrain them to answer those questions.
+
+Now solve the problem again.  What are the values of those three variables?
+To find out the values use:
+display value count
+display value totalvalue
+display value spareweight
+
+see eknapsack.zpl
+
+count                                            3695   (obj:0)
+totalvalue                                   17785767   (obj:1)
+spareweight                                         0   (obj:0)
+
 
 Problem 3 - Duplicate
 =====================================================================================
