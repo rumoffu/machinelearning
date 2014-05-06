@@ -123,12 +123,60 @@ into the knapsack in order to get the greatest total value for the items that
 can fit together inside the knapsack given the weight constraints.
 
 d) Save the solution you just found by typing write solution sol1. 
+Now change the declaration
+var take[I] binary;
+to
+var take[I] <= 1;
 
-b) What is the runtime of comparing ground Peano integers N and M using greater_than/2?
-O(min(N,M)) where min returns the minimum of the two values N and M.  This is because 
-each call to greater_than recurses by removing one more s, and it finishes when one
-term runs out of s's and becomes z.
+Solve this changed problem, which is a pure LP problem with no integrality
+requirements, and do write solution sol2.
 
+Now type
+comm -3 sol1 sol2
+
+Result:
+[kwong23@ugradx 4hw]$ comm -3 sol1 sol2
+objective value:                             17785767
+  objective value:                     17785770.5842697
+take$item0947                                       1   (obj:983)
+  take$item3730                                       1   (obj:1627)
+take$item6043                       0.999999999998561   (obj:756)
+  take$item6456                       0.730337078653831   (obj:3365)
+take$item9084                                       1   (obj:2342)
+
+  i. Study the differences and describe in English what changed.  How is sol2
+  packing the knapsack differently and why?
+
+  The difference is that the second solution allows for taking fractional
+  parts of items and to get their fraction of value and weight.  
+  sol1 involved taking items 947, 6043, and 9084 as whole items.
+  sol2 did not take those 3, but instead took item 3730, and 0.73 of item 6456.
+
+  ii. How many of the 10,000 take variables turned out to be integers in sol2
+  even though they weren't required to be?
+
+  Only 1 of the 10,000 take variables was not an integer.  The other 9,999 remained
+  as integers.  (Only 3694 variables were 1's).
+
+  iii. Can you give an intuition as to why this is? (Hint: What would you expect about
+  the value-to-weight ratio of the taken items in the non-integer case?)
+
+  In the non-integer case, the value-to-weight ratio of the taken items should be
+  higher than in the integer case.  This is because allowing items to be taken
+  fractionally allowed a more valuable-per-weight item to be taken when otherwise
+  its weight would have prohibited its addition to the knapsack.  
+  There is only 1 fractional item because its fractional weight alone fills up
+  the remaining space in the knapsack.  Since this is the best remaining
+  value-to-weight ratio item, it is the only item that should be put in 
+  fractionally to the knapsack to maximize the value when fractional items 
+  are allowed.
+
+  iv. How would you expect this property of sol2 to affect the efficiency of sol1?
+  
+  This means sol2 will have a higher value-to-weight efficiency than sol1, and
+  since it can allow fractional items, sol2 runs faster because it simply can add
+  items of the greater value-to-weight ratio and just keep going until it needs 
+  to add fractions of the last item to fill the rest of the knapsack to the fullest.
 
 
 Problem 3 - Duplicate
