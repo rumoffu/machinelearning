@@ -31,6 +31,6 @@ param maxweight := (sum <i> in I: weight[i]) / 3;
 # that they must fit in the knapsack.
 
 var take[I] binary; #tracks which items are taken
-maximize totalvalue:   totalvalue == sum<i> in I: take[i]*value[i]; 
+maximize totalvalue:   sum<i> in I: take[i]*value[i]; 
 subto maxweight:       sum<i> in I: take[i]*weight[i] <= maxweight;
 
