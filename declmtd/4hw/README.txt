@@ -103,7 +103,26 @@ send negative amounts of produce to consumers.
 
 Problem 2 - Simple ZIMPL Programming - KNAPSACK problem
 =====================================================================================
-a) See problem2.ecl
+a) Complete the given ZIMPL program.
+
+See aknapsack.zpl
+
+-- it can be run with 
+[kwong23@ugradx 4hw]$ scip -f aknapsack.zpl
+
+b) How fast under SCIP does it solve the 10,000-item problem in knapsack.txt?
+It took 1.14 seconds on ugradx.
+
+c) You can use display solution to see the value of the objective function, 
+followed by the very long optimal assignment.  What does the objective function
+represent?  What does the optimal assignment represent?
+
+The objective function represents the total value of all the items taken into
+the knapsack.  The optimal assignment represents which items should be put
+into the knapsack in order to get the greatest total value for the items that
+can fit together inside the knapsack given the weight constraints.
+
+d) Save the solution you just found by typing write solution sol1. 
 
 b) What is the runtime of comparing ground Peano integers N and M using greater_than/2?
 O(min(N,M)) where min returns the minimum of the two values N and M.  This is because 
