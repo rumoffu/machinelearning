@@ -44,7 +44,8 @@ var spareweight real;
 var takenweight real;
 var maxweight real;
 
-maximize totalvalue:   totalvalue - 8000*count; 
+#maximize totalvalue:   totalvalue - 8000*count; 
+maximize totalvalue:   totalvalue; 
 subto maxweightinit:   maxweight == (sum<i> in I: weight[i]) / 3;
 subto count:           count == sum<i> in I: take[i];
 subto value:   totalvalue == sum<i> in I: take[i]*value[i]; 
