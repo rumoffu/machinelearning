@@ -412,22 +412,63 @@ In your README, explain how you interpreted this constraint for 3-day periods
 that are only partially contained within the week.
 
 
-d) 
+d) Maximize fun.
+param base_fun_rate := 1;
+
+Make a short file events.txt with one row for each special event.
+Hint: Each special event has a string name, takes place on a particular day,
+consumes a certain amount of play time, and provides you with a certain rate of Fun per hour
+
+What would the solver do if an event's fun rate is lower than base_fun_rate?
+
+It would eliminate this event as a possibility since it cannot possibly help maximize
+the fun.  Thus, it will always choose regular play instead of the event.
+
+
+e) You also have homework.  Make a short file assignments.txt:
+each assignment has a string name, is due on a particular day, requires a particular
+number of hours to complete, and has a particular penalty rate.
+
+Suppose some parts of the assignment are worth more than others.  Can you still
+encode this situation using the approach above, or do you need a more
+complicated model?
+
+In the real world, assignment parts would be linked.  However, in this simple
+model, we can still use the same approach to give different parts of the
+assignment more weight than others: simply break the assignment up
+into different parts and have them due on the same day and give them
+different penalties based on how much they are worth.
+
+
+f) You are a less efficient worker when you get less sleep.
+You have sleep deficit on day i if you had less than 24 hours of sleep
+total over the 3 day period i-2, i-1, i.
+(Again, in your README, explain how you interpreted this constraint for
+3-day periods that are only partially contained within the week)
+On days when you have a sleep deficit, your work is only 75% as efficient
+as usual.  For example, it takes 8 hours to do 6 hours worth of work.
+(The 75% number should be a named parameter)
+
+Hand in your commented ZIMPL model schedule.zpl
+along with data files events.txt and assignments.txt.
+
+How to run the solver from the command line:
+
+Solution found:
+
+
+Discussion of solution found:
 
 
 
-See problem3.ecl
-
-What should be returned by the query duplicate(M, [f(3),f(X),X,Y])?
-M = [f(3), 3]
-X = 3
-Y = 3
-Yes (0.00s cpu)
-
-Problem 4 - Swap
+Problem 4 - n^2 by n^2 Sudoku solver
 =====================================================================================
 
-a) See problem 4.ecl
+a) You can find an incomplete ZIMPL program in sudoku.zpl.  Finish it.
+How long does SCIP take to solve the "very hard" problem in sudoku.txt?
+
+To view the result use:
+scip -f sudoku.zpl | ./sudoku-decode
 
 swap([a],L) should just return L = a since there are no elements to swap.
 swap([],L) should just return L = [] since there are no elements to swap.
