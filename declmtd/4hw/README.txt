@@ -101,6 +101,8 @@ negative value will add a negative cost which reduces the objective function.
 The solution found in this case will not be correct as real producers cannot
 send negative amounts of produce to consumers.
 
+
+
 Problem 2 - Simple ZIMPL Programming - KNAPSACK problem
 =====================================================================================
 a) Complete the given ZIMPL program.
@@ -110,8 +112,10 @@ See aknapsack.zpl
 -- it can be run with 
 [kwong23@ugradx 4hw]$ scip -f aknapsack.zpl
 
+
 b) How fast under SCIP does it solve the 10,000-item problem in knapsack.txt?
 It took 1.14 seconds on ugradx.
+
 
 c) You can use display solution to see the value of the objective function, 
 followed by the very long optimal assignment.  What does the objective function
@@ -121,6 +125,7 @@ The objective function represents the total value of all the items taken into
 the knapsack.  The optimal assignment represents which items should be put
 into the knapsack in order to get the greatest total value for the items that
 can fit together inside the knapsack given the weight constraints.
+
 
 d) Save the solution you just found by typing write solution sol1. 
 Now change the declaration
@@ -152,11 +157,13 @@ take$item9084                                       1   (obj:2342)
   sol1 involved taking items 947, 6043, and 9084 as whole items.
   sol2 did not take those 3, but instead took item 3730, and 0.73 of item 6456.
 
+
   ii. How many of the 10,000 take variables turned out to be integers in sol2
   even though they weren't required to be?
 
   Only 1 of the 10,000 take variables was not an integer.  The other 9,999 remained
   as integers.  (Only 3694 variables were 1's).
+
 
   iii. Can you give an intuition as to why this is? (Hint: What would you expect about
   the value-to-weight ratio of the taken items in the non-integer case?)
@@ -171,6 +178,7 @@ take$item9084                                       1   (obj:2342)
   fractionally to the knapsack to maximize the value when fractional items 
   are allowed.
 
+
   iv. How would you expect this property of sol2 to affect the efficiency of sol1?
   
   This means sol2 will have a higher value-to-weight efficiency than sol1, and
@@ -178,7 +186,8 @@ take$item9084                                       1   (obj:2342)
   items of the greater value-to-weight ratio and just keep going until it needs 
   to add fractions of the last item to fill the rest of the knapsack to the fullest.
 
-e) Know how many items are in the optimally packed knapsack, their total value,
+
+e) Find how many items are in the optimally packed knapsack, their total value,
 and how much room is left in the knapsack.  So introduce variables:
 count, totalvalue, and spareweight, and constrain them to answer those questions.
 
@@ -192,7 +201,10 @@ see eknapsack.zpl
 
 count                                            3695   (obj:0)
 totalvalue                                   17785767   (obj:1)
-spareweight                                         0   (obj:0)
+maximumweight                                  251360   (obj:0)
+takenweight                                    251360   (obj:0)
+spareweight                      2.91038304567337e-11   (obj:0)
+
 
 f) Does the solver do the same thing every time?  
 Were the solver statistics the same as last time? Why or why not?
@@ -217,6 +229,7 @@ So count, totalvalue, and spareweight are also the same every time.
 This is similarly because scip is deterministic and so it will reach the same optimum
 every time it is run.
 
+
 g) It will be easier to unpack the knapsack if it contains fewer items. Change
 the linear objective function so that it encourages a large totalvalue (as before)
 but also encourages a small count.
@@ -228,16 +241,28 @@ Please see gknapsack.zpl
 
 The new objective function is:
 
-maximize totalvalue:   totalvalue - 9000*count;
+maximize totalvalue:   totalvalue - 9500*count;
 subto value:   totalvalue == sum<i> in I: take[i]*value[i];
 
 SCIP> read gknapsack.zpl opt disp val count di val totalvalue di val spareweight
 
 Result:
 
-count                                              70   (obj:-9000)
-totalvalue                                     651656   (obj:1)
-spareweight                                         0   (obj:0)
+count                                              17   (obj:-9500)
+totalvalue                                     163666   (obj:1)
+maximumweight                                  251360   (obj:0)
+takenweight                                      1246   (obj:0)
+spareweight                                    250114   (obj:0)
+
+This new function reduces the value of count and totalvalue.  It increases
+the value of spareweight.  This is because I put a high cost on the number
+of items (over 9000) so that the number of items taken is less than 100 (I ran
+and tested the program with several different cost values per item).
+This solution thus has a lower count since adding more items decreases
+the objective function.  Since this limits the total value, the total value
+is decreased.  Since this constraint was made to be large, it overpowers
+the weight constraint and therefore there is more spareweight as the knapsack
+is not filled.  
 
 h) Argue that the previous problem is actually just solving a different knapsack
 problem.  That is, explain how your fancy revised problem that encourages fewer
@@ -248,8 +273,9 @@ The old knapsack solver actually already solves this new knapsack problem,
 the only difference is that the solution is not just the value with the most
 total value, but instead the selected solution is the highest value that also
 has a small count value. The solver merely needs to solve the same old problem,
-then it needs to consider the solution points that maximize the total value 
+then it needs to consider the solution vertices that maximize the total value 
 while still having a low overall count.
+
 
 i) Let's place one additional constraint.  Some items are radioactive.  The total
 radioactivity of the knapsack is <= 20.  Add this constraint to the ZIMPL program.
@@ -257,9 +283,35 @@ radioactivity of the knapsack is <= 20.  Add this constraint to the ZIMPL progra
 So how fast is SCIP on this problem?  How does the addition of the radioactivity
 constraint change count, totalvalue, and spareweight? Why?
 
+Result:
+
+count                                            3544   (obj:0)
+totalvalue                                   14775050   (obj:1)
+takenweight                                    251360   (obj:0)
+maximumweight                                  251360   (obj:0)
+spareweight                      -5.82076609134674e-11  (obj:0)
+radioactivity                        19.9926114693637   (obj:0)
+
+SCIP takes 2.46 seconds.  The radioactivity constraint has lowered the value of
+count and totalvalue.  Spareweight is still the same.  This is because the 
+radioactivity constraint is restricting the combination of items that can be put
+into the knapsack.  Therefore, fewer items are put into the knapsack.  Still,
+the optimal solution involves maximizing the weight of items in the knapsack,
+so spareweight stays the same (it is still 0).  Even though the knapsack weight
+is maximized, the total value is lower because the best item combination has 
+been ruled out by the radioactivity constraint.
 
 
 j) Final program as knapsack.zpl
+
+
+k) [extra credit] Study the solver output and try to figure out where the solver
+is spending its time on this problem.  Check optimize, disp displaycols, disp stats,
+and disp transproblem.  Comment on shape of the branch-and-bound tree, the total 
+number of LP (simplex) iterations, the effective presolving and propagation
+strategies, etc.
+
+
 
 
 Problem 3 - Duplicate
