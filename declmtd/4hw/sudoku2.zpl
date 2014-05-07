@@ -26,5 +26,13 @@ subto block: forall <bh, bv, d> in B*D do
 # Some of the digits are given.  Read these from file sudoku.txt and
 # further constrain the solution to match these.
 
-set Givens := { read "sudoku.txt" as "<1n,2n,3n>" comment "#" };
-subto givens: forall <r,c,d> in Givens: x[r,c,d]==1;
+#set Givens := { read "sudoku.txt" as "<1n,2n,3n>" comment "#" };
+#subto givens: forall <r,c,d> in Givens: x[r,c,d]==1;
+#
+
+subto rotsymm: forall <r, c, d> in R*C*D do
+  x[r, c, d] == x[dim - r + 1, dim - c + 1, d];
+
+
+
+
