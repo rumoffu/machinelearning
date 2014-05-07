@@ -1,6 +1,6 @@
 # Constraints for n^2 x n^2 Sudoku puzzles.
 
-param n := 3;
+param n := 4;
 param dim := n*n;
 set R := {1..dim};  # row indices
 set C := {1..dim};  # col indices
