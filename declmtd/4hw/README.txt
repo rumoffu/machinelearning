@@ -470,21 +470,84 @@ How long does SCIP take to solve the "very hard" problem in sudoku.txt?
 To view the result use:
 scip -f sudoku.zpl | ./sudoku-decode
 
-swap([a],L) should just return L = a since there are no elements to swap.
-swap([],L) should just return L = [] since there are no elements to swap.
+See sudoku1.zpl for the finished code.
 
-b) mystery(W,Z) :- swap(W,X), swap(X,Y), swap(Y,Z).
+Result:
 
-What does this do?
+3 7 9 | 5 4 6 | 1 8 2 
+4 1 8 | 3 9 2 | 5 6 7 
+2 5 6 | 8 1 7 | 4 3 9 
+------+-------+-------
+1 4 2 | 6 3 5 | 9 7 8 
+9 6 3 | 1 7 8 | 2 4 5 
+5 8 7 | 9 2 4 | 6 1 3 
+------+-------+-------
+7 9 1 | 4 5 3 | 8 2 6 
+8 2 5 | 7 6 1 | 3 9 4 
+6 3 4 | 2 8 9 | 7 5 1 
 
-How many values for L will be returned by mystery([1,2,3,...n],L)?
-Are all of these values different from one another? Why or why not?
 
-mystery first swaps adjacent elements down the list to find solutions, 
+SCIP takes 0.02 seconds to solve the "very hard" sudoku.txt problem.
+
+
+b) Now let's have a little fun.  Copy your program to sudoku2.zpl.
+The problem is infeasible (UNSAT).  In your README, give a simple argument
+in English that demonstrates that no valid 9 x 9 sudoku can be 180 degrees
+rotationally symmetric. (Hint: Think about the constraints being placed on the
+central 3 x 3 block.)
+
+added constraint:
+
+subto rotsymm: forall <r, c, d> in R*C*D do 
+  x[r, c, d] == x[dim - r + 1, dim - c + 1, d]; 
+
+Result:
+
+SCIP Status        : problem is solved [infeasible]
+Solving Time       :       0.01
+
+The central 3 x 3 block would have to be rotationally symmetric which means that 
+its top left corner value would be the same as its bottom right corner value.
+This would require the same digit to appear twice in the same 3 x 3 block.
+Therefore, this is impossible since Sudoku requires a digit to appear
+only once within the same 3 x 3 block.
+
+
+c) The previous argument doesn't apply to the n = 4 case.
+
+So it is possible to have a rotationally symmetric 16 x 16 sudoku?
+If yes, include the decoded solution in your README.  If it is still UNSAT,
+give a different argument in English that explains why.
+
+How long did SCIP take to finish?
+
+Yes it is possible to have a rotationally symmetric 16 x 16 sudoku.
+
+15  1  6  2 |  7 10 16  8 | 13 14  4  9 | 11  5 12  3 
+ 5  9  8 13 |  1  6  4  3 |  7  2 12 11 | 15 16 14 10 
+ 4 10  3 14 | 12  5 11  2 | 16  1 15  6 |  9 13  7  8 
+ 7 16 11 12 | 14 13 15  9 |  5 10  3  8 |  6  2  4  1 
+------------+-------------+-------------+-------------
+11  2 10  8 | 13  9  5  4 | 14  3  7 15 |  1 12  6 16 
+ 6  5  9  3 | 16 14  7 12 |  1 13 11  4 | 10 15  8  2 
+12 15  7  4 | 10  1  8 11 |  6  9 16  2 |  5 14  3 13 
+14 13  1 16 |  3  2  6 15 | 10 12  8  5 |  7  4 11  9 
+------------+-------------+-------------+-------------
+ 9 11  4  7 |  5  8 12 10 | 15  6  2  3 | 16  1 13 14 
+13  3 14  5 |  2 16  9  6 | 11  8  1 10 |  4  7 15 12 
+ 2  8 15 10 |  4 11 13  1 | 12  7 14 16 |  3  9  5  6 
+16  6 12  1 | 15  7  3 14 |  4  5  9 13 |  8 10  2 11 
+------------+-------------+-------------+-------------
+ 1  4  2  6 |  8  3 10  5 |  9 15 13 14 | 12 11 16  7 
+ 8  7 13  9 |  6 15  1 16 |  2 11  5 12 | 14  3 10  4 
+10 14 16 15 | 11 12  2  7 |  3  4  6  1 | 13  8  9  5 
+ 3 12  5 11 |  9  4 14 13 |  8 16 10  7 |  2  6  1 15 
+
+See sudoku2.zpl for the solution.  SCIP took 27.58 seconds on ugradx to finish it.  
+
+
 Problem 5 - power
 =====================================================================================
-
-a) See problem5.ecl
 
 b) query pow(z,z,C) which is 0^0 should return 1.
 
