@@ -311,11 +311,110 @@ and disp transproblem.  Comment on shape of the branch-and-bound tree, the total
 number of LP (simplex) iterations, the effective presolving and propagation
 strategies, etc.
 
+The effective presolving seems to start with some constraint elimination and bounds
+propagation (6 deleted constraints, 8 tightened bounds), although it also wastes some
+time using probing that turns out to be useless where there is no fixing or bounds found:
+
+---------------------------------------------------------------------------------------------
+original problem has 10006 variables (10000 bin, 1 int, 0 impl, 5 cont) and 8 constraints
+SCIP> opt
+
+presolving:
+(round 1) 5 del vars, 6 del conss, 8 chg bounds, 0 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+   (0.2s) probing: 101/10000 (1.0%) - 0 fixings, 0 aggregations, 0 implications, 0 bound changes
+   (0.2s) probing aborted: 100/100 successive totally useless probings
+(round 2) 6 del vars, 6 del conss, 8 chg bounds, 1 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 3) 13 del vars, 6 del conss, 8 chg bounds, 1 chg sides, 0 chg coeffs, 1 upgd conss, 0 impls, 0 clqs
+   (0.2s) probing: 111/10000 (1.1%) - 0 fixings, 0 aggregations, 0 implications, 0 bound changes
+   (0.2s) probing aborted: 100/100 successive totally useless probings
+presolving (4 rounds):
+ 13 deleted vars, 6 deleted constraints, 8 tightened bounds, 0 added holes, 1 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 9993 variables (9993 bin, 0 int, 0 impl, 0 cont) and 2 constraints
+      1 constraints of type <knapsack>
+      1 constraints of type <linear>
+transformed objective value is always integral (scale: 1)
+Presolving Time: 0.19
+---------------------------------------------------------------------------------------------
+
+Then, the second most effective pre-solving step seems to be using variable elimination
+(where 7450 variables are fixed and are thus deleted):
+
+---------------------------------------------------------------------------------------------
+(run 1, node 1) restarting after 7450 global fixings of integer variables
+
+(restart) converted 2 cuts from the global cut pool into linear constraints
+
+presolving:
+(round 1) 7450 del vars, 0 del conss, 0 chg bounds, 1 chg sides, 0 chg coeffs, 0 upgd conss, 0 impls, 0 clqs
+(round 2) 7450 del vars, 0 del conss, 0 chg bounds, 1 chg sides, 0 chg coeffs, 1 upgd conss, 0 impls, 0 clqs
+presolving (3 rounds):
+ 7450 deleted vars, 0 deleted constraints, 0 tightened bounds, 0 added holes, 1 changed sides, 0 changed coefficients
+ 0 implications, 0 cliques
+presolved problem has 2543 variables (2543 bin, 0 int, 0 impl, 0 cont) and 4 constraints
+      1 constraints of type <knapsack>
+      2 constraints of type <linear>
+      1 constraints of type <logicor>
+transformed objective value is always integral (scale: 1)
+Presolving Time: 0.24
+
+---------------------------------------------------------------------------------------------
 
 
+In terms of the branch-and-bound tree and LP (simplex) iterations,
+it seems like the program spends most of its time doing simplex on the dual problem (making
+466 calls and 652 iterations of the dual LP problem).  SCIP also invests time in 
+strong branching in order to predict dual bounds on the children nodes to minimize
+the size of the branch-and-bound tree and to reduce the average number of LP iterations.
 
-Problem 3 - Duplicate
+The branch and bound tree itself has 500 nodes and has depth 40 so it is not a fully
+balanced tree.  Thus, there is a lot of backtracking and exploration of the tree.
+
+---------------------------------------------------------------------------------------------
+LP                 :       Time      Calls Iterations  Iter/call   Iter/sec
+  primal LP        :       0.01          0          0       0.00          -
+  dual LP          :       0.44        466        652       1.40    1481.82
+  lex dual LP      :       0.00          0          0       0.00          -
+  barrier LP       :       0.00          0          0       0.00          -
+  diving/probing LP:       0.19        201        221       1.10    1163.16
+  strong branching :       0.17        149        491       3.30    2888.24
+    (at root node) :          -          5         17       3.40          -
+  conflict analysis:       0.00          0          0       0.00          -
+B&B Tree           :
+  number of runs   :          2
+  nodes            :        500
+  nodes (total)    :        501
+  nodes left       :          0
+  max depth        :         40
+  max depth (total):         40
+  backtracks       :        113 (22.6%)
+  delayed cutoffs  :         40
+  repropagations   :        118 (141 domain reductions, 40 cutoffs)
+  avg switch length:       5.26
+
+---------------------------------------------------------------------------------------------
+
+
+Problem 3 - Planning Next Week with MILP
 =====================================================================================
+
+a) Plan for next week
+set Day := {1..7};
+and assume that each day<i> in Day consists of 24.0 hours.
+
+
+b) For each day, decide how many hours to spend on work, sleep, and play 
+(these do not need to be integers).
+
+
+c) You need sleep.  In any 3-day period, at least 18 hours is required.
+In your README, explain how you interpreted this constraint for 3-day periods
+that are only partially contained within the week.
+
+
+d) 
+
+
 
 See problem3.ecl
 
