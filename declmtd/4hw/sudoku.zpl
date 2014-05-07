@@ -10,10 +10,18 @@ var x[R*C*D] binary;  # does digit D appear at coordinates (R,C)?
 
 # There are constraints, but nothing to maximize or minimize.
 
-subto uniq:  FILL THIS IN   # exactly one digit per cell
-subto row:   FILL THIS IN   # each digit appears once per row
-subto col:   FILL THIS IN   # each digit appears once per column
-subto block: FILL THIS IN   # each digit appears once per block
+# exactly one digit per cell
+subto uniq:  forall <r, c> in R*C do sum <d> in D : x[r,c,d] == 1;  
+
+# each digit appears once per row
+subto row:   forall <c, d> in C*D do sum <r> in R : x[r,c,d] == 1;  
+
+# each digit appears once per column
+subto col:   forall <r, d> in R*D do sum <c> in C : x[r,c,d] == 1;
+
+# each digit appears once per block
+subto block: forall <bh, bv, d> in B*D do
+  sum <a, b> in B : x[(bh-1)*n+a, (bv-1)*n+b, d] == 1;
 
 # Some of the digits are given.  Read these from file sudoku.txt and
 # further constrain the solution to match these.
