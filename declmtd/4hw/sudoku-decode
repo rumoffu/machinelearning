@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+
+# Read the output of SCIP.
+# 
+# All lines like "x#row#col#digit ..." are assumed to be part of the solution,
+# specifying that that digit appears at that row and column.  We don't
+# look at the assigned value; in particular we make no effort to handle fractional
+# solutions.
+#
+# Other lines from the input are printed to STDERR.
+
+$max = 0;   # Maximum digit (9 for an ordinary sudoku puzzle).
+while (<>) {
+  if (/^x\#(\d+)#(\d+)#(\d+) /) {
+    $s[$1][$2] = $3;
+    $max = $3 if $max < $3;
+  }     
+  else {
+    print STDERR $_;
+  }
+}
+
+# Check that solution has roughly the right form.
+
+$n = int(sqrt($max)+0.5);
+die "Error: Solution uses digits up to $max but that is not a square number\n" 
+  unless $max==$n*$n;
+
+# Print solution, with horizontal and vertical lines separating the n x n blocks.
+for $row (1..$max) {
+
+  for $col (1..$max) {
+    die "Error: No digit defined at row $row and column $col\n" unless defined $s[$row][$col];
+    printf "%".length($max)."d ", $s[$row][$col];
+    print "| " if ($col % $n == 0 && $col < $max);  # vertical line
+  }
+  print "\n";
+
+  if ($row % $n == 0 && $row < $max) {  # horizontal line
+    for $col (1..$max) {
+      printf "-" x (length($max)+1);
+      print "+-" if ($col % $n == 0 && $col < $max);  # horiz/vert cross
+    }
+    print "\n";
+  }
+}
