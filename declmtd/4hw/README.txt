@@ -546,6 +546,15 @@ Yes it is possible to have a rotationally symmetric 16 x 16 sudoku.
 See sudoku2.zpl for the solution.  SCIP took 27.58 seconds on ugradx to finish it.  
 
 
+d) Even though it's not possible to have a rotationally symmetric 9 x 9 grid,
+use SCIP to find one that is as close to rotationally symmetric as possible.
+Specifically, you should minimize the number of cells that are not equal to their
+rotational counterpart. How close can you get to be rotationally symmetric?
+(Hint: You may find vabs helpful)
+
+
+
+
 Problem 5 - power
 =====================================================================================
 
