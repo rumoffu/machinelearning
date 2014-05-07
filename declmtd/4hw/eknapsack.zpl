@@ -40,12 +40,15 @@ var take[I] binary; #tracks which items are taken
 #var take[I] <= 1; #tracks which items are taken
 var count integer;
 var totalvalue real;
-var spareweight real;
+var maximumweight real;
 var takenweight real;
+var spareweight real;
 
 maximize totalvalue:   totalvalue; 
+subto maximumweight:   maximumweight == (sum<i> in I: weight[i]) / 3;
 subto count:           count == sum<i> in I: take[i];
-subto value:   totalvalue == sum<i> in I: take[i]*value[i]; 
-subto takenweight:       takenweight == sum<i> in I: take[i]*weight[i];
+subto value:           totalvalue == sum<i> in I: take[i]*value[i]; 
+subto takenweight:     takenweight == sum<i> in I: take[i]*weight[i];
 subto maxweight:       takenweight <= maxweight;
 subto spareweight:     spareweight == maxweight - takenweight;
+

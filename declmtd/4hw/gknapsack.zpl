@@ -28,7 +28,7 @@ param weight[I] := read "knapsack.txt" as "<1s> 3n";  # item names and weights
 # Let's limit the capacity of our knapsack to 1/3 of the total weight
 # of all items.  That means the solver will have to make some hard choices.
 
-#param maxweight := (sum <i> in I: weight[i]) / 3;  
+param maxweight := (sum <i> in I: weight[i]) / 3;  
 
 # -----------
 
@@ -40,15 +40,15 @@ var take[I] binary; #tracks which items are taken
 #var take[I] <= 1; #tracks which items are taken
 var count integer;
 var totalvalue real;
-var spareweight real;
+var maximumweight real;
 var takenweight real;
-var maxweight real;
+var spareweight real;
 
-#maximize totalvalue:   totalvalue - 8000*count; 
-maximize totalvalue:   totalvalue; 
-subto maxweightinit:   maxweight == (sum<i> in I: weight[i]) / 3;
+#maximize totalvalue:   totalvalue; 
+maximize totalvalue:   totalvalue - 9500*count; 
+subto maximumweight:   maximumweight == (sum<i> in I: weight[i]) / 3;
 subto count:           count == sum<i> in I: take[i];
-subto value:   totalvalue == sum<i> in I: take[i]*value[i]; 
-subto takenweight:       takenweight == sum<i> in I: take[i]*weight[i];
+subto value:           totalvalue == sum<i> in I: take[i]*value[i]; 
+subto takenweight:     takenweight == sum<i> in I: take[i]*weight[i];
 subto maxweight:       takenweight <= maxweight;
 subto spareweight:     spareweight == maxweight - takenweight;
