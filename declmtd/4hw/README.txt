@@ -226,6 +226,40 @@ totalvalue, and spareweight in the optimal solution?  Why?
 
 Please see gknapsack.zpl
 
+The new objective function is:
+
+maximize totalvalue:   totalvalue - 9000*count;
+subto value:   totalvalue == sum<i> in I: take[i]*value[i];
+
+SCIP> read gknapsack.zpl opt disp val count di val totalvalue di val spareweight
+
+Result:
+
+count                                              70   (obj:-9000)
+totalvalue                                     651656   (obj:1)
+spareweight                                         0   (obj:0)
+
+h) Argue that the previous problem is actually just solving a different knapsack
+problem.  That is, explain how your fancy revised problem that encourages fewer
+items could be reduced to a plain old knapsack problem and solved with a plain
+old knapsack solver.
+
+The old knapsack solver actually already solves this new knapsack problem,
+the only difference is that the solution is not just the value with the most
+total value, but instead the selected solution is the highest value that also
+has a small count value. The solver merely needs to solve the same old problem,
+then it needs to consider the solution points that maximize the total value 
+while still having a low overall count.
+
+i) Let's place one additional constraint.  Some items are radioactive.  The total
+radioactivity of the knapsack is <= 20.  Add this constraint to the ZIMPL program.
+
+So how fast is SCIP on this problem?  How does the addition of the radioactivity
+constraint change count, totalvalue, and spareweight? Why?
+
+
+
+j) Final program as knapsack.zpl
 
 
 Problem 3 - Duplicate
