@@ -1,4 +1,10 @@
+# [kwong23@ugradx 4hw]$ rlwrap scip
+# SCIP> read gknapsack.zpl
+# SCIP> opt
+# SCIP> display solution
+
 # A basic knapsack solver.
+# 
 # 
 # The knapsack.txt file should have lines of the form 
 # "item,value,weight,radioactivity" -- like this:
@@ -16,6 +22,7 @@
 set I := { read "knapsack.txt" as "<1s>" };           # set of item names    
 param value[I] := read "knapsack.txt" as "<1s> 2n";   # item names and values
 param weight[I] := read "knapsack.txt" as "<1s> 3n";  # item names and weights
+param radio[I] := read "knapsack.txt" as "<1s> 4n"; # item names and radioactivity
 
 # -----------
 
@@ -23,6 +30,7 @@ param weight[I] := read "knapsack.txt" as "<1s> 3n";  # item names and weights
 # of all items.  That means the solver will have to make some hard choices.
 
 param maxweight := (sum <i> in I: weight[i]) / 3;  
+param maxradio := 20;
 
 # -----------
 
@@ -30,31 +38,21 @@ param maxweight := (sum <i> in I: weight[i]) / 3;
 # of the items I that has maximum total value, subject to the constraint
 # that they must fit in the knapsack.
 
-var take[I] binary;
-maximize totalvalue:    FILL THIS IN
-subto maxweight:        FILL THIS IN
-
-
-var take[I] binary;
-#var take[I] <= 1;
-
-# -----------
-
-# Set up additional analysis variables and constraints.
-# Setup must occur after the take, value, and weight parameters have
-# been initialized so that they may be used.
-
+var take[I] binary; #tracks which items are taken
+#var take[I] <= 1; #tracks which items are taken
 var count integer;
-subto count: count == sum<i> in I: take[i];
 var totalvalue real;
-subto totalvalue: totalvalue == sum <i> in I: value[i]*take[i];
 var spareweight real;
-subto spareweight: spareweight == maxweight - (sum <i> in I: weight[i]*take[i]);
+var takenweight real;
+var radioactivity real;
 
-# -----------
+maximize totalvalue:   totalvalue;
+subto value:   totalvalue == sum<i> in I: take[i]*value[i]; 
+subto count:           count == sum<i> in I: take[i];
+subto takenweight:       takenweight == sum<i> in I: take[i]*weight[i];
+subto maxweight:       takenweight <= maxweight;
+subto spareweight:     spareweight == maxweight - takenweight;
+subto radioactivity:   radioactivity == sum<i> in I: take[i]*radio[i];
+subto maxradio:       radioactivity <= maxradio;
 
-# Complete problem set up.
 
-maximize total:         totalvalue;
-subto maxweight:        (sum <i> in I: weight[i]*take[i]) <= maxweight;
-subto maxradioactivity: (sum <i> in I: radioactivity[i]*take[i]) <= maxradioactivity;
