@@ -33,11 +33,13 @@ var eusedhours[E];
 ##subto eusehours: forall <e> in E: vif (goevent[e] == 1) then (eusedhours[e] <= ehours[e] and eusedhours[e] >= ehours[e]) end;
 subto eusehours: forall <e> in E: eusedhours[e] == goevent[e]*ehours[e]; 
 
+var eperday[Day*E]; # event hours per day
 
-
+# days send hours to events, limited by event hours per day
+subto perday:   forall <d> in Day: (sum <e> in E: eperday[d,e]) <= events[d]; 
 # problem: events on the same day cause problems -- hours used are not summed
-subto perday:   forall <d> in Day: sum <e> in E: table[d,e]; 
-subto goevents: forall <e> in E: events[ edays[e] ] == eusedhours[e];
+subto goevents: forall <d> in Day: events[ d ] == sum <e> in E: eperday[d, e];
+#subto goevents: forall <e> in E: events[ edays[e] ] == eusedhours[e];
 
 #subto goevents: forall <e> in E: events[ edays[e] ] == eusedhours[e];
 #subto goevents: forall <d, e> in Day*E: vif events[d] == (sum <e> in E: eusedhours[e]) then d == edays[e] end;
