@@ -66,8 +66,14 @@ subto finishedassignment: forall <a> in A: sum <d> in Day: wperday[d,a] <= ahour
 # limit by due date - all work must stop past due date
 subto duedate: forall <d, a> in Day*A: if (d > adays[a]) then wperday[d,a] == 0 else 0 == 0 end;
 
+var workrate[Day] real;
+#subto workrate: forall <d> in Day: vif (sleepy[d] == 1) then workrate[d] == sleep_deficit_rate else workrate[d] == 1 end;
+subto workrate: forall <d> in Day: workrate[d] == (1 - sleepy[d])*1 + sleepy[d]*sleep_deficit_rate;
+
 # workdone is a sum over wperday
-subto workperassignment: forall <a> in A: workdone[a] == sum <d> in Day: wperday[d, a];
+subto workperassignment: forall <a> in A: workdone[a] == sum <d> in Day: workrate[d]*wperday[d, a];
+
+
 
 # constrain effective work done 
 #subto sleepywork: forall <d, a> in Day*A: vif(sleepy[d] == 1) then workdone[a] <= sleep_deficit_rate*wperday[d, a] end; 
