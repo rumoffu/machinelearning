@@ -33,20 +33,21 @@ subto block: forall <bh, bv, d> in B*D do
 #subto rotsymm: forall <r, c, d> in R*C*D do
 #  x[r, c, d] == x[dim - r + 1, dim - c + 1, d];
 
-var offmatch integer;
-var squaresdifferent integer;
+var doubleoffmatch integer;
+#var squaresdifferent integer;
 
-minimize offmatch: offmatch;
+minimize offmatch: doubleoffmatch;
 subto rotsymm: 
-  offmatch == sum <r, c, d> in R*C*D : vabs(x[r, c, d] - x[dim - r + 1, dim - c + 1, d]);
+  doubleoffmatch == sum <r, c, d> in R*C*D : vabs(x[r, c, d] - x[dim - r + 1, dim - c + 1, d]);
   #offmatch == (sum <r, c, d> in R*C*D : vabs(x[r, c, d] - x[dim - r + 1, dim - c + 1, d])) / 2;
-subto diff: squaresdifferent == offmatch / 2;
+#subto diff: squaresdifferent == offmatch / 2;
   # divide by 2 to account for double counting:
   # for example, if the top left square is a 1, but the bottom right square is a 9,
   # it counts 1 mistake for digit 1, and 1 mistake for digit 9
   # and then it repeats this process for the bottom right square being a 9 and 
   # the top left square being a 1
-
+  
+  # cannot use / 2 or a new variable -- it makes scip take forever to solve
 
 
 
