@@ -31,12 +31,13 @@ var eusedhours[E];
 
 #for each event, if we go, then we use take away those hours from that day
 ##subto eusehours: forall <e> in E: vif (goevent[e] == 1) then (eusedhours[e] <= ehours[e] and eusedhours[e] >= ehours[e]) end;
-subto eusehours: forall <e> in E: eusedhours[e] == goevent[e]*ehours[e]; 
+#subto eusehours: forall <e> in E: eusedhours[e] == goevent[e]*ehours[e]; 
 
 var eperday[Day*E]; # event hours per day
+subto eusehours: forall <e> in E: eperday[edays[e], e] == goevent[e]*ehours[e]; 
 
 # days send hours to events, limited by event hours per day
-subto perday:   forall <d> in Day: (sum <e> in E: eperday[d,e]) <= events[d]; 
+#subto perday:   forall <d> in Day: (sum <e> in E: eperday[d,e]) <= events[d]; 
 # problem: events on the same day cause problems -- hours used are not summed
 subto goevents: forall <d> in Day: events[ d ] == sum <e> in E: eperday[d, e];
 #subto goevents: forall <e> in E: events[ edays[e] ] == eusedhours[e];
@@ -47,7 +48,8 @@ subto goevents: forall <d> in Day: events[ d ] == sum <e> in E: eperday[d, e];
 
 #subto goevents: forall <e> in E: events[ edays[e] ] == (sum <e> in E: eusedhours[e]);
 
-subto efun:  eventfun == sum <e> in E: efunrate[e] * eusedhours[e];
+#subto efun:  eventfun == sum <e> in E: efunrate[e] * eusedhours[e];
+subto efun:  eventfun == sum <d,e> in Day*E: efunrate[e] * eperday[d, e];
 
 #subto funevents: forall <d> in D: funevents[d] == sum <e> in E : efunrate[e] * ehours[e];
 
