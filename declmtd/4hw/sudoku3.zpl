@@ -38,9 +38,9 @@ var offmatch integer;
 
 minimize offmatch: offmatch;
 subto rotsymm: 
-  #offmatch == sum <r, c, d> in R*C*D : vabs(x[r, c, d] - x[dim - r + 1, dim - c + 1, d]);
-  offmatch == (sum <r, c, d> in R*C*D : vabs(x[r, c, d] - x[dim - r + 1, dim - c + 1, d])) / 2;
-subto force: forall <c> in C : x[1, c, c] == 1;
+  offmatch == sum <r, c, d> in R*C*D : vabs(x[r, c, d] - x[dim - r + 1, dim - c + 1, d]);
+subto no_permute_digits: forall <c> in C : x[1, c, c] == 1;
+  #offmatch == (sum <r, c, d> in R*C*D : vabs(x[r, c, d] - x[dim - r + 1, dim - c + 1, d])) / 2;
 #subto diff: squaresdifferent == offmatch / 2;
   # divide by 2 to account for double counting:
   # for example, if the top left square is a 1, but the bottom right square is a 9,
