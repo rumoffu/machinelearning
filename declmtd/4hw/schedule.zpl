@@ -24,7 +24,7 @@ param efunrate[E] := read "events.txt" as "<1s> 4n"; # event names and funrates
 
 var goevent[E] binary; #whether or not we go
 var gohours[E] real; #hours we spent actually going
-var eventfun;
+var eventfun real;
 
 subto gohour: forall <e> in E: gohours[e] == goevent[e]*ehours[e];
 subto goevent: forall <d, e> in Day*E: if (edays[e] == d) then events[d] == sum <e> in E: gohours[e] 
@@ -59,14 +59,16 @@ subto calcfun: eventfun == sum <e> in E: efunrate[e] * gohours[e];
 #subto tired: forall <d> in Day without {1, 2} : sleep[d-2] + sleep[d-1] + sleep[d] >= 24 + 0.001 + (m-0.001)*sleepy[d];
 
 
-var totalfun integer;
+var totalfun real;
 
-#subto daylimit: forall <d> in Day : work[d] + sleep[d] + play[d] + events[d] == 24; # part a
-subto daylimit: forall <d> in Day :  sleep[d] + play[d] + events[d] == 24; # part a
+subto daylimit: forall <d> in Day : work[d] + sleep[d] + play[d] + events[d] == 24; # part a
+#subto daylimit: forall <d> in Day :  sleep[d] + play[d] + events[d] == 24; # part a
 subto minsleep: forall <d> in Day without {1, 2} : sleep[d-2] + sleep[d-1] + sleep[d] >= 18; # part c
 #subto totfun: forall <d> in Day : totalfun == base_fun_rate*play[d] + funevents[d] - workpenalty;
-subto totfun: forall <d> in Day : totalfun == base_fun_rate*play[d] + eventfun;
+#subto totfun: forall <d> in Day : totalfun == base_fun_rate*play[d] + eventfun;
+subto totfun: totalfun == sum <d> in Day: base_fun_rate*play[d];
 #subto totfun: forall <d> in Day : totalfun == base_fun_rate*play[d];
 
-maximize fun: totalfun;
+maximize fun: totalfun + eventfun;
+#maximize fun: totalfun;
 
