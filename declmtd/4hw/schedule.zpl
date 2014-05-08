@@ -27,8 +27,19 @@ var gohours[E] real; #hours we spent actually going
 var eventfun real;
 
 subto gohour: forall <e> in E: gohours[e] == goevent[e]*ehours[e];
-subto goevent: forall <d, e> in Day*E: if (edays[e] == d) then events[d] == sum <e> in E: gohours[e] 
-              else 0 == 0 end;
+#subto goevent: forall <d, e> in Day*E: if (edays[e] == d) then events[d] == sum <e> in E: gohours[e] 
+#              else 0 == 0 end;
+#subto goevents: forall <e> in E: events[ edays[e] ] == gohours[e]; #multiple event collision -- need +=
+
+var eperday[Day*E]; # event hours per day
+subto eusehours: forall <e> in E: eperday[edays[e], e] == goevent[e]*ehours[e]; 
+
+# days send hours to events, limited by event hours per day
+#subto perday:   forall <d> in Day: (sum <e> in E: eperday[d,e]) <= events[d]; 
+# problem: events on the same day cause problems -- hours used are not summed
+subto goevents: forall <d> in Day: events[d] == sum <e> in E: eperday[d, e];
+
+#subto goevents: forall <d> in Day: vif(goevent[e] == 1) then events[d] == gohours[e];
 subto calcfun: eventfun == sum <e> in E: efunrate[e] * gohours[e];
 
 
