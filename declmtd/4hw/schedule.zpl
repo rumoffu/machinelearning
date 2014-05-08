@@ -43,7 +43,8 @@ subto workpenalty: forall <a> in A : workpenalty == sum <a> in A : ahoursleft[a]
 subto dowork: forall <a> in A : ahoursleft[a] == ahours[a] - workdone[a];
 
 # work done is equal to hours put into work -- not considering sleep deficit at the moment
-subto workhours: forall <a> in A : workdone[a] == sum <d> in Day : work[d]; 
+##subto workhours: forall <a> in A : workdone[a] == sum <d> in Day : work[d]; 
+subto workhours: forall <a, d> in A*D : vif (d <= adays[a]) then workdone[a] == sum <d> in Day : work[d]; 
 
 # part f
 subto tired: forall <d> in Day without {1, 2} :vif (sleep[d-2] + sleep[d-1] + sleep[d] < 24) then sleepy[d] end;
