@@ -4,4 +4,5 @@ smallgroup 4 2 3
 bore 5 1 0.5
 hiking 6 4 5
 potluck 7 3 6
-stuff 2 1 4
+coolstuff 2 1 4
+church 7 2 2
