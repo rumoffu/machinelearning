@@ -74,30 +74,24 @@ subto workrate: forall <d> in Day: workrate[d] == (1 - sleepy[d])*1 + sleepy[d]*
 subto workperassignment: forall <a> in A: workdone[a] == sum <d> in Day: workrate[d]*wperday[d, a];
 
 
-
-# constrain effective work done 
-#subto sleepywork: forall <d, a> in Day*A: vif(sleepy[d] == 1) then workdone[a] <= sleep_deficit_rate*wperday[d, a] end; 
-# hours unfinished is equal to required hours minus effective work done
-#subto dowork: forall <a> in A : ahoursleft[a] == ahours[a] - workdone[a];
-
-# work done is equal to hours put into work -- not considering sleep deficit at the moment
-##subto workhours: forall <a> in A : workdone[a] == sum <d> in Day : work[d]; 
-#subto workhours: forall <a, d> in A*Day : if (d <= adays[a]) then workdone[a] == sum <d> in Day : work[d]; 
-
 # part f
 ##subto tired: forall <d> in Day without {1, 2} :vif (sleep[d-2] + sleep[d-1] + sleep[d] < 24) then sleepy[d] == 1 end;
 param m := -25;
 subto tired: forall <d> in Day without {1, 2} : sleep[d-2] + sleep[d-1] + sleep[d] >= 24 + 0.001 + (m-0.001)*sleepy[d];
 
 
-
+# limit 24 hours in a day 
 subto daylimit: forall <d> in Day : work[d] + sleep[d] + play[d] + events[d] == 24; # part a
-#subto daylimit: forall <d> in Day :  sleep[d] + play[d] + events[d] == 24; # part a
+# requirement for minimum sleep
 subto minsleep: forall <d> in Day without {1, 2} : sleep[d-2] + sleep[d-1] + sleep[d] >= 18; # part c
+# calculate fun
 subto playfun: playfun == sum <d> in Day: base_fun_rate*play[d];
+# calculate total fun
 subto addfun: totalfun == playfun + eventfun - workpenalty;
-#subto addfun: totalfun == playfun + eventfun;
 
+maximize fun: totalfun;
+
+# print variable sums
 var workhours real;
 var playhours real;
 var sleephours real;
@@ -106,6 +100,5 @@ subto sumwork: workhours == sum <d> in Day: work[d];
 subto sumplay: playhours == sum <d> in Day: play[d];
 subto sumsleep: sleephours == sum <d> in Day: sleep[d];
 subto sumevent: eventhours == sum <d> in Day: events[d];
-#maximize fun: playfun + eventfun - workpenalty;
-maximize fun: totalfun;
+
 

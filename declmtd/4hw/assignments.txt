@@ -3,4 +3,5 @@ cis 2 5 1
 victorianpoetry 3 2 1
 machinelearning 4 12 3
 declarative 5 16 2
+finalproject 6 25 3
 essay 7 5 8
