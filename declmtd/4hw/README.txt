@@ -584,29 +584,72 @@ c 6 k | o n m | 7 h 9
 
 So, it is off by 16 pairs (so 32 total digits are offset in total)
 
-In the code, I divide the offset count by 2 because of double counting:
+In the code, the offset count is called doubleoffset because of double counting:
 For example, if the top left square is a 1, but the bottom right square is a 9,
 it counts 1 mistake for digit 1, and 1 mistake for digit 9.
 And then it double counts because it repeats this process for the bottom right 
-square being a 9 and the top left square being a 1.
+square being a 9 and the top left square being a 1.  So the total number of 
+digits that are wrong is simply doubleoffset / 2.
+
+Note: this took 80 seconds to run on ugradx.
 
 
-Problem 5 - power
+e) Your solution to the previous problem is only one of a family of symmetric 
+solutions.  Add a symmetry-breaking constraint. Hint: Think about getting
+the first row into a standard form.
+
+We can add a symmetry breaking constraint by requiring the first row to be
+1, 2, 3, 4, 5, 6, 7, 8, 9
+
+This prevents swapping of any of the digit pairs.
+
+See code sudoku3.zpl
+
+Result:
+
+1 2 3 | 4 5 6 | 7 8 9 
+8 5 9 | 1 7 3 | 2 4 6 
+4 7 6 | 2 9 8 | 1 3 5 
+------+-------+-------
+2 6 4 | 3 1 5 | 8 9 7 
+7 1 8 | 9 4 2 | 5 6 3 
+3 9 5 | 6 8 7 | 4 1 2 
+------+-------+-------
+5 3 1 | 8 2 9 | 6 7 4 
+6 4 2 | 7 3 1 | 9 5 8 
+9 8 7 | 5 6 4 | 3 2 1
+
+note: This took 30 seconds on ugradx
+
+Thus, this constraint speeds up SCIP.  This makes sense because it 
+reduces the amount of branching and checking that SCIP has to do.
+This also does not change the feasibility of the problem as the
+first row being set to 1 through 9 is required since all digits
+in the row must be different.
+
+
+f) [extra credit]
+
+
+g) Now go back to n = 3. Suppose you allow the x variables to be real numbers 
+in the range [0, 1].  Now you could have a solution that satisfies all the 
+constraints including rotsymm.  What is the "simplest" such solution? (There is no
+need to change the program or run SCIP; just think about it!)
+
+To be honest, this question doesn't make much sense at all.
+However, it seems like the desired answer is that the simplest solution that 
+"satisfies the constraints" would be setting each x variable to be 1/9.
+
+Then the digit constraints add up to 1, the row constraints will add up to 1,
+the column constraints add up to 1, and the block constraints will add up to 1.
+
+And since each x variable has the same value of 1/9, it will also fit
+the rotational symmetry constraint.  
+
+
+Problem 5 - Primal to Dual [required for 425; extra credit for 325]
 =====================================================================================
 
-b) query pow(z,z,C) which is 0^0 should return 1.
+a)
 
-c) What will your program answer if A,B, and C are not all Peano integers?
-It should return No.
-
-Problem 6 - cut operator
-=====================================================================================
-
-subroutine calls to only stop backtracking within that subroutine.
-
-Problem 7 - Unique
-=====================================================================================
-
-uniq([],[]).
-
-
+b) 
