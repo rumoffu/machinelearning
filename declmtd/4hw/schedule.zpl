@@ -51,17 +51,17 @@ var wperday[Day*A]; # base work hours done per day
 
 ##var workloss[Day];
 ##subto workpenalty: forall <a> in A : workloss[ adays[a] ] == - (sum <a> in A : ahoursleft[a] * apenalthy[a]);
-#subto workpenalty: workpenalty == sum <a> in A : apenalty[a] * (ahours[a] - workdone[a]);
-subto workpenalty: workpenalty == sum <d, a> in Day*A : apenalty[a] * (ahours[a] - wperday[d, a]);
+subto workpenalty: workpenalty == sum <a> in A : apenalty[a] * (ahours[a] - workdone[a]);
+#subto workpenalty: workpenalty == sum <d, a> in Day*A : apenalty[a] * (ahours[a] - wperday[d, a]);
 
 # without sleepy factor
 #subto sleepywork: forall <a>
-# constrain effective work done 
-#subto sleepywork: forall <d, a> in Day*A: vif(sleepy[d] == 1) then workdone[a] <= sleep_deficit_rate*wperday[d, a]; 
 
 # constrain work hours done per day
 subto workhours: forall <d> in Day: work[d] == sum <a> in A: wperday[d, a];
 
+# constrain effective work done 
+subto sleepywork: forall <d, a> in Day*A: vif(sleepy[d] == 1) then workdone[a] <= sleep_deficit_rate*wperday[d, a] end; 
 # hours unfinished is equal to required hours minus effective work done
 #subto dowork: forall <a> in A : ahoursleft[a] == ahours[a] - workdone[a];
 
