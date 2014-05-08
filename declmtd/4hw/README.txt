@@ -582,7 +582,14 @@ c 6 k | o n m | 7 h 9
 6 7 4 | 2 f e | 5 8 1 
 8 5 9 | 7 b a | 3 4 2 
 
-So, it is off by 16 squares (pairs, so 32 total digits)
+So, it is off by 16 pairs (so 32 total digits are offset in total)
+
+In the code, I divide the offset count by 2 because of double counting:
+For example, if the top left square is a 1, but the bottom right square is a 9,
+it counts 1 mistake for digit 1, and 1 mistake for digit 9.
+And then it double counts because it repeats this process for the bottom right 
+square being a 9 and the top left square being a 1.
+
 
 Problem 5 - power
 =====================================================================================
