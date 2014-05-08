@@ -60,8 +60,17 @@ subto workpenalty: workpenalty == sum <a> in A : apenalty[a] * (ahours[a] - work
 # constrain work hours done per day
 subto workhours: forall <d> in Day: work[d] == sum <a> in A: wperday[d, a];
 
+# constrain based on hours for each assignment
+subto finishedassignment: forall <a> in A: sum <d> in Day: wperday[d,a] <= ahours[a];
+
+# limit by due date - all work must stop past due date
+subto duedate: forall <d, a> in Day*A: if (d > adays[a]) then wperday[d,a] == 0 else 0 == 0 end;
+
+# workdone is a sum over wperday
+subto workperassignment: forall <a> in A: workdone[a] == sum <d> in Day: wperday[d, a];
+
 # constrain effective work done 
-subto sleepywork: forall <d, a> in Day*A: vif(sleepy[d] == 1) then workdone[a] <= sleep_deficit_rate*wperday[d, a] end; 
+#subto sleepywork: forall <d, a> in Day*A: vif(sleepy[d] == 1) then workdone[a] <= sleep_deficit_rate*wperday[d, a] end; 
 # hours unfinished is equal to required hours minus effective work done
 #subto dowork: forall <a> in A : ahoursleft[a] == ahours[a] - workdone[a];
 
