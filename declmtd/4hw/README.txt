@@ -568,7 +568,21 @@ Result:
 6 7 4 | 2 3 9 | 5 8 1 
 8 5 9 | 7 6 1 | 3 4 2 
 
-It is off by 13 squares
+and using letters to represent mismatches:
+
+2 4 3 | a b 7 | 9 5 8 
+1 8 5 | e f 2 | 4 7 6 
+7 9 6 | 8 i j | 2 1 3 
+------+-------+-------
+9 h 7 | m n o | k 6 c 
+d g l | p 7 p | l g d 
+c 6 k | o n m | 7 h 9 
+------+-------+-------
+3 1 2 | j i 8 | 6 9 7 
+6 7 4 | 2 f e | 5 8 1 
+8 5 9 | 7 b a | 3 4 2 
+
+So, it is off by 16 squares (pairs, so 32 total digits)
 
 Problem 5 - power
 =====================================================================================
