@@ -44,15 +44,23 @@ param adays[A] := read "assignments.txt" as "<1s> 2n"; # assignment name and due
 param ahours[A] := read "assignments.txt" as "<1s> 3n"; # assignment name and hours used
 param apenalty[A] := read "assignments.txt" as "<1s> 4n"; # assignment name and penaltyrates
 
-do print A;
+#do print A;
 
-#var ahoursleft[A] real; # hours unfinished work
 var workdone[A] real; # hours of effective work done
-var wperday[Day*A]; # efftive work hours done per day
+var wperday[Day*A]; # base work hours done per day
 
 ##var workloss[Day];
 ##subto workpenalty: forall <a> in A : workloss[ adays[a] ] == - (sum <a> in A : ahoursleft[a] * apenalthy[a]);
-subto workpenalty: workpenalty == sum <a> in A : apenalty[a] * (ahours[a] - workdone[a]);
+#subto workpenalty: workpenalty == sum <a> in A : apenalty[a] * (ahours[a] - workdone[a]);
+subto workpenalty: workpenalty == sum <d, a> in Day*A : apenalty[a] * (ahours[a] - wperday[d, a]);
+
+# without sleepy factor
+#subto sleepywork: forall <a>
+# constrain effective work done 
+#subto sleepywork: forall <d, a> in Day*A: vif(sleepy[d] == 1) then workdone[a] <= sleep_deficit_rate*wperday[d, a]; 
+
+# constrain work hours done per day
+subto workhours: forall <d> in Day: work[d] == sum <a> in A: wperday[d, a];
 
 # hours unfinished is equal to required hours minus effective work done
 #subto dowork: forall <a> in A : ahoursleft[a] == ahours[a] - workdone[a];
@@ -71,12 +79,18 @@ subto tired: forall <d> in Day without {1, 2} : sleep[d-2] + sleep[d-1] + sleep[
 subto daylimit: forall <d> in Day : work[d] + sleep[d] + play[d] + events[d] == 24; # part a
 #subto daylimit: forall <d> in Day :  sleep[d] + play[d] + events[d] == 24; # part a
 subto minsleep: forall <d> in Day without {1, 2} : sleep[d-2] + sleep[d-1] + sleep[d] >= 18; # part c
-#subto totfun: forall <d> in Day : totalfun == base_fun_rate*play[d] + funevents[d] - workpenalty;
-#subto totfun: forall <d> in Day : totalfun == base_fun_rate*play[d] + eventfun;
-subto totfun: playfun == sum <d> in Day: base_fun_rate*play[d];
-#subto totfun: forall <d> in Day : totalfun == base_fun_rate*play[d];
-#subto addfun: totalfun == playfun + eventfun - workpenalty;
-subto addfun: totalfun == playfun + eventfun;
+subto playfun: playfun == sum <d> in Day: base_fun_rate*play[d];
+subto addfun: totalfun == playfun + eventfun - workpenalty;
+#subto addfun: totalfun == playfun + eventfun;
+
+var workhours real;
+var playhours real;
+var sleephours real;
+var eventhours real;
+subto sumwork: workhours == sum <d> in Day: work[d];
+subto sumplay: playhours == sum <d> in Day: play[d];
+subto sumsleep: sleephours == sum <d> in Day: sleep[d];
+subto sumevent: eventhours == sum <d> in Day: events[d];
 #maximize fun: playfun + eventfun - workpenalty;
 maximize fun: totalfun;
 
