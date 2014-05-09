@@ -304,6 +304,18 @@ been ruled out by the radioactivity constraint.
 
 j) Final program as knapsack.zpl
 
+$ scip -f knapsack.zpl
+
+Result:
+
+count                                            3544   (obj:0)
+totalvalue                                   14775050   (obj:1)
+takenweight                                    251360   (obj:0)
+maximumweight                                  251360   (obj:0)
+radioactivity                        19.9926114693637   (obj:0)
+
+note: ran in 1.73 seconds on ugrad14
+
 
 k) [extra credit] Study the solver output and try to figure out where the solver
 is spending its time on this problem.  Check optimize, disp displaycols, disp stats,
@@ -454,11 +466,96 @@ along with data files events.txt and assignments.txt.
 
 How to run the solver from the command line:
 
+[kwong23@ugrad14 4hw]$ scip -f schedule.zpl
+
+
 Solution found:
+
+objective value:                               52.996
+sleepy#3                                            1   (obj:0)
+sleepy#6                                            1   (obj:0)
+goevent$freetiedye                                  1   (obj:0)
+goevent$smallgroup                                  1   (obj:0)
+goevent$hiking                                      1   (obj:0)
+goevent$potluck                                     1   (obj:0)
+goevent$coolstuff                                   1   (obj:0)
+goevent$church                                      1   (obj:0)
+events#1                                            2   (obj:0)
+events#2                                            1   (obj:0)
+events#4                                            2   (obj:0)
+events#6                                           14   (obj:0)
+events#7                                            5   (obj:0)
+work#1                                             22   (obj:0)
+work#2                                             23   (obj:0)
+work#4                                         21.999   (obj:0)
+work#5                                         13.999   (obj:0)
+work#7                                             15   (obj:0)
+sleep#3                                            24   (obj:0)
+sleep#4                          0.000999999999997669   (obj:0)
+sleep#5                                        10.001   (obj:0)
+sleep#6                                            10   (obj:0)
+sleep#7                                             4   (obj:0)
+gohours$freetiedye                                  2   (obj:0)
+gohours$smallgroup                                  2   (obj:0)
+gohours$hiking                                     14   (obj:0)
+gohours$potluck                                     3   (obj:0)
+gohours$coolstuff                                   1   (obj:0)
+gohours$church                                      2   (obj:0)
+eventfun                                           68   (obj:0)
+workpenalty                                    15.004   (obj:0)
+totalfun                                       52.996   (obj:1)
+eperday#1$freetiedye                                2   (obj:0)
+eperday#2$coolstuff                                 1   (obj:0)
+eperday#4$smallgroup                                2   (obj:0)
+eperday#6$hiking                                   14   (obj:0)
+eperday#7$potluck                                   3   (obj:0)
+eperday#7$church                                    2   (obj:0)
+workdone$algorithms                                 3   (obj:0)
+workdone$machinelearning                           25   (obj:0)
+workdone$declarative                               24   (obj:0)
+workdone$finalproject                              28   (obj:0)
+workdone$study                      0.998000000000017   (obj:0)
+workdone$essay                                     15   (obj:0)
+wperday#1$machinelearning                      21.002   (obj:0)
+wperday#1$study                     0.998000000000017   (obj:0)
+wperday#2$algorithms                                3   (obj:0)
+wperday#2$machinelearning            3.99800000000001   (obj:0)
+wperday#2$finalproject                         16.002   (obj:0)
+wperday#4$declarative                          10.001   (obj:0)
+wperday#4$finalproject                         11.998   (obj:0)
+wperday#5$declarative                          13.999   (obj:0)
+wperday#7$essay                                    15   (obj:0)
+workrate#1                                          1   (obj:0)
+workrate#2                                          1   (obj:0)
+workrate#3                                       0.75   (obj:0)
+workrate#4                                          1   (obj:0)
+workrate#5                                          1   (obj:0)
+workrate#6                                       0.75   (obj:0)
+workrate#7                                          1   (obj:0)
+workhours                                      95.998   (obj:0)
+sleephours                                     48.002   (obj:0)
+eventhours                                         24   (obj:0)
 
 
 Discussion of solution found:
 
+The solver really optimizes fun, but in a non-realistic way.  First of all,
+some events are not visited - bore because it has a low fun rate (lower than 
+the base play rate), and liondance because it has a relatively low fun rate
+and requires too many hours.  Some assignments are skipped because of their
+low value (cis and victorian poetry).  Some assignments are unfinished (study
+required 5 hours but only 1 hour was done). Sleep is sporadic: day 3 is devoted
+solely to sleep.  Day 6 involves being sleepy (having a sleep deficit from 
+less than 24 hours of sleep).  
+
+Changing the weights (fun rates and penalty rates) affects which events 
+are visited and which assignments are done or not done.
+
+It was difficult getting multiple events to be on the same day at first
+in terms of having the code work properly.
+
+All in all, this program solves a cool problem, but it isn't realistic (who would
+sleep for 24 hours straight then work for 22 hours straight afterwards?)
 
 
 Problem 4 - n^2 by n^2 Sudoku solver
@@ -468,7 +565,7 @@ a) You can find an incomplete ZIMPL program in sudoku.zpl.  Finish it.
 How long does SCIP take to solve the "very hard" problem in sudoku.txt?
 
 To view the result use:
-scip -f sudoku.zpl | ./sudoku-decode
+scip -f sudoku1.zpl | ./sudoku-decode
 
 See sudoku1.zpl for the finished code.
 
@@ -650,6 +747,38 @@ the rotational symmetry constraint.
 Problem 5 - Primal to Dual [required for 425; extra credit for 325]
 =====================================================================================
 
-a)
+a) Why can the relaxed LP problem get a higher value of the objective than the 
+original LP problem?  Specifically, how does it make your job easier as a robber with
+a physical knapsack?
 
-b) 
+The relaxed LP problem can get a higher value because it allows for fractionally
+taking items.  This means that more possibilities are opened up for taking
+different item combinations.  It makes the job easier because fully packing
+the knapsack is more flexible.
+
+
+b) Derive the dual LP problem.
+
+
+c) What can you say about the minimum value of the dual objective? (Will it equal 
+the weight, or the value, of the optimally filled knapsack? Higher? Lower?)
+
+
+The minimum value of the dual objective will be equal to the value
+of the optimally filled knapsack.  This is because of the equality
+between the optimum (minimum) of the dual problem with the optimum (maximum) of
+the primal problem.
+
+d) What interpretation can you give to dual variable yo?
+
+
+e) What interpretation can you give to the dual variables y1, ... yn?
+
+
+f) Suppose for the sake of argument that y0 is fixed to some constant.
+
+
+g) The above question shows that once y0 is chosen, the values for the other
+yi will be fully determined.
+
+
