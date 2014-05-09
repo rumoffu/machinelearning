@@ -423,6 +423,14 @@ c) You need sleep.  In any 3-day period, at least 18 hours is required.
 In your README, explain how you interpreted this constraint for 3-day periods
 that are only partially contained within the week.
 
+For days that are only partially contained within the week (namely day 1 and 2)
+I just ignored their 18 hours of sleep constraint since it is reasonable to assume
+that enough sleep was gathered beforehand.  It is possible to wrap around using
+[ i - 1] % n + 1 where n is the length of days in order to connect day 1 with day 
+7 and day 6, but this seems unnecessary and complicated.  Rather, I kept the model
+simpler by assuming day 1 and 2 would have enough sleep from the day before the week
+begins.
+
 
 d) Maximize fun.
 param base_fun_rate := 1;
@@ -460,6 +468,16 @@ total over the 3 day period i-2, i-1, i.
 On days when you have a sleep deficit, your work is only 75% as efficient
 as usual.  For example, it takes 8 hours to do 6 hours worth of work.
 (The 75% number should be a named parameter)
+
+For 3-day periods partially contained in the week (namely days 1 and 2), 
+I assumed that the previous day gave them enough sleep so that there would
+not be a sleep deficit.  This assumption is similar to the one from above
+where we assumed that enough sleep was gathered before the week begins.
+A similar method of using 
+[i - 1] % n + 1 where n is the length of Day 
+could be used to wrap the days around, but there is no reason to
+as this means that day 1 is reliant upon future sleep in days 6 and 7.
+
 
 Hand in your commented ZIMPL model schedule.zpl
 along with data files events.txt and assignments.txt.
